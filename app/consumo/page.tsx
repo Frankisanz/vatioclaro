@@ -1,0 +1,103 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ApplianceCard } from "@/app/components/ApplianceCard";
+import { appliances } from "@/lib/appliances";
+import { absoluteUrl, SITE_NAME } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Calculadora de consumo eléctrico: guías por aparato",
+  description:
+    "Encuentra calculadoras y guías de consumo eléctrico para electrodomésticos, climatización y tecnología. Ajusta potencia, uso y precio por kWh.",
+  alternates: { canonical: "/consumo" },
+  openGraph: {
+    type: "website",
+    url: "/consumo",
+    title: `Guías de consumo eléctrico por aparato | ${SITE_NAME}`,
+    description:
+      "Calcula cuánto consumen tus aparatos y descubre los factores que más cambian el coste.",
+    images: [
+      { url: "/og.png", width: 1672, height: 941, alt: "Biblioteca de consumo de VatioClaro" },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Guías de consumo eléctrico por aparato | ${SITE_NAME}`,
+    description:
+      "Calcula cuánto consumen tus aparatos y descubre los factores que más cambian el coste.",
+    images: ["/og.png"],
+  },
+};
+
+export default function ConsumptionLibraryPage() {
+  const byCategory = appliances.reduce<Record<string, typeof appliances>>(
+    (groups, item) => {
+      groups[item.category] ??= [];
+      groups[item.category].push(item);
+      return groups;
+    },
+    {},
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl("/consumo")}#collection`,
+    name: "Guías de consumo eléctrico por aparato",
+    url: absoluteUrl("/consumo"),
+    inLanguage: "es-ES",
+    isPartOf: { "@id": `${absoluteUrl("/")}#website` },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: appliances.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: `Cuánto consume ${item.articleName}`,
+        url: absoluteUrl(`/consumo/${item.slug}`),
+      })),
+    },
+  };
+
+  return (
+    <main id="contenido">
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
+      />
+      <section className="simple-hero content-hub-hero">
+        <div className="eyebrow">Biblioteca de consumo</div>
+        <h1>Calcula qué aparatos pesan más en tu factura.</h1>
+        <p>
+          Elige un aparato para ver un ejemplo editable, la fórmula y los
+          factores que hacen que su consumo real suba o baje.
+        </p>
+        <div className="content-hub-hero__actions">
+          <Link className="button button--dark" href="/calculadora">
+            Calcular otro aparato
+          </Link>
+          <Link className="text-link" href="/consumo/electrodomesticos-que-mas-consumen">
+            Ver cuáles consumen más →
+          </Link>
+        </div>
+      </section>
+
+      <section className="guide-library">
+        {Object.entries(byCategory).map(([category, items]) => (
+          <section className="guide-category" key={category}>
+            <div className="section-heading section-heading--compact">
+              <div>
+                <div className="eyebrow">{category}</div>
+                <h2>Guías de {category.toLocaleLowerCase()}</h2>
+              </div>
+              <p>{items.length} calculadoras y explicaciones prácticas.</p>
+            </div>
+            <div className="guide-grid">
+              {items.map((item, index) => (
+                <ApplianceCard index={index} item={item} key={item.slug} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </section>
+    </main>
+  );
+}

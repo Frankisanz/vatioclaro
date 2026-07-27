@@ -1,14 +1,26 @@
 import type { Metadata } from "next";
+import { CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Metodología de cálculo y fuentes",
   description:
     "Cómo calcula VatioClaro el consumo eléctrico, qué supuestos utiliza y por qué una estimación puede diferir de una medición real.",
+  alternates: { canonical: "/metodologia" },
+  openGraph: {
+    type: "website",
+    url: "/metodologia",
+    title: `Metodología de cálculo y fuentes | ${SITE_NAME}`,
+    description:
+      "Cómo calcula VatioClaro el consumo eléctrico, qué supuestos utiliza y por qué una estimación puede diferir de una medición real.",
+    images: [
+      { url: "/og.png", width: 1672, height: 941, alt: "Metodología de VatioClaro" },
+    ],
+  },
 };
 
 export default function MethodPage() {
   return (
-    <main>
+    <main id="contenido">
       <section className="simple-hero">
         <div className="eyebrow">Transparencia</div>
         <h1>Cómo hacemos las cuentas.</h1>
@@ -19,6 +31,7 @@ export default function MethodPage() {
       </section>
       <section className="simple-body">
         <div className="simple-body__inner">
+          <p className="article-updated">Revisión editorial: {CONTENT_UPDATED_AT}</p>
           <h2>La fórmula base</h2>
           <div className="formula-box">
             Consumo (kWh) = potencia (W) ÷ 1.000 × horas de uso
@@ -70,8 +83,8 @@ export default function MethodPage() {
           <ul>
             <li>
               <a
-                href="https://www.idae.es/sites/default/files/documentos/publicaciones_idae/20260123_SPAHOUSEC_III.pdf"
-                rel="noreferrer"
+                href="https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 IDAE — SPAHOUSEC III: consumo energético residencial en España
@@ -80,7 +93,7 @@ export default function MethodPage() {
             <li>
               <a
                 href="https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 Comisión Europea — Ecodiseño y etiqueta energética
@@ -89,7 +102,7 @@ export default function MethodPage() {
             <li>
               <a
                 href="https://www.ocu.org/vivienda-y-energia/aire-acondicionado/consejos/consumo-aire-acondicionado"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 OCU — Consumo del aire acondicionado

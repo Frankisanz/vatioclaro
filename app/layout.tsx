@@ -1,53 +1,76 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
+import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const incomingHeaders = await headers();
-  const host =
-    incomingHeaders.get("x-forwarded-host") ??
-    incomingHeaders.get("host") ??
-    "localhost:3000";
-  const protocol =
-    incomingHeaders.get("x-forwarded-proto") ??
-    (host.includes("localhost") ? "http" : "https");
-  const origin = `${protocol}://${host}`;
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: SITE_NAME,
+    url: "/",
+    title: "VatioClaro — Calcula y entiende tu consumo eléctrico",
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og.png",
+        width: 1672,
+        height: 941,
+        alt: "VatioClaro — Calcula y entiende tu consumo eléctrico",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VatioClaro — Calcula y entiende tu consumo eléctrico",
+    description: SITE_DESCRIPTION,
+    images: ["/og.png"],
+  },
+};
 
-  return {
-    metadataBase: new URL(origin),
-    title: {
-      default: "VatioClaro — Calculadoras de consumo eléctrico",
-      template: "%s | VatioClaro",
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: absoluteUrl("/og.png"),
     },
-    description:
-      "Calcula el consumo y coste de tus electrodomésticos con fórmulas transparentes, ejemplos prácticos y fuentes fiables.",
-    openGraph: {
-      type: "website",
-      locale: "es_ES",
-      siteName: "VatioClaro",
-      title: "VatioClaro — Descubre dónde se va cada euro de tu factura",
-      description:
-        "Calculadoras y guías claras para convertir vatios y horas de uso en kWh y euros.",
-      images: [
-        {
-          url: `${origin}/og.png`,
-          width: 1672,
-          height: 941,
-          alt: "VatioClaro — Descubre dónde se va cada euro de tu factura",
-        },
-      ],
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      inLanguage: "es-ES",
+      publisher: { "@id": `${SITE_URL}/#organization` },
     },
-    twitter: {
-      card: "summary_large_image",
-      title: "VatioClaro — Calcula tu consumo eléctrico",
-      description:
-        "Convierte vatios y horas de uso en kWh y euros, sin letra pequeña.",
-      images: [`${origin}/og.png`],
-    },
-  };
-}
+  ],
+};
 
 export default function RootLayout({
   children,
@@ -57,6 +80,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
+        <script
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+          type="application/ld+json"
+        />
+        <a className="skip-link" href="#contenido">
+          Saltar al contenido principal
+        </a>
         <SiteHeader />
         {children}
         <SiteFooter />

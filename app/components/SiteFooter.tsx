@@ -8,9 +8,11 @@ export function SiteFooter() {
           vatio<i aria-hidden="true" />claro
         </Link>
         <div className="site-footer__links">
-          <Link href="/#guias">Guías</Link>
+          <Link href="/consumo">Guías de consumo</Link>
+          <Link href="/guias">Guías prácticas</Link>
           <Link href="/calculadora">Calculadora</Link>
           <Link href="/metodologia">Metodología</Link>
+          <Link href="/sobre-vatioclaro">Sobre VatioClaro</Link>
           <Link href="/privacidad">Privacidad</Link>
           <Link href="/aviso-legal">Aviso legal</Link>
         </div>

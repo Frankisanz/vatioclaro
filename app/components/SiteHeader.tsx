@@ -7,13 +7,27 @@ export function SiteHeader() {
         vatio<i aria-hidden="true" />claro
       </Link>
       <nav className="site-nav" aria-label="Navegación principal">
-        <Link href="/#guias">Guías de consumo</Link>
+        <Link href="/consumo">Consumo</Link>
+        <Link href="/guias">Guías</Link>
         <Link href="/calculadora">Calculadora</Link>
         <Link href="/metodologia">Metodología</Link>
       </nav>
       <Link className="header-cta" href="/calculadora">
         Calcular ahora
       </Link>
+      <details className="mobile-nav">
+        <summary>
+          <span aria-hidden="true">☰</span>
+          <span>Menú</span>
+        </summary>
+        <nav aria-label="Navegación móvil">
+          <Link href="/consumo">Guías de consumo</Link>
+          <Link href="/guias">Guías prácticas</Link>
+          <Link href="/calculadora">Calculadora</Link>
+          <Link href="/metodologia">Metodología</Link>
+          <Link href="/sobre-vatioclaro">Sobre VatioClaro</Link>
+        </nav>
+      </details>
     </header>
   );
 }

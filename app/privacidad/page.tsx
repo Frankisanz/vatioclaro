@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main>
+    <main id="contenido">
       <section className="simple-hero">
         <div className="eyebrow">Información</div>
         <h1>Política de privacidad.</h1>

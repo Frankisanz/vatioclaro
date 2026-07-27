@@ -2,12 +2,13 @@
 
 :root {
   --ink: #173d35;
-  --deep: #12342d;
+  --deep: #10312b;
   --cream: #f7f1e4;
   --paper: #fffdf8;
   --mint: #cfe6d2;
   --lime: #dff36b;
   --coral: #f2674f;
+  --coral-ink: #b34332;
   --sun: #f4be4f;
   --line: rgba(23, 61, 53, 0.18);
   --muted: #61726c;
@@ -171,7 +172,7 @@ a {
 }
 
 .hero h1 em {
-  color: var(--coral);
+  color: var(--coral-ink);
   font-weight: 400;
 }
 
@@ -579,12 +580,19 @@ a {
 }
 
 .guide-card__footer {
+  align-items: center;
   border-top: 1px solid rgba(23, 61, 53, 0.45);
   display: flex;
   font-size: 0.74rem;
   font-weight: 800;
   justify-content: space-between;
   padding-top: 1rem;
+}
+
+.guide-card__footer svg {
+  flex: 0 0 auto;
+  height: 1.1rem;
+  width: 1.1rem;
 }
 
 .fine-print {
@@ -654,7 +662,7 @@ a {
 }
 
 .content-plan__list span {
-  color: var(--coral);
+  color: var(--coral-ink);
   font-weight: 800;
 }
 
@@ -1122,7 +1130,7 @@ a {
 }
 
 :where(a, button, input, summary):focus-visible {
-  outline: 3px solid var(--coral);
+  outline: 3px solid var(--coral-ink);
   outline-offset: 3px;
 }
 
@@ -1241,7 +1249,7 @@ a {
 }
 
 .editorial-card > span:first-child {
-  color: var(--coral);
+  color: var(--coral-ink);
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -1468,7 +1476,7 @@ a {
 }
 
 .calculator-explainer span {
-  color: var(--coral);
+  color: var(--coral-ink);
   font-weight: 800;
 }
 
@@ -1514,6 +1522,12 @@ a {
 
   .mobile-nav summary::-webkit-details-marker {
     display: none;
+  }
+
+  .mobile-nav summary svg {
+    flex: 0 0 auto;
+    height: 1.05rem;
+    width: 1.05rem;
   }
 
   .mobile-nav nav {

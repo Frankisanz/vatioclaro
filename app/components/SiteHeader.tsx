@@ -1,3 +1,4 @@
+import { Menu } from "lucide-react";
 import Link from "next/link";
 
 export function SiteHeader() {
@@ -17,7 +18,7 @@ export function SiteHeader() {
       </Link>
       <details className="mobile-nav">
         <summary>
-          <span aria-hidden="true">☰</span>
+          <Menu aria-hidden="true" strokeWidth={1.8} />
           <span>Menú</span>
         </summary>
         <nav aria-label="Navegación móvil">

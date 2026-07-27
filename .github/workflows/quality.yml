@@ -1,0 +1,59 @@
+name: Calidad
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, build y navegador
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v6
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditar dependencias de producción
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Revisar código
+        run: npm run lint
+
+      - name: Compilar y comprobar salida
+        run: npm test
+
+      - name: Probar navegación y accesibilidad
+        run: npm run test:e2e
+
+      - name: Guardar diagnóstico si falla
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7

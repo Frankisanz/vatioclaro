@@ -80,6 +80,9 @@ test("publishes complete legal, privacy and cookie information", async () => {
   }
 
   assert.match(cookies, /Cookies anal/);
+  assert.match(cookies, /Vercel Web Analytics/);
+  assert.match(cookies, /Medici.n agregada sin cookies/);
+  assert.match(privacy, /Speed Insights/);
   assert.match(cookies, /Google AdSense/);
   assert.match(cookies, /noindex, follow/);
 });

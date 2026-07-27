@@ -77,6 +77,18 @@ export default function PrivacyPage() {
               perfiles publicitarios.
             </li>
             <li>
+              <strong>Medición de audiencia y rendimiento.</strong> Utilizamos
+              Vercel Web Analytics y Speed Insights para conocer, de forma
+              agregada, qué páginas reciben visitas y cómo funciona la web en
+              dispositivos reales. Estas herramientas pueden tratar la URL
+              visitada, la página de procedencia, fecha y hora aproximadas, país,
+              tipo de dispositivo, navegador, sistema operativo y métricas de
+              rendimiento. No usamos esta información para identificarte,
+              seguirte entre sitios ni crear perfiles publicitarios. La base
+              jurídica es nuestro interés legítimo en medir y mejorar un servicio
+              gratuito, limitado mediante una configuración sin cookies.
+            </li>
+            <li>
               <strong>Obligaciones legales.</strong> Podremos conservar los datos
               imprescindibles cuando una norma aplicable lo exija.
             </li>
@@ -105,9 +117,10 @@ export default function PrivacyPage() {
             transferencia previstos por la normativa aplicable.
           </p>
           <p>
-            No vendemos datos personales ni enviamos datos de las calculadoras a
-            redes publicitarias, herramientas de analítica o plataformas de
-            redes sociales en esta versión del sitio.
+            No vendemos datos personales ni enviamos los valores introducidos en
+            las calculadoras a Vercel Analytics, redes publicitarias o
+            plataformas sociales. No utilizamos Google Analytics ni Google
+            AdSense en esta versión del sitio.
           </p>
 
           <h2>5. Derechos</h2>
@@ -123,11 +136,18 @@ export default function PrivacyPage() {
 
           <h2>6. Analítica, publicidad y cookies</h2>
           <p>
-            No se han activado herramientas de analítica ni publicidad en esta
-            versión. Antes de incorporar Google AdSense u otros terceros se
-            actualizarán esta política y la <Link href="/cookies">Política de
-            cookies</Link>, se identificarán los proveedores y se habilitará el
-            mecanismo de consentimiento que corresponda.
+            Vercel Web Analytics y Speed Insights están activos para medir
+            páginas vistas y métricas web esenciales. Según la documentación de
+            Vercel, funcionan sin cookies ni almacenamiento local y generan
+            estadísticas agregadas; por eso no se muestra un banner para estas
+            mediciones. Puedes consultar el detalle técnico y las formas de
+            contacto en la <Link href="/cookies">Política de cookies</Link>.
+          </p>
+          <p>
+            No hay publicidad activa. Antes de incorporar Google AdSense u otro
+            proveedor publicitario actualizaremos esta política, identificaremos
+            a los proveedores y habilitaremos el mecanismo de consentimiento
+            previo que corresponda.
           </p>
 
           <h2>7. Actualizaciones</h2>

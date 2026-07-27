@@ -24,9 +24,9 @@ export default function CookiesPage() {
       <section className="simple-body">
         <div className="simple-body__inner">
           <div className="callout">
-            Última revisión: {LEGAL_OWNER.updatedAt}. En esta versión no se
-            instalan cookies de analítica, publicidad, redes sociales ni
-            personalización.
+            Última revisión: {LEGAL_OWNER.updatedAt}. La web utiliza medición
+            anónima de Vercel sin cookies. No se instalan cookies de publicidad,
+            redes sociales ni personalización.
           </div>
 
           <h2>1. Qué son las cookies</h2>
@@ -39,15 +39,26 @@ export default function CookiesPage() {
 
           <h2>2. Tecnologías utilizadas actualmente</h2>
           <p>
-            Tras la revisión técnica de esta versión, VatioClaro no carga Google
-            Analytics, Google AdSense ni otras etiquetas de publicidad, análisis
-            o redes sociales. Las calculadoras funcionan en el navegador y no
-            crean perfiles de navegación.
+            VatioClaro utiliza Vercel Web Analytics para obtener estadísticas
+            agregadas de visitas y Speed Insights para medir Core Web Vitals.
+            Según Vercel, ambas herramientas funcionan sin instalar cookies ni
+            utilizar almacenamiento local. No cargamos Google Analytics, Google
+            AdSense, etiquetas publicitarias ni widgets de redes sociales. Las
+            calculadoras funcionan en el navegador y sus valores no se envían a
+            estas herramientas.
           </p>
           <dl className="legal-facts legal-facts--compact">
             <div>
               <dt>Cookies analíticas</dt>
               <dd>No se utilizan</dd>
+            </div>
+            <div>
+              <dt>Vercel Web Analytics</dt>
+              <dd>Medición agregada sin cookies</dd>
+            </div>
+            <div>
+              <dt>Vercel Speed Insights</dt>
+              <dd>Rendimiento real sin cookies</dd>
             </div>
             <div>
               <dt>Cookies publicitarias</dt>
@@ -64,27 +75,33 @@ export default function CookiesPage() {
           </dl>
           <p>
             El proveedor de alojamiento puede tratar información técnica para
-            servir y proteger el sitio, pero esta web no instala actualmente
-            cookies opcionales desde su código. Puedes consultar más detalles
-            sobre el tratamiento de datos en la{" "}
+            servir, proteger y medir el sitio, pero esta web no instala
+            actualmente cookies opcionales desde su código. La medición puede
+            incluir URL visitada, página de procedencia, país, dispositivo,
+            navegador, sistema operativo y métricas de rendimiento, sin los
+            valores introducidos en las calculadoras. Puedes consultar más
+            detalles sobre el tratamiento de datos en la{" "}
             <Link href="/privacidad">Política de privacidad</Link>.
           </p>
 
           <h2>3. Por qué no aparece un banner de consentimiento</h2>
           <p>
-            Al no utilizar tecnologías no esenciales, no es necesario solicitar
-            consentimiento para categorías de analítica o publicidad. No
-            condicionamos el acceso a los contenidos a aceptar tecnologías
-            opcionales.
+            Las herramientas de medición configuradas no guardan ni leen cookies
+            o identificadores persistentes en tu dispositivo. Por ello no
+            solicitamos consentimiento para instalarlas y no condicionamos el
+            acceso a los contenidos a aceptar tecnologías opcionales. Si esta
+            configuración cambia, mostraremos el mecanismo de consentimiento
+            antes de activar cualquier tecnología que lo requiera.
           </p>
 
           <h2>4. Cambios futuros</h2>
           <p>
-            Antes de añadir analítica, publicidad —incluido Google AdSense— o
-            cualquier tecnología no esencial, actualizaremos esta política con
-            los proveedores, finalidades y plazos aplicables. También
-            mostraremos el mecanismo de consentimiento correspondiente antes de
-            que esas tecnologías se activen.
+            Antes de añadir publicidad —incluido Google AdSense—, analítica con
+            identificadores persistentes o cualquier otra tecnología no
+            esencial, actualizaremos esta política con los proveedores,
+            finalidades y plazos aplicables. También mostraremos el mecanismo de
+            consentimiento correspondiente antes de que esas tecnologías se
+            activen.
           </p>
 
           <h2>5. Cómo controlar las cookies</h2>

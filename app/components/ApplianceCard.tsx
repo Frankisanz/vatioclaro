@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { Appliance } from "@/lib/appliances";
 
@@ -28,7 +29,7 @@ export function ApplianceCard({ item, index }: ApplianceCardProps) {
           })}
           {" € / mes"}
         </span>
-        <span aria-hidden="true">↗</span>
+        <ArrowUpRight aria-hidden="true" strokeWidth={1.8} />
       </div>
     </Link>
   );

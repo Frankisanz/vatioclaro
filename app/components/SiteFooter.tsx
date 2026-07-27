@@ -14,6 +14,7 @@ export function SiteFooter() {
           <Link href="/metodologia">Metodología</Link>
           <Link href="/sobre-vatioclaro">Sobre VatioClaro</Link>
           <Link href="/privacidad">Privacidad</Link>
+          <Link href="/cookies">Cookies</Link>
           <Link href="/aviso-legal">Aviso legal</Link>
         </div>
       </div>

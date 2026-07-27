@@ -63,3 +63,23 @@ test("exposes all key URLs through robots and sitemap", async () => {
     /https:\/\/vatioclaro\.es\/consumo\/freidora-de-aire<\/loc>/,
   );
 });
+
+test("publishes complete legal, privacy and cookie information", async () => {
+  const [legal, privacy, cookies] = await Promise.all([
+    readOutput("aviso-legal.html"),
+    readOutput("privacidad.html"),
+    readOutput("cookies.html"),
+  ]);
+
+  for (const html of [legal, privacy]) {
+    assert.match(html, /Francisco Javier Sanchez Fuentes/);
+    assert.match(html, /15514272J/);
+    assert.match(html, /23400/);
+    assert.match(html, /amargued@gmail\.com/);
+    assert.match(html, /noindex, follow/);
+  }
+
+  assert.match(cookies, /Cookies anal/);
+  assert.match(cookies, /Google AdSense/);
+  assert.match(cookies, /noindex, follow/);
+});

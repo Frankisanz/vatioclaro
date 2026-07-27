@@ -898,6 +898,35 @@ a {
   padding: 1.6rem;
 }
 
+.legal-facts {
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+
+.legal-facts > div {
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(150px, 0.3fr) 1fr;
+  padding: 1rem 0;
+}
+
+.legal-facts dt {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.legal-facts dd {
+  margin: 0;
+}
+
+.simple-body a:not(.button) {
+  border-bottom: 1px solid currentColor;
+}
+
 .not-found {
   min-height: 65vh;
   padding: 10vh 6vw;
@@ -1043,6 +1072,10 @@ a {
   .article-body,
   .simple-body {
     padding: 4rem 5vw;
+  }
+
+  .legal-facts > div {
+    grid-template-columns: 1fr;
   }
 
   .article-body__inner {

@@ -1,0 +1,26 @@
+import Link from "next/link";
+
+export function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="site-footer__top">
+        <Link className="brand" href="/">
+          vatio<i aria-hidden="true" />claro
+        </Link>
+        <div className="site-footer__links">
+          <Link href="/#guias">Guías</Link>
+          <Link href="/calculadora">Calculadora</Link>
+          <Link href="/metodologia">Metodología</Link>
+          <Link href="/privacidad">Privacidad</Link>
+          <Link href="/aviso-legal">Aviso legal</Link>
+        </div>
+      </div>
+      <div className="site-footer__bottom">
+        <span>© {new Date().getFullYear()} VatioClaro</span>
+        <span>
+          Estimaciones informativas. Comprueba siempre la etiqueta y tu factura.
+        </span>
+      </div>
+    </footer>
+  );
+}

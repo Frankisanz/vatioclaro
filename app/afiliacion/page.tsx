@@ -74,9 +74,9 @@ export default function AffiliatePolicyPage() {
           <p>
             Mientras no dispongamos de una integración autorizada con datos
             actualizados, no mostramos precios, disponibilidad, Prime, descuentos
-            ni valoraciones de Amazon. Los enlaces pueden abrir una ficha o una
-            lista de resultados para que la persona usuaria compruebe la oferta
-            vigente directamente.
+            ni valoraciones de Amazon. Los enlaces abren la ficha concreta que
+            hemos verificado para que la persona usuaria compruebe directamente
+            el modelo, el vendedor y la oferta vigente.
           </p>
 
           <h2>5. Medición y privacidad</h2>

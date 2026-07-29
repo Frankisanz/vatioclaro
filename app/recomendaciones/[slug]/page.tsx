@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { AffiliateLink } from "@/app/components/AffiliateLink";
 import {
   AMAZON_ASSOCIATE_DISCLOSURE,
-  amazonSearchUrl,
+  amazonProductUrl,
 } from "@/lib/affiliate";
 import {
   buyingGuides,
@@ -246,8 +246,8 @@ export default async function BuyingGuidePage({
                       <span>Publicidad · enlace de afiliado</span>
                       <AffiliateLink
                         context={guide.slug}
-                        href={amazonSearchUrl(profile.amazonQuery)}
-                        label={`Ver opciones de ${profile.name} en Amazon`}
+                        href={amazonProductUrl(profile.amazonAsin)}
+                        label={`Ver ficha de ${profile.name} en Amazon`}
                         product={profile.name}
                       />
                     </div>

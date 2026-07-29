@@ -15,7 +15,7 @@ export type BuyingGuideProfile = {
   summary: string;
   checks: string[];
   limitation: string;
-  amazonQuery: string;
+  amazonAsin: string;
   source?: {
     title: string;
     url: string;
@@ -113,7 +113,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "La pantalla y los botones son menos cómodos en tomas bajas o escondidas. Comprueba siempre la carga real y el manual del equipo conectado.",
-        amazonQuery: "Brennenstuhl PM 231 E medidor consumo",
+        amazonAsin: "B007459MH6",
         source: {
           title: "Especificaciones oficiales de Brennenstuhl",
           url: "https://service.brennenstuhl.com/hc/es/articles/8867312023453--Cu%C3%A1les-son-las-caracter%C3%ADsticas-de-medici%C3%B3n-y-consumo-del-contador-de-energ%C3%ADa-PM-231-E-de-Primera-Line",
@@ -132,29 +132,29 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "El límite máximo no garantiza compatibilidad con cualquier carga. Confirma también requisitos de privacidad, cuenta y conexión antes de elegirlo.",
-        amazonQuery: "TP-Link Tapo P110 enchufe medidor consumo",
+        amazonAsin: "B09BFT7NZJ",
         source: {
           title: "Ficha oficial Tapo P110",
           url: "https://www.tapo.com/es/product/smart-plug/tapo-p110/",
         },
       },
       {
-        label: "Medición avanzada",
-        name: "Shelly Plug PM Gen3",
-        bestFor: "Quien prioriza monitorización, alertas e integración local",
+        label: "Pantalla detallada",
+        name: "Goobay 64590 Digital Pro",
+        bestFor: "Consultar varias magnitudes a la vez sin aplicación ni cuenta",
         summary:
-          "Está orientado a medir cargas de forma continuada. Shelly declara medición en tiempo real, alertas de consumo y hasta 16 A o 3.680 W para carga resistiva.",
+          "Su pantalla de tres líneas reúne potencia, kWh, coste y tiempo de medición. El manual declara un rango de 0,5 a 3.680 W, hasta 16 A y uso interior IP20.",
         checks: [
-          "Este modelo PM está diseñado para medir y no incorpora relé de encendido.",
-          "Ofrece Wi‑Fi, Bluetooth, interfaz y opciones de automatización.",
-          "Distingue este modelo de otros Shelly Plug con límites distintos.",
+          "Muestra también tensión, corriente, frecuencia y factor de potencia.",
+          "Conserva ajustes y datos durante unos 20 minutos al desenchufarlo.",
+          "No ofrece historial en el móvil ni exportación de datos.",
         ],
         limitation:
-          "No es la opción adecuada si necesitas cortar la alimentación desde la aplicación. Verifica el nombre exacto del modelo antes de comprar.",
-        amazonQuery: "Shelly Plug PM Gen3 medidor consumo",
+          "Su umbral de medición declarado parte de 0,5 W, por lo que no es la mejor opción para cuantificar consumos inferiores. No debe conectarse a alargadores ni regletas.",
+        amazonAsin: "B0CKR762DL",
         source: {
-          title: "Comparador oficial de enchufes Shelly",
-          url: "https://www.shelly.com/pages/shelly-smart-plugs",
+          title: "Manual Goobay 64590 en español",
+          url: "https://asset.conrad.com/media10/add/160267/c1/-/de/871121286ML00/bedienungsanleitung-871121338-goobay-64590-digitales-energiekostenmessgeraet-pro-steckdose-stromzaehler-3680w-16a-230v-strommessgeraet-lc-display.pdf",
         },
       },
     ],
@@ -221,8 +221,8 @@ export const buyingGuides: BuyingGuide[] = [
         url: "https://www.tapo.com/es/product/smart-plug/tapo-p110/",
       },
       {
-        title: "Shelly — comparación de enchufes con medición",
-        url: "https://www.shelly.com/pages/shelly-smart-plugs",
+        title: "Goobay — manual 64590 Digital Pro",
+        url: "https://asset.conrad.com/media10/add/160267/c1/-/de/871121286ML00/bedienungsanleitung-871121338-goobay-64590-digitales-energiekostenmessgeraet-pro-steckdose-stromzaehler-3680w-16a-230v-strommessgeraet-lc-display.pdf",
       },
     ],
     related: [
@@ -281,7 +281,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "La cuenta y la aplicación forman parte del uso. Valora privacidad, soporte y permanencia del ecosistema además de las funciones visibles.",
-        amazonQuery: "TP-Link Tapo P110 enchufe inteligente consumo",
+        amazonAsin: "B09BFT7NZJ",
         source: {
           title: "Ficha oficial Tapo P110",
           url: "https://www.tapo.com/es/product/smart-plug/tapo-p110/",
@@ -300,7 +300,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "Matter no elimina todos los requisitos de la aplicación ni garantiza que cada plataforma muestre el mismo historial energético.",
-        amazonQuery: "TP-Link Tapo P110M Matter medidor consumo",
+        amazonAsin: "B0CJ9R466Z",
         source: {
           title: "Ficha oficial Tapo P110M",
           url: "https://www.tapo.com/es/product/smart-plug/tapo-p110m/",
@@ -308,7 +308,7 @@ export const buyingGuides: BuyingGuide[] = [
       },
       {
         label: "Automatización flexible",
-        name: "Shelly Plug S Gen3",
+        name: "Shelly Plug S MTR Gen3 (blanco)",
         bestFor: "Matter, acciones locales e integración domótica avanzada",
         summary:
           "Shelly declara medición, horarios, acciones locales, Matter y compatibilidad con varios sistemas. El modelo S Gen3 admite hasta 12 A o 2.500 W de carga resistiva.",
@@ -319,7 +319,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "Requiere más atención a configuración y modelo exacto. No lo elijas por automatización avanzada si solo quieres leer kWh una vez.",
-        amazonQuery: "Shelly Plug S Gen3 Matter enchufe",
+        amazonAsin: "B0DJFCQRWL",
         source: {
           title: "Ficha oficial Shelly Plug S Gen3",
           url: "https://www.shelly.com/products/shelly-plug-s-gen3",
@@ -435,48 +435,60 @@ export const buyingGuides: BuyingGuide[] = [
     profiles: [
       {
         label: "Rutina fija",
-        name: "Temporizador mecánico diario",
+        name: "Brennenstuhl MMZ 20",
         bestFor: "Un horario que se repite cada día sin aplicación",
         summary:
-          "Permite definir franjas mediante pestañas y suele incluir un selector de funcionamiento continuo. Es fácil de entender, pero ofrece intervalos menos precisos.",
+          "Temporizador mecánico interior con programa de 24 horas, 96 posiciones e intervalos mínimos de 15 minutos. Incluye un selector para alternar entre el horario y el encendido permanente.",
         checks: [
-          "Intervalo mínimo y número de franjas disponibles.",
-          "Carga máxima y compatibilidad con el aparato.",
-          "Selector manual accesible.",
+          "La ficha oficial declara 16 A, 230 V y protección IP20.",
+          "Las pestañas permiten hasta 96 cambios de estado al día.",
+          "El selector manual queda accesible en un lateral.",
         ],
         limitation:
           "Puede perder la referencia tras un corte y no distingue laborables de fin de semana. No es adecuado para equipos que no deban arrancar solos.",
-        amazonQuery: "temporizador enchufe mecánico 16A",
+        amazonAsin: "B01N1M2NZ4",
+        source: {
+          title: "Ficha oficial Brennenstuhl MMZ 20",
+          url: "https://www.brennenstuhl.com/en-DE/products/timers/24-hour-timer-mmz-20-ip20-white",
+        },
       },
       {
         label: "Corte manual",
-        name: "Regleta con interruptor individual",
+        name: "Brennenstuhl 1153110126 (6 tomas)",
         bestFor: "Apagar solo pantalla, altavoces o periféricos concretos",
         summary:
-          "Los interruptores por toma evitan desconectar el equipo que debe permanecer activo. Busca una construcción documentada y espacio suficiente entre conectores.",
+          "Reúne seis tomas a 45°, seis interruptores bipolares individuales y un interruptor general. La ficha declara un cable de 2 m H05VV-F 3G1,5 y protección contra contacto accidental.",
         checks: [
-          "Interruptor general y controles individuales claramente identificados.",
-          "Longitud y sección del cable declaradas.",
-          "Protección infantil y número real de tomas utilizables.",
+          "Cada toma tiene su propio interruptor iluminado.",
+          "La carga conjunta declarada llega a 16 A; no es un límite por toma.",
+          "No declara protección contra sobretensiones en esta referencia.",
         ],
         limitation:
           "Exige crear el hábito de apagar. No presupongas protección contra sobretensiones si la ficha no la declara expresamente.",
-        amazonQuery: "regleta interruptores individuales enchufes",
+        amazonAsin: "B083ZRMJKX",
+        source: {
+          title: "Ficha oficial de regletas con control individual",
+          url: "https://www.brennenstuhl.com/de-DE/themenwelt/haus-garten/einzeln-schaltbare-steckdosenleiste",
+        },
       },
       {
         label: "Control por zonas",
-        name: "Regleta inteligente con control individual",
+        name: "Meross MSS425FHK (EU)",
         bestFor: "Programar grupos distintos o controlar tomas a distancia",
         summary:
-          "Añade horarios y control independiente. Puede ser útil en una zona de trabajo, siempre que la propia regleta y los adaptadores respeten las cargas.",
+          "Ofrece cuatro tomas Schuko controlables por separado y cuatro puertos USB controlados como un único grupo. Admite horarios, aplicación y control por voz sobre Wi‑Fi de 2,4 GHz.",
         checks: [
-          "Qué tomas se controlan por separado y cuáles son siempre activas.",
-          "Si incluye medición total o por toma; no debe darse por supuesto.",
-          "Funcionamiento de los horarios sin conexión.",
+          "Las cuatro tomas de corriente alterna se controlan individualmente.",
+          "Los cuatro USB se encienden y apagan juntos, no por separado.",
+          "Esta referencia no ofrece medición de consumo.",
         ],
         limitation:
-          "Cuesta más, añade consumo propio y depende de software. Si un interruptor manual resuelve el problema, la opción inteligente puede no compensar.",
-        amazonQuery: "regleta inteligente control individual medidor consumo",
+          "Añade consumo propio y depende de software para el control individual; el botón físico conmuta el conjunto. Si basta un interruptor manual, la opción inteligente puede no compensar.",
+        amazonAsin: "B09WDMHZFP",
+        source: {
+          title: "Ficha oficial Meross MSS425F EU",
+          url: "https://www.meross.com/en-gc/mTerminal/smart-plug/wifi-surge-protector/126",
+        },
       },
     ],
     sections: [
@@ -504,7 +516,7 @@ export const buyingGuides: BuyingGuide[] = [
         title: "Por qué no publicamos un ranking",
         paragraphs: [
           "La necesidad cambia según horario, carga y número de tomas. Por eso presentamos tres perfiles y una lista de comprobación en lugar de coronar un producto por popularidad.",
-          "Los enlaces abren búsquedas relevantes en Amazon porque modelos y disponibilidad cambian. Verifica marca, documentación, vendedor y especificaciones antes de comprar.",
+          "Cada enlace abre la ficha concreta que verificamos al revisar esta guía. La disponibilidad y el vendedor pueden cambiar, así que confirma el modelo, la documentación y las especificaciones antes de comprar.",
         ],
       },
     ],
@@ -599,7 +611,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "No permite reconstruir qué ocurrió durante la noche o cuando no estabas. Para patrones necesitas anotar lecturas o elegir un modelo con memoria.",
-        amazonQuery: "ThermoPro TempPro TP49 termómetro higrómetro",
+        amazonAsin: "B07TV364MZ",
         source: {
           title: "Ficha oficial TempPro TP49",
           url: "https://temppro.com/products/tp49b-indoor-thermometer-hygrometer",
@@ -607,7 +619,7 @@ export const buyingGuides: BuyingGuide[] = [
       },
       {
         label: "Historial Bluetooth",
-        name: "Govee H5075",
+        name: "Govee H5075 (pack de 2)",
         bestFor: "Consultar gráficos y exportar datos al acercarte con el móvil",
         summary:
           "Incluye pantalla y aplicación Bluetooth. Govee declara almacenamiento, exportación CSV y alertas en la aplicación dentro del alcance compatible.",
@@ -618,10 +630,10 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "Una alerta Bluetooth no equivale a una notificación remota permanente. Para acceso fuera de casa se necesita una solución adicional compatible.",
-        amazonQuery: "Govee H5075 termómetro higrómetro Bluetooth",
+        amazonAsin: "B08QRX8Y3X",
         source: {
           title: "Ficha oficial Govee H5075",
-          url: "https://us.govee.com/products/govee-bluetooth-hygrometer-thermometer-h5075",
+          url: "https://eu.govee.com/products/govee-bluetooth-hygrometer-thermometer-h5075",
         },
       },
       {
@@ -637,7 +649,7 @@ export const buyingGuides: BuyingGuide[] = [
         ],
         limitation:
           "Es una solución de ecosistema y no la compra más simple para mirar una habitación. Las alertas y automatizaciones dependen de componentes adicionales.",
-        amazonQuery: "Tapo T315 H100 sensor temperatura humedad",
+        amazonAsin: "B0C7FJYTR2",
         source: {
           title: "Ficha oficial Tapo T315",
           url: "https://www.tapo.com/es/product/smart-sensor/tapo-t315/",
@@ -698,7 +710,7 @@ export const buyingGuides: BuyingGuide[] = [
       },
       {
         title: "Govee — H5075",
-        url: "https://us.govee.com/products/govee-bluetooth-hygrometer-thermometer-h5075",
+        url: "https://eu.govee.com/products/govee-bluetooth-hygrometer-thermometer-h5075",
       },
       {
         title: "TP-Link — Tapo T315",
@@ -750,48 +762,56 @@ export const buyingGuides: BuyingGuide[] = [
     profiles: [
       {
         label: "Comprobación económica",
-        name: "Termómetro analógico colgante",
+        name: "TFA Dostmann 14.4006",
         bestFor: "Ver de un vistazo si la zona central está en rango",
         summary:
-          "No necesita pila y puede moverse entre estantes. Conviene elegir una escala clara y un soporte que no bloquee la circulación de aire.",
+          "Termómetro bimetálico compacto con escala de −30 a 30 °C y zonas de frío impresas. No necesita pila y su soporte permite colgarlo dentro del frigorífico o congelador.",
         checks: [
-          "Rango específico para frigorífico y congelador.",
-          "Escala legible sin abrir demasiado tiempo.",
-          "Construcción fácil de limpiar.",
+          "El fabricante lo destina a frigorífico y congelador.",
+          "La escala coloreada facilita una comprobación rápida.",
+          "Mide 72 × 21 × 95 mm y está fabricado en Alemania.",
         ],
         limitation:
           "No conserva máximas, mínimas ni avisa cuando la puerta queda abierta. La aguja tarda en estabilizarse.",
-        amazonQuery: "termómetro frigorífico congelador analógico",
+        amazonAsin: "B001F8MRFM",
+        source: {
+          title: "Ficha oficial TFA Dostmann 14.4006",
+          url: "https://www.tfa-dostmann.de/produkt/analoges-kuehlthermometer-14-4006/",
+        },
       },
       {
         label: "Historial básico",
-        name: "Termómetro digital con mínima y máxima",
+        name: "TempPro TP110",
         bestFor: "Detectar variaciones durante varias horas",
         summary:
-          "La memoria ayuda a ver si la temperatura se alejó del rango desde el último reinicio, aunque no indica exactamente a qué hora ocurrió.",
+          "Registra la mínima y la máxima de las últimas 24 horas, muestra de −30 a 50 °C y añade retroiluminación. Su carcasa está declarada como IPX6 para el ambiente húmedo del frigorífico.",
         checks: [
-          "Rango declarado y comportamiento de la pantalla en frío.",
-          "Botón de reinicio accesible.",
-          "Tipo de pila y aviso de batería baja.",
+          "La ficha declara una tolerancia de ±0,5 °C.",
+          "Funciona con una pila CR2032 reemplazable.",
+          "Puede apoyarse, colgarse o fijarse con el imán trasero.",
         ],
         limitation:
-          "Una mínima o máxima aislada puede deberse a aperturas o ciclos normales. Interpreta el patrón antes de concluir que existe una avería.",
-        amazonQuery: "termómetro digital frigorífico congelador máxima mínima",
+          "La memoria es un resumen móvil de 24 horas, no un gráfico con la hora de cada cambio. Una desviación aislada puede deberse a aperturas o ciclos normales.",
+        amazonAsin: "B0DNMRNRF2",
+        source: {
+          title: "Ficha oficial TempPro TP110",
+          url: "https://temppro.com/products/tp110-2",
+        },
       },
       {
         label: "Aviso sin abrir",
-        name: "Termómetro con sonda y alarma",
+        name: "ORIA termómetro con sonda y alarma",
         bestFor: "Consultar desde el exterior y recibir un aviso local",
         summary:
-          "Mantiene la pantalla fuera y el sensor dentro. Es útil cuando abrir la puerta altera la lectura, siempre que el cable pueda instalarse sin comprometer el cierre.",
+          "Combina una pantalla exterior con una sonda impermeable de 1,5 m, límites de alarma configurables y registros mínimos y máximos. La sonda puede medir sin abrir la puerta.",
         checks: [
-          "Rango y precisión declarados para la sonda.",
-          "Longitud, grosor y colocación segura del cable.",
-          "Límites configurables y volumen de alarma.",
+          "La sonda declara un rango de −40 a 100 °C.",
+          "Los límites de alarma se ajustan entre −40 y 40 °C.",
+          "La pantalla funciona con dos pilas AAA y admite soporte, imán o colgador.",
         ],
         limitation:
           "No aprisiones la sonda ni dañes la junta. Algunos modelos miden solo en un punto y no representan todo el compartimento.",
-        amazonQuery: "termómetro frigorífico congelador sonda alarma",
+        amazonAsin: "B0F24JK3D5",
       },
     ],
     sections: [
@@ -814,7 +834,7 @@ export const buyingGuides: BuyingGuide[] = [
       {
         title: "Por qué recomendamos tipos y no un ganador",
         paragraphs: [
-          "El producto adecuado cambia según quieras una lectura puntual, memoria o alarma exterior. La disponibilidad de modelos económicos cambia con frecuencia, por lo que enlazamos búsquedas por función.",
+          "El producto adecuado cambia según quieras una lectura puntual, memoria o alarma exterior. Enlazamos fichas concretas verificadas durante esta revisión; comprueba que el nombre y la referencia sigan coincidiendo antes de comprar.",
           "No mostramos precios ni valoraciones y no afirmamos una precisión que el fabricante no documente. Revisa la ficha y el manual del modelo concreto antes de comprar.",
         ],
       },

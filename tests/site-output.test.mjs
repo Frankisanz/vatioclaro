@@ -125,25 +125,69 @@ test("publishes complete legal, privacy and cookie information", async () => {
 });
 
 test("publishes useful and transparent Amazon buying guides", async () => {
-  const [hub, guide] = await Promise.all([
+  const [hub, ...guides] = await Promise.all([
     readOutput("recomendaciones.html"),
     readOutput(
       "recomendaciones/medidores-consumo-electrico-enchufe.html",
     ),
+    readOutput(
+      "recomendaciones/enchufes-inteligentes-medidor-consumo.html",
+    ),
+    readOutput(
+      "recomendaciones/temporizadores-regletas-consumo-fantasma.html",
+    ),
+    readOutput("recomendaciones/termohigrometros-casa.html"),
+    readOutput(
+      "recomendaciones/termometros-frigorifico-congelador.html",
+    ),
   ]);
+  const allGuides = guides.join("\n");
+  const expectedAsins = [
+    "B007459MH6",
+    "B09BFT7NZJ",
+    "B0CKR762DL",
+    "B0CJ9R466Z",
+    "B0DJFCQRWL",
+    "B01N1M2NZ4",
+    "B083ZRMJKX",
+    "B09WDMHZFP",
+    "B07TV364MZ",
+    "B08QRX8Y3X",
+    "B0C7FJYTR2",
+    "B001F8MRFM",
+    "B0DNMRNRF2",
+    "B0F24JK3D5",
+  ];
 
   assert.match(
     hub,
     /Compra solo la herramienta que resuelve tu duda/,
   );
-  assert.match(guide, /"@type":"Article"/);
-  assert.match(guide, /"@type":"FAQPage"/);
-  assert.match(guide, /Tres perfiles, no un podio/);
-  assert.match(guide, /Publicidad · enlace de afiliado/);
-  assert.match(guide, /tag=vatio-21/);
-  assert.match(
-    guide,
-    /rel="sponsored nofollow noopener noreferrer"/,
-  );
-  assert.doesNotMatch(guide, /"@type":"Product"/);
+
+  for (const guide of guides) {
+    assert.match(guide, /"@type":"Article"/);
+    assert.match(guide, /"@type":"FAQPage"/);
+    assert.match(guide, /Tres perfiles, no un podio/);
+    assert.match(guide, /Publicidad · enlace de afiliado/);
+    assert.match(guide, /tag=vatio-21/);
+    assert.doesNotMatch(guide, /amazon\.es\/s\?/);
+    assert.equal(
+      guide.match(
+        /href="https:\/\/www\.amazon\.es\/dp\/[A-Z0-9]{10}\?tag=vatio-21"/g,
+      )?.length,
+      3,
+    );
+    assert.match(
+      guide,
+      /rel="sponsored nofollow noopener noreferrer"/,
+    );
+    assert.doesNotMatch(guide, /"@type":"Product"/);
+  }
+
+  for (const asin of expectedAsins) {
+    assert.match(
+      allGuides,
+      new RegExp(`amazon\\.es\\/dp\\/${asin}\\?tag=vatio-21`),
+    );
+  }
 });

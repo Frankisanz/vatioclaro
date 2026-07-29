@@ -89,6 +89,13 @@ export default function PrivacyPage() {
               gratuito, limitado mediante una configuración sin cookies.
             </li>
             <li>
+              <strong>Clics en enlaces de afiliado.</strong> Podemos medir de
+              forma agregada qué tipo de recomendación se abre para evaluar la
+              utilidad del contenido. El evento identifica la guía y el perfil
+              de producto, no incluye los valores de las calculadoras ni nos
+              permite conocer la identidad de quien compra en Amazon.
+            </li>
+            <li>
               <strong>Obligaciones legales.</strong> Podremos conservar los datos
               imprescindibles cuando una norma aplicable lo exija.
             </li>
@@ -144,10 +151,17 @@ export default function PrivacyPage() {
             contacto en la <Link href="/cookies">Política de cookies</Link>.
           </p>
           <p>
-            No hay publicidad activa. Antes de incorporar Google AdSense u otro
-            proveedor publicitario actualizaremos esta política, identificaremos
-            a los proveedores y habilitaremos el mecanismo de consentimiento
-            previo que corresponda.
+            No hay anuncios de display ni Google AdSense activos. Sí existen
+            enlaces de afiliado identificados que llevan a Amazon.es. Estos son
+            enlaces externos normales: no cargamos en VatioClaro píxeles,
+            anuncios ni scripts de Amazon. Al pulsarlos abandonas este sitio y
+            se aplican la privacidad y las tecnologías del destino. Consulta
+            nuestra <Link href="/afiliacion">política de afiliación</Link>.
+          </p>
+          <p>
+            Antes de incorporar Google AdSense u otro proveedor publicitario
+            actualizaremos esta política, identificaremos a los proveedores y
+            habilitaremos el mecanismo de consentimiento previo que corresponda.
           </p>
 
           <h2>7. Actualizaciones</h2>

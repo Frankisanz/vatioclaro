@@ -15,6 +15,10 @@ const representativePages = [
     path: "/guias/etiqueta-energetica-a-euros",
     heading: /Cómo convertir la etiqueta energética en euros/i,
   },
+  {
+    path: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    heading: /Medidores de consumo eléctrico de enchufe/i,
+  },
   { path: "/calculadora", heading: /Calculadora de consumo eléctrico/i },
   { path: "/cookies", heading: /Política de cookies/i },
 ] as const;
@@ -79,6 +83,7 @@ for (const path of [
   "/",
   "/consumo/lavadora",
   "/guias/potencia-contratada",
+  "/recomendaciones/medidores-consumo-electrico-enchufe",
   "/cookies",
 ] as const) {
   test(`${path} no presenta infracciones automáticas WCAG A/AA`, async ({

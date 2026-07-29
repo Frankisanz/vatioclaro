@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AMAZON_ASSOCIATE_DISCLOSURE } from "@/lib/affiliate";
 import { LEGAL_ADDRESS, LEGAL_OWNER } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -55,9 +56,9 @@ export default function LegalPage() {
           </dl>
           <p>
             VatioClaro es una web informativa de acceso gratuito. En la fecha
-            de esta versión no vende productos ni servicios, no ofrece una
-            profesión regulada a través del sitio y no requiere autorización
-            administrativa previa para su actividad editorial.
+            de esta versión no vende productos ni servicios directamente, no
+            ofrece una profesión regulada a través del sitio y no requiere
+            autorización administrativa previa para su actividad editorial.
           </p>
 
           <h2>2. Finalidad informativa y uso correcto</h2>
@@ -75,7 +76,27 @@ export default function LegalPage() {
             interferir en su funcionamiento, seguridad ni derechos de terceros.
           </p>
 
-          <h2>3. Propiedad intelectual y fuentes</h2>
+          <h2>3. Afiliación y comunicaciones comerciales</h2>
+          <p>
+            VatioClaro participa en el Programa de Afiliados de Amazon. Algunos
+            enlaces a Amazon.es incorporan el identificador de seguimiento{" "}
+            <strong>vatio-21</strong>. Si una compra cumple las condiciones del
+            programa, el titular puede recibir una comisión sin que esto añada
+            un recargo a la persona compradora.
+          </p>
+          <p>
+            <strong>{AMAZON_ASSOCIATE_DISCLOSURE}</strong>
+          </p>
+          <p>
+            Los enlaces comerciales se identifican cerca del botón o bloque
+            correspondiente. Amazon y, cuando proceda, el vendedor son
+            responsables del precio, disponibilidad, entrega, garantías y
+            devoluciones. Consulta la{" "}
+            <Link href="/afiliacion">política de afiliación</Link> para conocer
+            nuestro criterio editorial.
+          </p>
+
+          <h2>4. Propiedad intelectual y fuentes</h2>
           <p>
             Salvo indicación expresa, los textos, la estructura visual y las
             herramientas propias de VatioClaro están protegidos por la
@@ -85,7 +106,7 @@ export default function LegalPage() {
             respectivos derechos.
           </p>
 
-          <h2>4. Enlaces externos</h2>
+          <h2>5. Enlaces externos</h2>
           <p>
             Los enlaces a sitios de terceros se facilitan como referencia. El
             titular no controla ni responde por sus contenidos, disponibilidad
@@ -93,7 +114,7 @@ export default function LegalPage() {
             sus condiciones y políticas aplicables.
           </p>
 
-          <h2>5. Privacidad y cookies</h2>
+          <h2>6. Privacidad y cookies</h2>
           <p>
             El tratamiento de datos personales se explica en la{" "}
             <Link href="/privacidad">Política de privacidad</Link>. El uso de
@@ -101,7 +122,7 @@ export default function LegalPage() {
             <Link href="/cookies">Política de cookies</Link>.
           </p>
 
-          <h2>6. Legislación aplicable</h2>
+          <h2>7. Legislación aplicable</h2>
           <p>
             Este aviso se rige por la normativa española. Cualquier conflicto
             se someterá a los juzgados y tribunales que correspondan conforme a

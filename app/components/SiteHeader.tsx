@@ -10,6 +10,7 @@ export function SiteHeader() {
       <nav className="site-nav" aria-label="Navegación principal">
         <Link href="/consumo">Consumo</Link>
         <Link href="/guias">Guías</Link>
+        <Link href="/recomendaciones">Productos útiles</Link>
         <Link href="/calculadora">Calculadora</Link>
         <Link href="/metodologia">Metodología</Link>
       </nav>
@@ -24,6 +25,7 @@ export function SiteHeader() {
         <nav aria-label="Navegación móvil">
           <Link href="/consumo">Guías de consumo</Link>
           <Link href="/guias">Guías prácticas</Link>
+          <Link href="/recomendaciones">Productos útiles</Link>
           <Link href="/calculadora">Calculadora</Link>
           <Link href="/metodologia">Metodología</Link>
           <Link href="/sobre-vatioclaro">Sobre VatioClaro</Link>

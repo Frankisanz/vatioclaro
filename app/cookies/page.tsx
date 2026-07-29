@@ -47,6 +47,13 @@ export default function CookiesPage() {
             calculadoras funcionan en el navegador y sus valores no se envían a
             estas herramientas.
           </p>
+          <p>
+            Algunas guías contienen enlaces de afiliado identificados hacia
+            Amazon.es. Son enlaces externos y no cargan cookies, píxeles,
+            imágenes ni scripts de Amazon dentro de VatioClaro. Al pulsarlos
+            abandonas esta web y el sitio de destino puede utilizar sus propias
+            cookies conforme a sus políticas y opciones de consentimiento.
+          </p>
           <dl className="legal-facts legal-facts--compact">
             <div>
               <dt>Cookies analíticas</dt>
@@ -63,6 +70,10 @@ export default function CookiesPage() {
             <div>
               <dt>Cookies publicitarias</dt>
               <dd>No se utilizan</dd>
+            </div>
+            <div>
+              <dt>Enlaces de afiliado</dt>
+              <dd>Navegación externa, sin cookies de Amazon en VatioClaro</dd>
             </div>
             <div>
               <dt>Cookies de redes sociales</dt>

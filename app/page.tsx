@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ApplianceCard } from "./components/ApplianceCard";
 import { EnergyCalculator } from "./components/EnergyCalculator";
 import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
+import { buyingGuides } from "@/lib/buying-guides";
 import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
 };
 
 const featured = appliances.slice(0, 6);
+const featuredBuyingGuides = buyingGuides.slice(0, 3);
 const heroItem = appliances[0];
 const tickerSlugs = ["ventilador", "router-wifi", "horno", "termo-electrico"];
 const tickerItems = tickerSlugs.map((slug) => {
@@ -203,6 +205,37 @@ export default function Home() {
         </p>
         <Link className="button button--light" href="/metodologia">
           Ver metodología
+        </Link>
+      </section>
+
+      <section className="home-recommendations">
+        <div className="section-heading">
+          <div>
+            <div className="eyebrow">Medir antes de comprar</div>
+            <h2>Herramientas útiles, con sus límites a la vista.</h2>
+          </div>
+          <p>
+            Selecciones basadas en funciones y documentación. Te explicamos
+            cuándo sirven, cuándo no y qué debes comprobar antes de pagar.
+          </p>
+        </div>
+        <div className="home-recommendations__grid">
+          {featuredBuyingGuides.map((guide) => (
+            <Link
+              href={`/recomendaciones/${guide.slug}`}
+              key={guide.slug}
+            >
+              <div className="eyebrow">{guide.eyebrow}</div>
+              <h3>{guide.title}</h3>
+              <p>{guide.description}</p>
+              <b>
+                Ver guía <span aria-hidden="true">→</span>
+              </b>
+            </Link>
+          ))}
+        </div>
+        <Link className="text-link" href="/recomendaciones">
+          Ver todas las recomendaciones →
         </Link>
       </section>
 

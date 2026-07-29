@@ -12,6 +12,7 @@ import {
   getRelatedAppliances,
   getRelatedGuideLinks,
 } from "@/lib/appliances";
+import { getBuyingGuideForAppliance } from "@/lib/buying-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
@@ -85,6 +86,7 @@ export default async function AppliancePage({
   const isCycleCalculation = item.calculationMode === "cycle";
   const related = getRelatedAppliances(item);
   const relatedGuideLinks = getRelatedGuideLinks(item);
+  const buyingGuide = getBuyingGuideForAppliance(item.slug);
   const faq = [
     {
       question: `¿Cuánto cuesta usar ${item.articleName} al mes?`,
@@ -343,6 +345,23 @@ export default async function AppliancePage({
                 <p>{entry.answer}</p>
               </div>
             ))}
+
+            {buyingGuide ? (
+              <aside className="contextual-recommendation">
+                <div>
+                  <span>GUÍA DE COMPRA RELACIONADA</span>
+                  <h2>Una herramienta para comprobar antes de decidir</h2>
+                  <p>
+                    Compara funciones, compatibilidad y límites. Incluye enlaces
+                    de afiliado identificados y alternativas para saber cuándo
+                    no necesitas comprar.
+                  </p>
+                </div>
+                <Link href={buyingGuide.href}>
+                  {buyingGuide.title} <span aria-hidden="true">→</span>
+                </Link>
+              </aside>
+            ) : null}
 
             <section aria-labelledby="related-guides-title" className="related-guides">
               <div className="section-heading section-heading--compact">

@@ -74,6 +74,21 @@ export default function AboutPage() {
             un cambio editorial significativo.
           </p>
 
+          <h2>Cómo financiamos el proyecto</h2>
+          <p>
+            Algunas guías incluyen enlaces de afiliado a productos relacionados
+            con la medición y el ahorro doméstico. Si una compra cumple las
+            condiciones del programa, VatioClaro puede recibir una comisión sin
+            coste adicional para la persona compradora. La comisión no decide
+            qué perfiles aparecen ni su orden.
+          </p>
+          <p>
+            Explicamos cuándo no comprar, mostramos las limitaciones y
+            distinguimos el análisis documental de una prueba propia. Puedes
+            consultar todos los detalles en la{" "}
+            <Link href="/afiliacion">política de afiliación</Link>.
+          </p>
+
           <h2>Cómo usar la web</h2>
           <p>
             Empieza por la <Link href="/calculadora">calculadora de consumo</Link> si ya conoces tus

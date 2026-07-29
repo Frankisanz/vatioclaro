@@ -7,7 +7,7 @@ export const LEGAL_OWNER = {
   locality: "Úbeda",
   province: "Jaén",
   country: "España",
-  updatedAt: "27 de julio de 2026",
+  updatedAt: "29 de julio de 2026",
 } as const;
 
 export const LEGAL_ADDRESS = `${LEGAL_OWNER.streetAddress}, ${LEGAL_OWNER.postalCode} ${LEGAL_OWNER.locality} (${LEGAL_OWNER.province}), ${LEGAL_OWNER.country}`;

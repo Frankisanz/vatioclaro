@@ -70,6 +70,10 @@ test("exposes all key URLs through robots and sitemap", async () => {
     sitemap,
     /https:\/\/vatioclaro\.es\/guias\/potencia-contratada<\/loc>/,
   );
+  assert.match(
+    sitemap,
+    /https:\/\/vatioclaro\.es\/recomendaciones\/medidores-consumo-electrico-enchufe<\/loc>/,
+  );
 });
 
 test("publishes problem-solving guides with sources, FAQs and tools", async () => {
@@ -91,10 +95,11 @@ test("publishes problem-solving guides with sources, FAQs and tools", async () =
 });
 
 test("publishes complete legal, privacy and cookie information", async () => {
-  const [legal, privacy, cookies] = await Promise.all([
+  const [legal, privacy, cookies, affiliate] = await Promise.all([
     readOutput("aviso-legal.html"),
     readOutput("privacidad.html"),
     readOutput("cookies.html"),
+    readOutput("afiliacion.html"),
   ]);
 
   for (const html of [legal, privacy]) {
@@ -111,4 +116,34 @@ test("publishes complete legal, privacy and cookie information", async () => {
   assert.match(privacy, /Speed Insights/);
   assert.match(cookies, /Google AdSense/);
   assert.match(cookies, /noindex, follow/);
+  assert.match(legal, /vatio-21/);
+  assert.match(
+    affiliate,
+    /En calidad de Afiliado de Amazon, obtengo ingresos por las compras adscritas/,
+  );
+  assert.match(affiliate, /noindex, follow/);
+});
+
+test("publishes useful and transparent Amazon buying guides", async () => {
+  const [hub, guide] = await Promise.all([
+    readOutput("recomendaciones.html"),
+    readOutput(
+      "recomendaciones/medidores-consumo-electrico-enchufe.html",
+    ),
+  ]);
+
+  assert.match(
+    hub,
+    /Compra solo la herramienta que resuelve tu duda/,
+  );
+  assert.match(guide, /"@type":"Article"/);
+  assert.match(guide, /"@type":"FAQPage"/);
+  assert.match(guide, /Tres perfiles, no un podio/);
+  assert.match(guide, /Publicidad · enlace de afiliado/);
+  assert.match(guide, /tag=vatio-21/);
+  assert.match(
+    guide,
+    /rel="sponsored nofollow noopener noreferrer"/,
+  );
+  assert.doesNotMatch(guide, /"@type":"Product"/);
 });

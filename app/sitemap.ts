@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { appliances, getApplianceUpdatedAt } from "@/lib/appliances";
+import { buyingGuides } from "@/lib/buying-guides";
 import { editorialGuides } from "@/lib/editorial-guides";
 import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/site";
 
@@ -13,6 +14,11 @@ const staticPages = [
     frequency: "monthly" as const,
   },
   { path: "/guias", priority: 0.8, frequency: "monthly" as const },
+  {
+    path: "/recomendaciones",
+    priority: 0.85,
+    frequency: "monthly" as const,
+  },
   {
     path: "/guias/como-calcular-consumo-electrico",
     priority: 0.85,
@@ -46,6 +52,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(guide.updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.85,
+    })),
+    ...buyingGuides.map((guide) => ({
+      url: `${SITE_URL}/recomendaciones/${guide.slug}`,
+      lastModified: new Date(guide.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.82,
     })),
   ];
 }

@@ -106,6 +106,13 @@ export default function PhantomConsumptionGuidePage() {
             <li>Apunta los kWh acumulados, no solo una lectura instantánea en vatios.</li>
             <li>Prueba el coste anual en la <Link href="/calculadora">calculadora de consumo</Link> con 24 horas y 365 días.</li>
           </ol>
+          <p>
+            Si todavía no tienes uno, consulta cómo elegir un{" "}
+            <Link href="/recomendaciones/medidores-consumo-electrico-enchufe">
+              medidor de consumo eléctrico de enchufe
+            </Link>{" "}
+            y qué límites debes revisar antes de conectarlo.
+          </p>
 
           <h2>Acciones simples que sí tienen sentido</h2>
           <h3>Usa una regleta con interruptor para grupos seguros</h3>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -70,7 +71,11 @@ export default function MethodPage() {
           <div className="callout">
             <b>La mejor comprobación:</b> mide varios días representativos con
             un medidor adecuado para la potencia del aparato y compáralos con la
-            curva de consumo de tu distribuidora.
+            curva de consumo de tu distribuidora. Consulta los{" "}
+            <Link href="/recomendaciones/medidores-consumo-electrico-enchufe">
+              criterios para elegir un medidor
+            </Link>{" "}
+            sin superar sus límites.
           </div>
 
           <h2>Fuentes</h2>

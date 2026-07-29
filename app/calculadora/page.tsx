@@ -104,7 +104,10 @@ export default function CalculatorPage() {
           <p>
             Para una cifra más precisa, mide varios días con un medidor de enchufe
             adecuado para la potencia del aparato y usa una muestra representativa
-            de tu rutina.
+            de tu rutina. Antes de comprar, revisa nuestra{" "}
+            <Link href="/recomendaciones/medidores-consumo-electrico-enchufe">
+              guía para elegir un medidor de consumo
+            </Link>.
           </p>
           <p>
             Si quieres entender cada paso, lee la guía sobre{" "}

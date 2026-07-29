@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LEGAL_OWNER } from "@/lib/legal";
 import { CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -55,6 +56,23 @@ export default function AboutPage() {
             <li>Indicamos una fecha de revisión y enlazamos la fuente principal de cada guía.</li>
             <li>Actualizamos las páginas cuando encontramos un dato obsoleto, una fórmula mejorable o una fuente más sólida.</li>
           </ul>
+
+          <h2>Responsabilidad editorial y correcciones</h2>
+          <p>
+            El responsable editorial y titular de VatioClaro es{" "}
+            <strong>{LEGAL_OWNER.name}</strong>. Su función es revisar que las
+            fórmulas sean visibles, que los ejemplos estén identificados como
+            orientativos y que las fuentes enlazadas respalden el contexto de
+            cada guía. No se atribuyen cualificaciones profesionales que no
+            estén verificadas.
+          </p>
+          <p>
+            Si detectas un enlace roto, una cifra desactualizada o una
+            explicación mejorable, puedes escribir a{" "}
+            <a href={`mailto:${LEGAL_OWNER.email}`}>{LEGAL_OWNER.email}</a>.
+            Revisaremos la observación y actualizaremos la fecha cuando exista
+            un cambio editorial significativo.
+          </p>
 
           <h2>Cómo usar la web</h2>
           <p>

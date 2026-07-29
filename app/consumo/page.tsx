@@ -5,9 +5,9 @@ import { appliances } from "@/lib/appliances";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Calculadora de consumo eléctrico: guías por aparato",
+  title: "Consumo de electrodomésticos: guías y costes",
   description:
-    "Encuentra calculadoras y guías de consumo eléctrico para electrodomésticos, climatización y tecnología. Ajusta potencia, uso y precio por kWh.",
+    "Consulta cuánto consumen electrodomésticos, climatización y tecnología. Cada guía incluye coste, fórmula, factores y calculadora editable.",
   alternates: { canonical: "/consumo" },
   openGraph: {
     type: "website",

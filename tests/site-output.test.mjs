@@ -16,7 +16,7 @@ test("renders a canonical, indexable homepage with the primary calculator", asyn
     /<link rel="canonical" href="https:\/\/vatioclaro\.es"/,
   );
   assert.match(html, /<meta name="robots" content="index, follow"/);
-  assert.match(html, /Calculadora de consumo eléctrico y guías de ahorro/);
+  assert.match(html, /Consumo eléctrico en casa: calcula cuánto gastas/);
   assert.match(html, /id="contenido"/);
   assert.match(html, /Saltar al contenido principal/);
   assert.match(html, /COSTE ANUAL/);
@@ -62,6 +62,32 @@ test("exposes all key URLs through robots and sitemap", async () => {
     sitemap,
     /https:\/\/vatioclaro\.es\/consumo\/freidora-de-aire<\/loc>/,
   );
+  assert.match(
+    sitemap,
+    /https:\/\/vatioclaro\.es\/guias\/por-que-ha-subido-factura-luz<\/loc>/,
+  );
+  assert.match(
+    sitemap,
+    /https:\/\/vatioclaro\.es\/guias\/potencia-contratada<\/loc>/,
+  );
+});
+
+test("publishes problem-solving guides with sources, FAQs and tools", async () => {
+  const [bill, power, label] = await Promise.all([
+    readOutput("guias/por-que-ha-subido-factura-luz.html"),
+    readOutput("guias/potencia-contratada.html"),
+    readOutput("guias/etiqueta-energetica-a-euros.html"),
+  ]);
+
+  for (const html of [bill, power, label]) {
+    assert.match(html, /"@type":"Article"/);
+    assert.match(html, /"@type":"FAQPage"/);
+    assert.match(html, /RESPUESTA RÁPIDA/);
+    assert.match(html, /Fuentes oficiales y criterio de revisión/);
+  }
+
+  assert.match(power, /REVISIÓN ORIENTATIVA/);
+  assert.match(label, /kWh por 100 ciclos/);
 });
 
 test("publishes complete legal, privacy and cookie information", async () => {

@@ -7,6 +7,14 @@ const representativePages = [
     path: "/consumo/lavadora",
     heading: /Cuánto consume (una |la )?lavadora/i,
   },
+  {
+    path: "/guias/potencia-contratada",
+    heading: /Qué potencia eléctrica contratar en casa/i,
+  },
+  {
+    path: "/guias/etiqueta-energetica-a-euros",
+    heading: /Cómo convertir la etiqueta energética en euros/i,
+  },
   { path: "/calculadora", heading: /Calculadora de consumo eléctrico/i },
   { path: "/cookies", heading: /Política de cookies/i },
 ] as const;
@@ -48,7 +56,31 @@ test("una ruta inexistente devuelve la página 404 útil", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Volver al inicio/i })).toBeVisible();
 });
 
-for (const path of ["/", "/consumo/lavadora", "/cookies"] as const) {
+test("las nuevas herramientas editoriales recalculan escenarios", async ({ page }) => {
+  await page.goto("/guias/etiqueta-energetica-a-euros");
+
+  await expect(page.getByText("45,00€", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /kWh por 100 ciclos/i }).click();
+  await expect(page.getByText("26,40€", { exact: true })).toBeVisible();
+
+  await page.goto("/guias/potencia-contratada");
+  await expect(page.getByText("3,6 kW", { exact: true })).toBeVisible();
+  await expect(page.getByText("2,7 kW", { exact: true })).toBeVisible();
+  await page.getByLabel("Contratada en punta/llano").fill("3.4");
+  await expect(
+    page.getByText(
+      "La referencia con margen supera la potencia contratada actual.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+});
+
+for (const path of [
+  "/",
+  "/consumo/lavadora",
+  "/guias/potencia-contratada",
+  "/cookies",
+] as const) {
   test(`${path} no presenta infracciones automáticas WCAG A/AA`, async ({
     page,
   }) => {

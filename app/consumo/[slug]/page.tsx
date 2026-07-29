@@ -10,7 +10,9 @@ import {
   getApplianceMonthlyKwh,
   getApplianceUpdatedAt,
   getRelatedAppliances,
+  getRelatedGuideLinks,
 } from "@/lib/appliances";
+import { LEGAL_OWNER } from "@/lib/legal";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -30,7 +32,8 @@ export async function generateMetadata({
   }
 
   const path = `/consumo/${item.slug}`;
-  const title = `Cuánto consume ${item.articleName}: coste y calculadora`;
+  const title =
+    item.seoTitle ?? `Cuánto consume ${item.articleName}: coste y calculadora`;
   const description = `Calcula cuánto consume ${item.articleName} y cuánto cuesta con tus datos. Incluye ejemplo, fórmula, factores y consejos para gastar menos.`;
 
   return {
@@ -81,6 +84,7 @@ export default async function AppliancePage({
   const annualCost = item.exampleCost * 12;
   const isCycleCalculation = item.calculationMode === "cycle";
   const related = getRelatedAppliances(item);
+  const relatedGuideLinks = getRelatedGuideLinks(item);
   const faq = [
     {
       question: `¿Cuánto cuesta usar ${item.articleName} al mes?`,
@@ -114,9 +118,7 @@ export default async function AppliancePage({
           url: absoluteUrl("/"),
         },
         publisher: {
-          "@type": "Organization",
-          name: SITE_NAME,
-          url: absoluteUrl("/"),
+          "@id": `${absoluteUrl("/")}#organization`,
         },
       },
       {
@@ -176,7 +178,10 @@ export default async function AppliancePage({
           <div className="eyebrow">{item.category}</div>
           <h1>¿Cuánto consume {item.articleName}?</h1>
           <p className="article-hero__intro">{item.intro}</p>
-          <p className="article-updated">Actualizado: {lastUpdated}</p>
+          <p className="article-updated">
+            Actualizado: {lastUpdated} · Responsable editorial:{" "}
+            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link>
+          </p>
         </div>
         <aside className="quick-result" aria-label="Ejemplo de coste mensual">
           <small>EJEMPLO ORIENTATIVO</small>
@@ -348,6 +353,14 @@ export default async function AppliancePage({
                 <Link className="text-link" href="/consumo">
                   Ver biblioteca completa →
                 </Link>
+              </div>
+              <div className="appliance-topic-links">
+                {relatedGuideLinks.map((guide) => (
+                  <Link href={guide.href} key={guide.href}>
+                    <span>{guide.title}</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                ))}
               </div>
               <div className="guide-grid guide-grid--related">
                 {related.map((relatedItem, index) => (

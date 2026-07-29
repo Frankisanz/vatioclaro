@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { appliances, getApplianceUpdatedAt } from "@/lib/appliances";
+import { editorialGuides } from "@/lib/editorial-guides";
 import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/site";
 
 const staticPages = [
@@ -39,6 +40,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(getApplianceUpdatedAt(item)),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    ...editorialGuides.map((guide) => ({
+      url: `${SITE_URL}/guias/${guide.slug}`,
+      lastModified: new Date(guide.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.85,
     })),
   ];
 }

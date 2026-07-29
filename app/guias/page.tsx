@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { editorialGuides } from "@/lib/editorial-guides";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
-const guides = [
+const foundationalGuides = [
   {
     href: "/guias/como-calcular-consumo-electrico",
     eyebrow: "Empezar por aquí",
@@ -21,7 +22,17 @@ const guides = [
     title: "Consumo fantasma: qué es y cómo comprobarlo",
     text: "Distingue el modo espera real de los equipos que deben permanecer conectados y calcula su impacto anual.",
   },
-] as const;
+];
+
+const guides = [
+  ...editorialGuides.map((guide) => ({
+    href: `/guias/${guide.slug}`,
+    eyebrow: guide.eyebrow,
+    title: guide.title,
+    text: guide.description,
+  })),
+  ...foundationalGuides,
+];
 
 export const metadata: Metadata = {
   title: "Guías para entender y reducir el consumo eléctrico",
@@ -68,8 +79,8 @@ export default function GuidesPage() {
         <div className="eyebrow">Guías prácticas</div>
         <h1>Entiende tu consumo antes de intentar reducirlo.</h1>
         <p>
-          Explicamos las fórmulas, los límites de cada estimación y los datos que
-          merece la pena buscar en una etiqueta o factura.
+          Respuestas prácticas para diagnosticar una factura, ajustar cálculos,
+          leer etiquetas y decidir qué dato merece la pena comprobar.
         </p>
       </section>
       <section className="guide-directory">

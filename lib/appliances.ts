@@ -6,6 +6,7 @@ export type Appliance = {
   slug: string;
   name: string;
   articleName: string;
+  seoTitle?: string;
   category: string;
   watts: number;
   hours: number;
@@ -56,15 +57,141 @@ export function getApplianceUpdatedAt(item: Appliance) {
   return item.updatedAt ?? CONTENT_UPDATED_AT;
 }
 
+const relatedApplianceSlugs: Record<string, string[]> = {
+  "aire-acondicionado": [
+    "aire-acondicionado-portatil",
+    "ventilador",
+    "deshumidificador",
+  ],
+  "aire-acondicionado-portatil": [
+    "aire-acondicionado",
+    "ventilador",
+    "deshumidificador",
+  ],
+  ventilador: [
+    "aire-acondicionado",
+    "aire-acondicionado-portatil",
+    "deshumidificador",
+  ],
+  deshumidificador: [
+    "aire-acondicionado",
+    "aire-acondicionado-portatil",
+    "calefactor-electrico",
+  ],
+  "calefactor-electrico": [
+    "termo-electrico",
+    "aire-acondicionado",
+    "deshumidificador",
+  ],
+  horno: ["freidora-de-aire", "vitroceramica", "microondas"],
+  "freidora-de-aire": ["horno", "microondas", "vitroceramica"],
+  microondas: ["horno", "freidora-de-aire", "vitroceramica"],
+  vitroceramica: ["horno", "freidora-de-aire", "microondas"],
+  lavadora: ["secadora", "lavavajillas", "termo-electrico"],
+  secadora: ["lavadora", "lavavajillas", "deshumidificador"],
+  lavavajillas: ["lavadora", "secadora", "termo-electrico"],
+  "termo-electrico": ["calefactor-electrico", "lavavajillas", "lavadora"],
+  frigorifico: ["congelador", "router-wifi", "aire-acondicionado"],
+  congelador: ["frigorifico", "router-wifi", "aire-acondicionado"],
+  ordenador: ["router-wifi", "televisor", "frigorifico"],
+  televisor: ["ordenador", "router-wifi", "frigorifico"],
+  "router-wifi": ["ordenador", "televisor", "frigorifico"],
+};
+
 export function getRelatedAppliances(item: Appliance, limit = 3) {
-  const sameCategory = appliances.filter(
+  const configured = (relatedApplianceSlugs[item.slug] ?? [])
+    .map((slug) => appliances.find((candidate) => candidate.slug === slug))
+    .filter((candidate): candidate is Appliance => Boolean(candidate));
+
+  if (configured.length >= limit) {
+    return configured.slice(0, limit);
+  }
+
+  const currentIndex = appliances.findIndex(
+    (candidate) => candidate.slug === item.slug,
+  );
+  const orderedCandidates =
+    currentIndex >= 0
+      ? [
+          ...appliances.slice(currentIndex + 1),
+          ...appliances.slice(0, currentIndex),
+        ]
+      : appliances.filter((candidate) => candidate.slug !== item.slug);
+  const sameCategory = orderedCandidates.filter(
     (candidate) => candidate.category === item.category && candidate.slug !== item.slug,
   );
-  const otherGuides = appliances.filter(
+  const otherGuides = orderedCandidates.filter(
     (candidate) => candidate.category !== item.category && candidate.slug !== item.slug,
   );
 
-  return [...sameCategory, ...otherGuides].slice(0, limit);
+  return [...new Map(
+    [...configured, ...sameCategory, ...otherGuides].map((candidate) => [
+      candidate.slug,
+      candidate,
+    ]),
+  ).values()].slice(0, limit);
+}
+
+export type RelatedGuideLink = {
+  href: string;
+  title: string;
+};
+
+const labelGuideSlugs = new Set([
+  "frigorifico",
+  "congelador",
+  "lavadora",
+  "lavavajillas",
+  "secadora",
+  "televisor",
+]);
+const continuousGuideSlugs = new Set([
+  "router-wifi",
+  "televisor",
+  "ordenador",
+  "frigorifico",
+  "congelador",
+]);
+const highPowerGuideSlugs = new Set([
+  "aire-acondicionado",
+  "aire-acondicionado-portatil",
+  "calefactor-electrico",
+  "horno",
+  "termo-electrico",
+  "vitroceramica",
+  "secadora",
+]);
+
+export function getRelatedGuideLinks(item: Appliance): RelatedGuideLink[] {
+  const links: RelatedGuideLink[] = [];
+
+  if (labelGuideSlugs.has(item.slug)) {
+    links.push({
+      href: "/guias/etiqueta-energetica-a-euros",
+      title: "Convertir la etiqueta energética en euros",
+    });
+  }
+
+  if (continuousGuideSlugs.has(item.slug)) {
+    links.push({
+      href: "/guias/consumo-fantasma",
+      title: "Comprobar el consumo continuo y en espera",
+    });
+  }
+
+  if (highPowerGuideSlugs.has(item.slug)) {
+    links.push({
+      href: "/guias/potencia-contratada",
+      title: "Revisar potencia contratada y simultaneidad",
+    });
+  }
+
+  links.push({
+    href: "/guias/como-calcular-consumo-electrico",
+    title: "Aprender la fórmula de kWh y coste",
+  });
+
+  return links.slice(0, 2);
 }
 
 export const appliances: Appliance[] = [
@@ -72,6 +199,7 @@ export const appliances: Appliance[] = [
     slug: "aire-acondicionado",
     name: "Aire acondicionado",
     articleName: "un aire acondicionado",
+    seoTitle: "Cuánto consume un aire acondicionado: coste",
     category: "Climatización",
     watts: 1000,
     hours: 4,
@@ -152,6 +280,7 @@ export const appliances: Appliance[] = [
     slug: "horno",
     name: "Horno eléctrico",
     articleName: "un horno eléctrico",
+    seoTitle: "Cuánto consume un horno eléctrico: coste",
     category: "Cocina",
     watts: 2200,
     hours: 0.75,
@@ -192,6 +321,7 @@ export const appliances: Appliance[] = [
     slug: "termo-electrico",
     name: "Termo eléctrico",
     articleName: "un termo eléctrico",
+    seoTitle: "Cuánto consume un termo eléctrico: coste",
     category: "Agua caliente",
     watts: 1500,
     hours: 2,
@@ -232,6 +362,7 @@ export const appliances: Appliance[] = [
     slug: "ordenador",
     name: "Ordenador de sobremesa",
     articleName: "un ordenador de sobremesa",
+    seoTitle: "Cuánto consume un ordenador: coste y cálculo",
     category: "Tecnología",
     watts: 250,
     hours: 8,
@@ -304,9 +435,9 @@ export const appliances: Appliance[] = [
         text: "Sobrecargar, mezclar tejidos o elegir secado extra puede alargar el ciclo.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiquetado energético",
+    sourceTitle: "Comisión Europea — Etiqueta energética de secadoras",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label/product-list/household-tumble-dryers_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/tumble-dryers_en",
     calculationMode: "cycle",
     kwhPerCycle: 1.4,
     cyclesPerMonth: 12,
@@ -389,9 +520,9 @@ export const appliances: Appliance[] = [
         text: "La frecuencia de apertura, el volumen y el estado de las juntas de la puerta influyen en las pérdidas de frío.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética y ecodiseño",
+    sourceTitle: "Comisión Europea — Etiqueta de frigoríficos y congeladores",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/fridges-and-freezers_en",
     measurement:
       "Para estimar tu modelo, divide los kWh/año de su etiqueta entre 12 y multiplícalos por el precio de tu electricidad.",
   },
@@ -431,9 +562,9 @@ export const appliances: Appliance[] = [
         text: "Un centrifugado eficaz deja menos agua en la ropa y puede disminuir el trabajo posterior de la secadora.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética y ecodiseño",
+    sourceTitle: "Comisión Europea — Etiqueta energética de lavadoras",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/washing-machines_en",
     calculationMode: "cycle",
     kwhPerCycle: 0.6,
     cyclesPerMonth: 16,
@@ -476,9 +607,9 @@ export const appliances: Appliance[] = [
         text: "Abrir la puerta al finalizar, cuando el fabricante lo permita, puede facilitar el secado sin añadir tiempo de calentamiento.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética y ecodiseño",
+    sourceTitle: "Comisión Europea — Etiqueta energética de lavavajillas",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/dishwashers_en",
     calculationMode: "cycle",
     kwhPerCycle: 0.85,
     cyclesPerMonth: 16,
@@ -489,6 +620,7 @@ export const appliances: Appliance[] = [
     slug: "vitroceramica",
     name: "Vitrocerámica o inducción",
     articleName: "una vitrocerámica o placa de inducción",
+    seoTitle: "Cuánto consume una vitrocerámica: coste y cálculo",
     category: "Cocina",
     watts: 1500,
     hours: 0.75,
@@ -601,14 +733,15 @@ export const appliances: Appliance[] = [
         text: "Consolas, receptores y decodificadores no forman parte del consumo del televisor y deben sumarse de forma independiente.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética y ecodiseño",
+    sourceTitle: "Comisión Europea — Etiqueta energética de pantallas",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/electronic-displays_en",
   },
   {
     slug: "calefactor-electrico",
     name: "Calefactor eléctrico",
     articleName: "un calefactor eléctrico",
+    seoTitle: "Cuánto consume un calefactor eléctrico: coste",
     category: "Climatización",
     watts: 1500,
     hours: 4,
@@ -648,6 +781,7 @@ export const appliances: Appliance[] = [
     slug: "deshumidificador",
     name: "Deshumidificador",
     articleName: "un deshumidificador",
+    seoTitle: "Cuánto consume un deshumidificador: coste",
     category: "Climatización",
     watts: 250,
     hours: 8,
@@ -688,6 +822,7 @@ export const appliances: Appliance[] = [
     slug: "aire-acondicionado-portatil",
     name: "Aire acondicionado portátil",
     articleName: "un aire acondicionado portátil",
+    seoTitle: "Consumo de aire acondicionado portátil: coste",
     category: "Climatización",
     watts: 1200,
     hours: 4,
@@ -760,9 +895,9 @@ export const appliances: Appliance[] = [
         text: "Un garaje o una cocina con temperaturas extremas puede apartarse de las condiciones en las que se declara el consumo de etiqueta.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética y ecodiseño",
+    sourceTitle: "Comisión Europea — Etiqueta de frigoríficos y congeladores",
     sourceUrl:
-      "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+      "https://energy-efficient-products.ec.europa.eu/product-list/fridges-and-freezers_en",
     measurement:
       "Divide los kWh/año de la etiqueta entre 12 y multiplícalos por el precio por kWh de tu factura.",
   },
@@ -770,6 +905,7 @@ export const appliances: Appliance[] = [
     slug: "freidora-de-aire",
     name: "Freidora de aire",
     articleName: "una freidora de aire",
+    seoTitle: "Cuánto consume una freidora de aire: coste",
     category: "Cocina",
     watts: 1500,
     hours: 0.4,

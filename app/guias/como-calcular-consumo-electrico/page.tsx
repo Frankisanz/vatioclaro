@@ -3,7 +3,7 @@ import Link from "next/link";
 import { absoluteUrl, CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Cómo calcular el consumo eléctrico: fórmula, kWh y euros",
+  title: "Cómo calcular consumo eléctrico: fórmula y coste",
   description:
     "Aprende a calcular el consumo eléctrico de un aparato en kWh y euros. Te explicamos la fórmula, un ejemplo y los errores más frecuentes.",
   alternates: { canonical: "/guias/como-calcular-consumo-electrico" },

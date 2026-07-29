@@ -1310,6 +1310,10 @@ a {
   letter-spacing: 0.03em;
 }
 
+.article-updated a {
+  border-bottom: 1px solid currentColor;
+}
+
 .article-key-facts {
   border-bottom: 1px solid var(--line);
   border-top: 1px solid var(--line);
@@ -1370,6 +1374,31 @@ a {
 
 .guide-grid--related .guide-card {
   min-height: 285px;
+}
+
+.appliance-topic-links {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 2rem;
+}
+
+.appliance-topic-links a {
+  align-items: center;
+  background: var(--mint);
+  border: 1px solid var(--ink);
+  display: flex;
+  font-size: 0.8rem;
+  font-weight: 800;
+  gap: 1rem;
+  justify-content: space-between;
+  line-height: 1.4;
+  min-height: 82px;
+  padding: 1rem 1.2rem;
+}
+
+.appliance-topic-links a:hover {
+  background: var(--lime);
 }
 
 .article-aside__link {
@@ -1493,6 +1522,167 @@ a {
   margin: 0;
 }
 
+/* Problem-solving editorial guides */
+.guide-hero {
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-answer {
+  background: var(--lime);
+  border: 1px solid var(--ink);
+  margin: 1.8rem 0 3rem;
+  padding: 1.6rem;
+}
+
+.guide-answer > span {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  margin-bottom: 0.8rem;
+}
+
+.guide-answer p {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.guide-key-facts {
+  margin-top: 0;
+}
+
+.guide-section {
+  scroll-margin-top: 6rem;
+}
+
+.guide-section + .guide-section {
+  border-top: 1px solid var(--line);
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+}
+
+.embedded-tool {
+  margin: 2.7rem 0;
+}
+
+.embedded-tool .energy-calculator {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 1080px);
+}
+
+.guide-faq {
+  border-top: 1px solid var(--ink);
+  margin-top: 4.5rem;
+  padding-top: 3.5rem;
+}
+
+.guide-faq > h2,
+.related-reading > h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.guide-faq__item {
+  border-top: 1px solid var(--line);
+  padding: 1.5rem 0;
+}
+
+.guide-faq__item h3 {
+  margin-top: 0;
+}
+
+.guide-faq__item p {
+  margin-bottom: 0;
+}
+
+.related-reading {
+  border-top: 1px solid var(--ink);
+  margin-top: 4.5rem;
+  padding-top: 3.5rem;
+}
+
+.related-reading__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.related-reading__grid a {
+  align-items: flex-start;
+  border: 1px solid var(--ink);
+  display: flex;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  gap: 1rem;
+  justify-content: space-between;
+  line-height: 1.3;
+  min-height: 130px;
+  padding: 1.2rem;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.related-reading__grid a:hover {
+  background: var(--deep);
+  color: white;
+}
+
+.source-list {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+}
+
+.source-list li + li {
+  margin-top: 0.65rem;
+}
+
+.power-review__result {
+  gap: 1.5rem;
+}
+
+.power-review__figures {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.power-review__figures > div {
+  border-top: 1px solid rgba(23, 61, 53, 0.35);
+  padding-top: 0.8rem;
+}
+
+.power-review__figures small {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.power-review__figures strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -0.05em;
+  margin-top: 0.5rem;
+}
+
+.power-review__figures p,
+.power-review__warning {
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.power-review__warning {
+  border-top: 1px solid rgba(23, 61, 53, 0.35);
+  font-weight: 800;
+  margin: 0;
+  padding-top: 1rem;
+}
+
 @media (max-width: 980px) {
   .site-header {
     grid-template-columns: 1fr auto auto;
@@ -1559,6 +1749,16 @@ a {
   }
 
   .calculator-explainer {
+    grid-template-columns: 1fr;
+  }
+
+  .embedded-tool .energy-calculator {
+    margin-left: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  .related-reading__grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1631,6 +1831,10 @@ a {
     padding-top: 3.5rem;
   }
 
+  .appliance-topic-links {
+    grid-template-columns: 1fr;
+  }
+
   .guide-grid--related .guide-card {
     min-height: 250px;
   }
@@ -1647,5 +1851,9 @@ a {
 
   .calculator-result__meta div {
     flex: 1 1 42%;
+  }
+
+  .power-review__figures {
+    grid-template-columns: 1fr;
   }
 }

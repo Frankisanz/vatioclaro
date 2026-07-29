@@ -6,9 +6,9 @@ import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
 import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Calculadora de consumo eléctrico y guías de ahorro",
+  title: "Consumo eléctrico en casa: calcula cuánto gastas",
   description:
-    "Calcula el consumo y coste de tus aparatos en kWh y euros. Guías claras con fórmulas, ejemplos editables y fuentes para entender tu factura.",
+    "Descubre qué consume más en casa, calcula costes en kWh y euros y encuentra respuestas claras para revisar tu factura eléctrica.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -49,22 +49,28 @@ const tickerItems = tickerSlugs.map((slug) => {
 
 const nextGuides = [
   {
-    href: "/guias/como-calcular-consumo-electrico",
+    href: "/guias/por-que-ha-subido-factura-luz",
     number: "01",
-    title: "Cómo calcular el consumo",
-    text: "La fórmula, los datos que necesitas y cuándo un valor de etiqueta es mejor que los vatios.",
+    title: "¿Por qué ha subido mi factura?",
+    text: "Una comprobación ordenada para separar consumo, precio, potencia, días facturados y servicios añadidos.",
   },
   {
-    href: "/consumo/electrodomesticos-que-mas-consumen",
+    href: "/guias/potencia-contratada",
     number: "02",
-    title: "Qué aparatos consumen más",
-    text: "Aprende a priorizar mediciones sin confiar en una lista genérica para todos los hogares.",
+    title: "Revisa tu potencia contratada",
+    text: "Compara potencia contratada y máxima demandada en punta y valle con una herramienta prudente.",
   },
   {
-    href: "/guias/consumo-fantasma",
+    href: "/guias/etiqueta-energetica-a-euros",
     number: "03",
-    title: "Consumo fantasma",
-    text: "Distingue el modo espera de los equipos que realmente deben seguir conectados.",
+    title: "Convierte la etiqueta en euros",
+    text: "Pasa de kWh al año o por 100 ciclos a un coste mensual y anual comparable.",
+  },
+  {
+    href: "/guias/como-entender-factura-luz",
+    number: "04",
+    title: "Entiende cada línea de la factura",
+    text: "Identifica contrato, potencia, energía, lecturas, servicios, impuestos y el QR oficial de la CNMC.",
   },
 ] as const;
 

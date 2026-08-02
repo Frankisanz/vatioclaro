@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LEGAL_OWNER } from "@/lib/legal";
-import { CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
+import {
+  absoluteUrl,
+  CONTENT_UPDATED_AT,
+  EDITORIAL_PERSON_ID,
+  SITE_NAME,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Sobre VatioClaro y su criterio editorial",
@@ -21,8 +26,29 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const pageUrl = absoluteUrl("/sobre-vatioclaro");
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": `${pageUrl}#profile-page`,
+    url: pageUrl,
+    name: `Sobre ${SITE_NAME} y su responsable editorial`,
+    dateModified: CONTENT_UPDATED_AT,
+    mainEntity: {
+      "@type": "Person",
+      "@id": EDITORIAL_PERSON_ID,
+      name: LEGAL_OWNER.name,
+      url: pageUrl,
+      jobTitle: `Responsable editorial de ${SITE_NAME}`,
+    },
+  };
+
   return (
     <main id="contenido">
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
+      />
       <section className="simple-hero">
         <div className="eyebrow">Sobre VatioClaro</div>
         <h1>Menos jerga. Mejores decisiones en casa.</h1>
@@ -67,11 +93,45 @@ export default function AboutPage() {
             estén verificadas.
           </p>
           <p>
+            Francisco Javier Sanchez Fuentes coordina el calendario editorial,
+            comprueba que cada ejemplo pueda reproducirse con la fórmula
+            publicada, revisa que las afirmaciones importantes estén limitadas
+            por sus fuentes y decide si una corrección exige actualizar el texto
+            y su fecha. Esta responsabilidad editorial no equivale a una
+            acreditación como instalador, técnico electricista, auditor
+            energético ni asesor profesional.
+          </p>
+          <p>
             Si detectas un enlace roto, una cifra desactualizada o una
             explicación mejorable, puedes escribir a{" "}
             <a href={`mailto:${LEGAL_OWNER.email}`}>{LEGAL_OWNER.email}</a>.
             Revisaremos la observación y actualizaremos la fecha cuando exista
             un cambio editorial significativo.
+          </p>
+
+          <h2>Cómo documentamos una comparación</h2>
+          <p>
+            Antes de comparar dos tecnologías separamos datos observables de
+            ejemplos calculados. Las etiquetas, manuales y páginas de organismos
+            públicos respaldan el marco técnico; los escenarios en euros se
+            identifican como supuestos y muestran potencia, tiempo, rendimiento
+            o precio utilizados. No presentamos una simulación como si fuera una
+            prueba de laboratorio propia.
+          </p>
+          <ul>
+            <li>La respuesta breve resume la decisión sin ocultar sus límites.</li>
+            <li>Las tablas comparan el mismo criterio en las dos alternativas.</li>
+            <li>Los ejemplos numéricos incluyen la operación que permite repetirlos.</li>
+            <li>Las fuentes primarias se enlazan al final y se revisan al actualizar.</li>
+          </ul>
+
+          <h2>Separación entre edición y monetización</h2>
+          <p>
+            La selección editorial se realiza antes de valorar si existe un
+            enlace de afiliado útil. Un producto puede desaparecer si su ficha
+            deja de ser verificable, aunque genere comisiones. También publicamos
+            alternativas sin compra y explicamos cuándo una medición, un manual
+            o una revisión de la factura resuelven mejor la duda.
           </p>
 
           <h2>Cómo financiamos el proyecto</h2>

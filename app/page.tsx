@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ApplianceCard } from "./components/ApplianceCard";
+import { EditorialIllustration } from "./components/EditorialIllustration";
 import { EnergyCalculator } from "./components/EnergyCalculator";
 import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
 import { buyingGuides } from "@/lib/buying-guides";
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
       "Convierte potencia y horas de uso en kWh y euros con calculadoras editables y guías claras.",
     images: [
       {
-        url: "/og.png",
-        width: 1672,
-        height: 941,
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
         alt: "VatioClaro — Calcula y entiende tu consumo eléctrico",
       },
     ],
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — Calcula y entiende tu consumo eléctrico`,
     description:
       "Convierte potencia y horas de uso en kWh y euros con calculadoras editables y guías claras.",
-    images: ["/og.png"],
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -166,6 +167,34 @@ export default function Home() {
           </p>
         </div>
         <EnergyCalculator />
+      </section>
+
+      <section className="home-editorial-visual">
+        <div className="home-editorial-visual__copy">
+          <div className="eyebrow">Del dato a una decisión</div>
+          <h2>Compara la misma tarea, no dos promesas.</h2>
+          <p>
+            Cocinar una ración, enfriar una habitación o aportar la misma
+            cantidad de calor: nuestras comparativas fijan primero la tarea y
+            después muestran qué dato medir. Así puedes repetir el cálculo y
+            saber dónde termina la fuente y empieza el ejemplo.
+          </p>
+          <div className="home-editorial-visual__links">
+            <Link href="/guias/induccion-vs-vitroceramica-consumo">
+              Inducción o vitrocerámica <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/guias/horno-vs-freidora-aire-consumo">
+              Horno o freidora de aire <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/guias/aire-acondicionado-split-vs-portatil">
+              Split o aire portátil <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/guias/radiador-electrico-vs-bomba-calor">
+              Radiador o bomba de calor <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+        <EditorialIllustration caption="Ilustración editorial de los usos de energía que conectan las guías de VatioClaro. No representa mediciones de una vivienda real." />
       </section>
 
       <section className="guides-section" id="guias">

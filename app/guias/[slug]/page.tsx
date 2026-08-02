@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContractedPowerReview } from "@/app/components/ContractedPowerReview";
+import { EditorialComparisonTable } from "@/app/components/EditorialComparisonTable";
+import { EditorialIllustration } from "@/app/components/EditorialIllustration";
 import { EnergyLabelCalculator } from "@/app/components/EnergyLabelCalculator";
 import {
   editorialGuides,
   getEditorialGuide,
 } from "@/lib/editorial-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, EDITORIAL_PERSON_ID, SITE_NAME } from "@/lib/site";
 
 export function generateStaticParams() {
   return editorialGuides.map((guide) => ({ slug: guide.slug }));
@@ -41,9 +43,9 @@ export async function generateMetadata({
       modifiedTime: guide.updatedAt,
       images: [
         {
-          url: "/og.png",
-          width: 1672,
-          height: 941,
+          url: "/images/vatioclaro-hogar-energia-og.jpg",
+          width: 1200,
+          height: 630,
           alt: `${SITE_NAME}: ${guide.title}`,
         },
       ],
@@ -52,7 +54,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${guide.seoTitle} | ${SITE_NAME}`,
       description: guide.description,
-      images: ["/og.png"],
+      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
     },
   };
 }
@@ -93,15 +95,13 @@ export default async function EditorialGuidePage({
         inLanguage: "es-ES",
         datePublished: guide.updatedAt,
         dateModified: guide.updatedAt,
-        image: absoluteUrl("/og.png"),
-        author: {
-          "@type": "Organization",
-          name: SITE_NAME,
-          url: absoluteUrl("/sobre-vatioclaro"),
-        },
+        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        author: { "@id": EDITORIAL_PERSON_ID },
+        editor: { "@id": EDITORIAL_PERSON_ID },
         publisher: {
           "@id": `${absoluteUrl("/")}#organization`,
         },
+        citation: guide.sources.map((source) => source.url),
       },
       {
         "@type": "FAQPage",
@@ -165,8 +165,11 @@ export default async function EditorialGuidePage({
         <article className="simple-body__inner article-guide">
           <p className="article-updated">
             Revisado el {formatDate(guide.updatedAt)} · Responsable editorial:{" "}
-            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link>
+            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link> ·{" "}
+            <Link href="/metodologia">Método y criterios</Link>
           </p>
+
+          <EditorialIllustration />
 
           <div className="guide-answer">
             <span>RESPUESTA RÁPIDA</span>
@@ -184,6 +187,10 @@ export default async function EditorialGuidePage({
               </div>
             ))}
           </div>
+
+          {guide.comparison ? (
+            <EditorialComparisonTable comparison={guide.comparison} />
+          ) : null}
 
           {guide.sections.map((section, index) => (
             <section className="guide-section" key={section.title}>

@@ -11,7 +11,7 @@ import {
   getBuyingGuide,
 } from "@/lib/buying-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, EDITORIAL_PERSON_ID, SITE_NAME } from "@/lib/site";
 
 export function generateStaticParams() {
   return buyingGuides.map((guide) => ({ slug: guide.slug }));
@@ -44,9 +44,9 @@ export async function generateMetadata({
       modifiedTime: guide.updatedAt,
       images: [
         {
-          url: "/og.png",
-          width: 1672,
-          height: 941,
+          url: "/images/vatioclaro-hogar-energia-og.jpg",
+          width: 1200,
+          height: 630,
           alt: `${SITE_NAME}: ${guide.title}`,
         },
       ],
@@ -55,7 +55,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${guide.seoTitle} | ${SITE_NAME}`,
       description: guide.description,
-      images: ["/og.png"],
+      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
     },
   };
 }
@@ -96,12 +96,9 @@ export default async function BuyingGuidePage({
         inLanguage: "es-ES",
         datePublished: guide.updatedAt,
         dateModified: guide.updatedAt,
-        image: absoluteUrl("/og.png"),
-        author: {
-          "@type": "Person",
-          name: LEGAL_OWNER.name,
-          url: absoluteUrl("/sobre-vatioclaro"),
-        },
+        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        author: { "@id": EDITORIAL_PERSON_ID },
+        editor: { "@id": EDITORIAL_PERSON_ID },
         publisher: {
           "@id": `${absoluteUrl("/")}#organization`,
         },
@@ -168,7 +165,8 @@ export default async function BuyingGuidePage({
         <article className="simple-body__inner buying-guide">
           <p className="article-updated">
             Revisado el {formatDate(guide.updatedAt)} · Responsable editorial:{" "}
-            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link>
+            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link> ·{" "}
+            <Link href="/metodologia">Método y criterios</Link>
           </p>
 
           <div className="guide-answer">
@@ -212,12 +210,14 @@ export default async function BuyingGuidePage({
           </section>
 
           <section className="product-profiles" aria-labelledby="profiles-title">
-            <div className="eyebrow">Tres perfiles, no un podio</div>
+            <div className="eyebrow">
+              {guide.profiles.length} perfiles verificados, no un podio
+            </div>
             <h2 id="profiles-title">Qué opción encaja con cada necesidad</h2>
             <p className="product-profiles__intro">
-              No ordenamos por popularidad ni por comisión. Seleccionamos tres
-              usos distintos y mostramos qué debes verificar antes de decidir.
-              No mostramos precios porque pueden cambiar.
+              No ordenamos por popularidad ni por comisión. Seleccionamos
+              perfiles con documentación primaria y mostramos qué debes verificar
+              antes de decidir. No mostramos precios porque pueden cambiar.
             </p>
             <div className="product-profile-list">
               {guide.profiles.map((profile) => (

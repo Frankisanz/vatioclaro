@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { appliances } from "@/lib/appliances";
-import { absoluteUrl, CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
+import { LEGAL_OWNER } from "@/lib/legal";
+import {
+  absoluteUrl,
+  CONTENT_PUBLISHED_AT,
+  CONTENT_UPDATED_AT,
+  EDITORIAL_PERSON_ID,
+  SITE_NAME,
+} from "@/lib/site";
 
 const selectedSlugs = [
   "calefactor-electrico",
@@ -34,7 +41,12 @@ export const metadata: Metadata = {
     description:
       "Compara ejemplos, entiende qué variables cambian el coste y calcula el consumo de tu hogar.",
     images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "VatioClaro: consumo eléctrico del hogar" },
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "VatioClaro: consumo eléctrico del hogar",
+      },
     ],
   },
   twitter: {
@@ -42,7 +54,7 @@ export const metadata: Metadata = {
     title: `Qué electrodomésticos consumen más | ${SITE_NAME}`,
     description:
       "Compara ejemplos, entiende qué variables cambian el coste y calcula el consumo de tu hogar.",
-    images: ["/og.png"],
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -60,11 +72,14 @@ export default function HighestConsumptionGuidePage() {
         url: pageUrl,
         mainEntityOfPage: pageUrl,
         inLanguage: "es-ES",
-        datePublished: CONTENT_UPDATED_AT,
+        datePublished: CONTENT_PUBLISHED_AT,
         dateModified: CONTENT_UPDATED_AT,
-        author: { "@type": "Organization", name: SITE_NAME },
-        publisher: { "@type": "Organization", name: SITE_NAME },
-        image: absoluteUrl("/og.png"),
+        author: { "@id": EDITORIAL_PERSON_ID },
+        editor: { "@id": EDITORIAL_PERSON_ID },
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        citation:
+          "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
       },
       {
         "@type": "BreadcrumbList",
@@ -112,7 +127,11 @@ export default function HighestConsumptionGuidePage() {
 
       <section className="simple-body">
         <article className="simple-body__inner article-guide">
-          <p className="article-updated">Actualizado: {CONTENT_UPDATED_AT}</p>
+          <p className="article-updated">
+            Actualizado: {CONTENT_UPDATED_AT} · Responsable editorial:{" "}
+            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link> ·{" "}
+            <Link href="/metodologia">Método y criterios</Link>
+          </p>
           <h2>La respuesta corta: busca potencia alta y muchas horas</h2>
           <p>
             Un calefactor de resistencia, un aire acondicionado o un termo

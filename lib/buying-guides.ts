@@ -70,7 +70,7 @@ export const buyingGuides: BuyingGuide[] = [
     seoTitle: "Medidores de consumo eléctrico de enchufe: guía 2026",
     description:
       "Compara un vatímetro con pantalla, un enchufe con historial y un medidor avanzado. Aprende qué carga, precisión y datos debes comprobar antes de comprar.",
-    updatedAt: "2026-07-29",
+    updatedAt: "2026-08-02",
     intro:
       "Un medidor de enchufe permite observar la potencia instantánea y acumular kWh de un aparato conectado. Es útil para comprobar un frigorífico, un televisor, un ordenador o pequeños equipos, pero no sirve para instalaciones fijas ni debe usarse por encima de la carga admitida. La elección depende de si quieres una lectura puntual, historial en el móvil o integración domótica.",
     directAnswer:
@@ -116,7 +116,7 @@ export const buyingGuides: BuyingGuide[] = [
         amazonAsin: "B007459MH6",
         source: {
           title: "Especificaciones oficiales de Brennenstuhl",
-          url: "https://service.brennenstuhl.com/hc/es/articles/8867312023453--Cu%C3%A1les-son-las-caracter%C3%ADsticas-de-medici%C3%B3n-y-consumo-del-contador-de-energ%C3%ADa-PM-231-E-de-Primera-Line",
+          url: "https://www.brennenstuhl.com/en-DE/products/travel-adapters-adapter-plugs/primera-line-wattage-and-current-meter-pm-231-e",
         },
       },
       {
@@ -214,7 +214,7 @@ export const buyingGuides: BuyingGuide[] = [
     sources: [
       {
         title: "Brennenstuhl — especificaciones PM 231 E",
-        url: "https://service.brennenstuhl.com/hc/es/articles/8867312023453--Cu%C3%A1les-son-las-caracter%C3%ADsticas-de-medici%C3%B3n-y-consumo-del-contador-de-energ%C3%ADa-PM-231-E-de-Primera-Line",
+        url: "https://www.brennenstuhl.com/en-DE/products/travel-adapters-adapter-plugs/primera-line-wattage-and-current-meter-pm-231-e",
       },
       {
         title: "TP-Link — ficha Tapo P110",
@@ -403,7 +403,7 @@ export const buyingGuides: BuyingGuide[] = [
     seoTitle: "Temporizador o regleta para reducir consumo fantasma",
     description:
       "Elige entre temporizador mecánico, regleta desconectable y regleta inteligente según horario, carga, número de tomas y consumo fantasma medido.",
-    updatedAt: "2026-07-29",
+    updatedAt: "2026-08-02",
     intro:
       "Una regleta o un temporizador puede cortar varios consumos en espera, pero no todos los equipos deben desconectarse y no toda regleta protege frente a sobretensiones. La compra correcta empieza midiendo el grupo y definiendo si necesitas un horario repetido, un único interruptor o control independiente.",
     directAnswer:
@@ -468,7 +468,7 @@ export const buyingGuides: BuyingGuide[] = [
         amazonAsin: "B083ZRMJKX",
         source: {
           title: "Ficha oficial de regletas con control individual",
-          url: "https://www.brennenstuhl.com/de-DE/themenwelt/haus-garten/einzeln-schaltbare-steckdosenleiste",
+          url: "https://www.brennenstuhl.com/en-DE/products/extension-leads/extension-lead-individually-switchable-6-way-2m-h05vv-f-3g1.5-white",
         },
       },
       {
@@ -545,7 +545,7 @@ export const buyingGuides: BuyingGuide[] = [
     sources: [
       {
         title: "IDAE — Guía práctica de la energía",
-        url: "https://www.idae.es/publicaciones/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+        url: "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
       },
       {
         title: "VatioClaro — metodología de cálculo",
@@ -730,7 +730,7 @@ export const buyingGuides: BuyingGuide[] = [
     seoTitle: "Termómetro para frigorífico y congelador: cómo elegir",
     description:
       "Compara termómetros colgantes, digitales y con sonda para frigorífico o congelador. Revisa rango, alarma, memoria y colocación antes de comprar.",
-    updatedAt: "2026-07-29",
+    updatedAt: "2026-08-02",
     intro:
       "La rueda del frigorífico no indica necesariamente grados. Un termómetro independiente ayuda a comprobar estabilidad, detectar cambios y ajustar con más criterio. Para el congelador, el rango y la resistencia al frío son especialmente importantes.",
     directAnswer:
@@ -798,21 +798,6 @@ export const buyingGuides: BuyingGuide[] = [
           url: "https://temppro.com/products/tp110-2",
         },
       },
-      {
-        label: "Aviso sin abrir",
-        name: "ORIA termómetro con sonda y alarma",
-        bestFor: "Consultar desde el exterior y recibir un aviso local",
-        summary:
-          "Combina una pantalla exterior con una sonda impermeable de 1,5 m, límites de alarma configurables y registros mínimos y máximos. La sonda puede medir sin abrir la puerta.",
-        checks: [
-          "La sonda declara un rango de −40 a 100 °C.",
-          "Los límites de alarma se ajustan entre −40 y 40 °C.",
-          "La pantalla funciona con dos pilas AAA y admite soporte, imán o colgador.",
-        ],
-        limitation:
-          "No aprisiones la sonda ni dañes la junta. Algunos modelos miden solo en un punto y no representan todo el compartimento.",
-        amazonAsin: "B0F24JK3D5",
-      },
     ],
     sections: [
       {
@@ -835,7 +820,7 @@ export const buyingGuides: BuyingGuide[] = [
         title: "Por qué recomendamos tipos y no un ganador",
         paragraphs: [
           "El producto adecuado cambia según quieras una lectura puntual, memoria o alarma exterior. Enlazamos fichas concretas verificadas durante esta revisión; comprueba que el nombre y la referencia sigan coincidiendo antes de comprar.",
-          "No mostramos precios ni valoraciones y no afirmamos una precisión que el fabricante no documente. Revisa la ficha y el manual del modelo concreto antes de comprar.",
+          "No mostramos precios ni valoraciones y no afirmamos una precisión que el fabricante no documente. Retiramos de la selección cualquier referencia sin ficha primaria verificable, aunque siga disponible en una tienda.",
         ],
       },
     ],
@@ -863,8 +848,8 @@ export const buyingGuides: BuyingGuide[] = [
     ],
     sources: [
       {
-        title: "AESAN — seguridad alimentaria en el hogar",
-        url: "https://www.aesan.gob.es/AECOSAN/web/para_el_consumidor/ampliacion/seguridad_alimentaria_hogar.htm",
+        title: "AESAN — colocar los alimentos de forma segura",
+        url: "https://www.aesan.gob.es/AECOSAN/web/para_el_consumidor/ampliacion/colocar_segura.htm",
       },
       {
         title: "VatioClaro — consumo del frigorífico",

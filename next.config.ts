@@ -5,6 +5,16 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "vatioclaro-theta.vercel.app" }],
+        destination: "https://vatioclaro.es/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

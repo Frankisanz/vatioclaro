@@ -162,8 +162,53 @@ const highPowerGuideSlugs = new Set([
   "secadora",
 ]);
 
+const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
+  vitroceramica: [
+    {
+      href: "/guias/induccion-vs-vitroceramica-consumo",
+      title: "Comparar inducción y vitrocerámica para la misma receta",
+    },
+  ],
+  horno: [
+    {
+      href: "/guias/horno-vs-freidora-aire-consumo",
+      title: "Comparar horno y freidora de aire por ración",
+    },
+  ],
+  "freidora-de-aire": [
+    {
+      href: "/guias/horno-vs-freidora-aire-consumo",
+      title: "Comparar freidora de aire y horno por ración",
+    },
+  ],
+  "aire-acondicionado": [
+    {
+      href: "/guias/aire-acondicionado-split-vs-portatil",
+      title: "Comparar aire acondicionado split y portátil",
+    },
+    {
+      href: "/guias/radiador-electrico-vs-bomba-calor",
+      title: "Comparar bomba de calor y resistencia eléctrica",
+    },
+  ],
+  "aire-acondicionado-portatil": [
+    {
+      href: "/guias/aire-acondicionado-split-vs-portatil",
+      title: "Comparar aire portátil y split en la misma estancia",
+    },
+  ],
+  "calefactor-electrico": [
+    {
+      href: "/guias/radiador-electrico-vs-bomba-calor",
+      title: "Comparar resistencia eléctrica y bomba de calor",
+    },
+  ],
+};
+
 export function getRelatedGuideLinks(item: Appliance): RelatedGuideLink[] {
-  const links: RelatedGuideLink[] = [];
+  const links: RelatedGuideLink[] = [
+    ...(comparisonGuideLinks[item.slug] ?? []),
+  ];
 
   if (labelGuideSlugs.has(item.slug)) {
     links.push({
@@ -191,7 +236,7 @@ export function getRelatedGuideLinks(item: Appliance): RelatedGuideLink[] {
     title: "Aprender la fórmula de kWh y coste",
   });
 
-  return links.slice(0, 2);
+  return links.slice(0, 3);
 }
 
 export const appliances: Appliance[] = [

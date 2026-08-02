@@ -1,6 +1,72 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { absoluteUrl, CONTENT_UPDATED_AT, SITE_NAME } from "@/lib/site";
+import { ComparisonChart } from "@/app/components/ComparisonChart";
+import { EditorialIllustration } from "@/app/components/EditorialIllustration";
+import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
+import { LEGAL_OWNER } from "@/lib/legal";
+import {
+  absoluteUrl,
+  CONTENT_PUBLISHED_AT,
+  CONTENT_UPDATED_AT,
+  EDITORIAL_PERSON_ID,
+  SITE_NAME,
+} from "@/lib/site";
+
+const examplePrice = 0.25;
+const hourlyExamples = [100, 500, 1000, 2000].map((watts) => ({
+  watts,
+  kwh: watts / 1000,
+  cost: (watts / 1000) * examplePrice,
+}));
+
+const chartAppliances = [
+  "ventilador",
+  "router-wifi",
+  "horno",
+  "termo-electrico",
+].map((slug) => {
+  const item = appliances.find((candidate) => candidate.slug === slug);
+
+  if (!item) {
+    throw new Error(`No se ha encontrado el aparato ${slug}`);
+  }
+
+  return {
+    label: item.name,
+    value: getApplianceMonthlyKwh(item),
+    note: `${item.watts.toLocaleString("es-ES")} W × ${item.hours.toLocaleString("es-ES")} h/día × ${item.days} días`,
+  };
+});
+
+const faq = [
+  {
+    question: "¿Cuánto consume un aparato de 1.000 W en una hora?",
+    answer:
+      "Si mantiene 1.000 W durante una hora, consume 1 kWh. A un precio usado como ejemplo de 0,25 €/kWh, esa hora de energía costaría 0,25 €. Un termostato o regulador puede reducir la potencia media real.",
+  },
+  {
+    question: "¿Cuánto gastan 2.000 W durante 30 minutos?",
+    answer:
+      "Treinta minutos son 0,5 horas. El cálculo es 2 kW × 0,5 h = 1 kWh. Para obtener euros, multiplica ese kWh por el precio que quieras analizar.",
+  },
+  {
+    question: "¿Cómo paso de consumo diario a mensual?",
+    answer:
+      "Multiplica los kWh diarios por los días reales de uso. Si el patrón cambia entre laborables y fines de semana, calcula cada grupo por separado y súmalos.",
+  },
+  {
+    question: "¿La potencia de la etiqueta es el consumo real?",
+    answer:
+      "No siempre. Puede ser potencia nominal o máxima. Los equipos con termostato, compresor, programas o fuente de alimentación regulan; en ellos conviene usar etiqueta energética, kWh por ciclo o medición representativa.",
+  },
+];
+
+const formattedUpdatedAt = new Intl.DateTimeFormat("es-ES", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date(`${CONTENT_UPDATED_AT}T12:00:00Z`));
 
 export const metadata: Metadata = {
   title: "Cómo calcular consumo eléctrico: fórmula y coste",
@@ -13,9 +79,23 @@ export const metadata: Metadata = {
     title: `Cómo calcular el consumo eléctrico | ${SITE_NAME}`,
     description:
       "Fórmula, ejemplo y límites para pasar de vatios y horas de uso a kWh y euros.",
+    publishedTime: CONTENT_PUBLISHED_AT,
+    modifiedTime: CONTENT_UPDATED_AT,
     images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "Cómo calcular el consumo eléctrico" },
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Cómo calcular el consumo eléctrico",
+      },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cómo calcular el consumo eléctrico | VatioClaro",
+    description:
+      "Fórmula, ejemplo y límites para pasar de vatios y horas de uso a kWh y euros.",
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -34,11 +114,16 @@ export default function HowToCalculateConsumptionPage() {
         url: pageUrl,
         mainEntityOfPage: pageUrl,
         inLanguage: "es-ES",
-        datePublished: CONTENT_UPDATED_AT,
+        datePublished: CONTENT_PUBLISHED_AT,
         dateModified: CONTENT_UPDATED_AT,
-        author: { "@type": "Organization", name: SITE_NAME },
-        publisher: { "@type": "Organization", name: SITE_NAME },
-        image: absoluteUrl("/og.png"),
+        author: { "@id": EDITORIAL_PERSON_ID },
+        editor: { "@id": EDITORIAL_PERSON_ID },
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        citation: [
+          "https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en",
+          "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+        ],
       },
       {
         "@type": "HowTo",
@@ -64,6 +149,42 @@ export default function HowToCalculateConsumptionPage() {
             position: 3,
             name: "Convierte los kWh en euros",
             text: "Multiplica los kWh por el precio por kWh que quieras analizar.",
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        mainEntity: faq.map((entry) => ({
+          "@type": "Question",
+          name: entry.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: entry.answer,
+          },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Inicio",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Guías",
+            item: absoluteUrl("/guias"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: "Cómo calcular el consumo eléctrico",
+            item: pageUrl,
           },
         ],
       },
@@ -95,7 +216,25 @@ export default function HowToCalculateConsumptionPage() {
 
       <section className="simple-body">
         <article className="simple-body__inner article-guide">
-          <p className="article-updated">Actualizado: {CONTENT_UPDATED_AT}</p>
+          <p className="article-updated">
+            Revisado el {formattedUpdatedAt} · Responsable editorial:{" "}
+            <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link> ·{" "}
+            <Link href="/metodologia">Método y criterios</Link>
+          </p>
+
+          <EditorialIllustration caption="Ilustración editorial de distintos usos eléctricos del hogar. Los valores de esta guía proceden de fórmulas visibles, no de la imagen ni de una medición de esa vivienda." />
+
+          <div className="guide-answer">
+            <span>RESPUESTA RÁPIDA</span>
+            <p>
+              Divide los vatios entre 1.000, multiplica por las horas reales y
+              obtendrás kWh. Después multiplica los kWh por el precio analizado.
+              Si el aparato regula, funciona por ciclos o muestra kWh en su
+              etiqueta, usa ese dato en vez de mantener la potencia máxima en
+              todas las horas.
+            </p>
+          </div>
+
           <h2>La fórmula para aparatos que funcionan por horas</h2>
           <p>
             Si conoces la potencia en vatios (W), conviértela primero a kilovatios
@@ -120,6 +259,81 @@ export default function HowToCalculateConsumptionPage() {
             encendidos cuatro horas ni que ese sea el precio de tu contrato. La
             utilidad está en cambiar los valores por los tuyos.
           </p>
+
+          <ComparisonChart
+            description="Todos los valores salen de potencia × horas × días en las fichas actuales de VatioClaro. Sirven para comprobar cómo el tiempo puede pesar más que los vatios."
+            items={chartAppliances}
+            title="Cuatro ejemplos mensuales calculados con la misma fórmula"
+            unit="kWh/mes"
+          />
+
+          <h2>Cuánto consumen 100, 500, 1.000 o 2.000 W durante una hora</h2>
+          <p>
+            Estas búsquedas expresan potencia y tiempo, así que pueden resolverse
+            sin asumir un aparato concreto. Durante una hora, 1.000 W equivalen
+            a 1 kWh. Para media hora multiplica por 0,5; para quince minutos, por
+            0,25. La tabla aplica un precio de ejemplo de {examplePrice.toLocaleString("es-ES")} €/kWh,
+            que debes sustituir por el que quieras estudiar.
+          </p>
+          <div className="table-scroll">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col">Potencia durante 1 hora</th>
+                  <th scope="col">Energía</th>
+                  <th scope="col">Coste con 0,25 €/kWh</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hourlyExamples.map((example) => (
+                  <tr key={example.watts}>
+                    <th scope="row">{example.watts.toLocaleString("es-ES")} W</th>
+                    <td>{example.kwh.toLocaleString("es-ES")} kWh</td>
+                    <td>
+                      {example.cost.toLocaleString("es-ES", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 3,
+                      })} €
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Cómo calcular minutos, uso diario, mensual y anual</h2>
+          <h3>Pasar minutos a horas</h3>
+          <p>
+            Divide los minutos entre 60. Diez minutos son 0,167 horas; quince
+            minutos son 0,25; treinta minutos son 0,5 y cuarenta y cinco son
+            0,75. Un aparato de 2.000 W durante treinta minutos consume 2 kW ×
+            0,5 h = 1 kWh. No multipliques 2 kW por «30» porque mezclarías horas
+            y minutos.
+          </p>
+          <h3>De una sesión al día y al mes</h3>
+          <p>
+            Calcula primero los kWh de una sesión. Multiplícalos por las veces
+            que lo usas al día y por los días reales del periodo. Si solo lo usas
+            entre semana, veinte o veintidós días puede describir mejor el mes
+            que treinta. Para estimar un año con climatización, separa temporadas
+            en lugar de multiplicar un mes extremo por doce.
+          </p>
+          <h3>Cuánto cuesta dejar 100 W encendidos 24 horas</h3>
+          <p>
+            El cálculo teórico es 0,1 kW × 24 h = 2,4 kWh al día. Durante 30 días
+            serían 72 kWh; con 0,25 €/kWh, 18 €. Antes de aplicarlo a un equipo,
+            verifica que realmente mantenga 100 W de forma continua: un
+            frigorífico, un ordenador o una fuente de alimentación suelen variar.
+          </p>
+
+          <div className="measurement-note">
+            <h3>Atajo para comprobar una respuesta</h3>
+            <p>
+              Si duplicas la potencia, el tiempo, los días o el precio, el
+              resultado se duplica; si reduces uno a la mitad, se reduce a la
+              mitad. Esta comprobación detecta muchos errores de unidades.
+            </p>
+          </div>
 
           <h2>Cuándo no conviene multiplicar vatios por todas las horas</h2>
           <h3>Aparatos con termostato o compresor</h3>
@@ -168,7 +382,74 @@ export default function HowToCalculateConsumptionPage() {
             <li>Olvidar los días de uso al pasar de una estimación diaria a una mensual.</li>
             <li>Comparar programas de lavadora o lavavajillas solo por duración, sin mirar sus kWh por ciclo.</li>
             <li>Confundir el coste de la energía del aparato con el importe completo de la factura.</li>
+            <li>Usar W y kW como si fueran la misma unidad: 1 kW son 1.000 W.</li>
+            <li>Presentar una potencia nominal calculada como si fuera una medición real.</li>
           </ul>
+
+          <h2>Ejemplos según el tipo de aparato</h2>
+          <p>
+            La fórmula base funciona bien para una carga estable. En otros casos
+            hay un dato más representativo. En un{" "}
+            <Link href="/consumo/horno">horno con termostato</Link> interesa el
+            ciclo completo; en una{" "}
+            <Link href="/consumo/lavadora">lavadora</Link> o un{" "}
+            <Link href="/consumo/lavavajillas">lavavajillas</Link>, los kWh por
+            ciclo; y en un{" "}
+            <Link href="/consumo/aire-acondicionado">aire acondicionado inverter</Link>,
+            varias horas o días que incluyan su regulación.
+          </p>
+          <p>
+            Las comparativas aplican este principio a decisiones concretas:
+            revisa{" "}
+            <Link href="/guias/induccion-vs-vitroceramica-consumo">
+              inducción frente a vitrocerámica
+            </Link>
+            ,{" "}
+            <Link href="/guias/horno-vs-freidora-aire-consumo">
+              horno frente a freidora de aire
+            </Link>
+            ,{" "}
+            <Link href="/guias/aire-acondicionado-split-vs-portatil">
+              split frente a aire portátil
+            </Link>{" "}
+            y{" "}
+            <Link href="/guias/radiador-electrico-vs-bomba-calor">
+              radiador eléctrico frente a bomba de calor
+            </Link>
+            . En todas se compara la misma tarea y se identifican los supuestos.
+          </p>
+
+          <h2>Cómo usar el precio de tu factura sin confundir conceptos</h2>
+          <p>
+            Si quieres valorar una decisión de uso, introduce el precio de
+            energía que corresponda al periodo que estudias. Una factura puede
+            aplicar varios periodos, descuentos o un precio indexado. El coste
+            marginal de un aparato no incluye automáticamente potencia
+            contratada, alquiler, servicios e impuestos fijos; por eso el
+            resultado de esta fórmula no debe presentarse como el total del
+            recibo.
+          </p>
+          <p>
+            Para una comprobación rápida puedes dividir el importe variable de
+            energía entre sus kWh, siempre que sepas qué conceptos estás
+            incluyendo. Para revisar todos los apartados, utiliza la guía sobre{" "}
+            <Link href="/guias/como-entender-factura-luz">
+              cómo entender la factura de la luz
+            </Link>
+            . Si el objetivo es comparar tarifas, usa condiciones anuales y
+            herramientas oficiales, no solo un precio destacado.
+          </p>
+
+          <section aria-labelledby="calculation-faq-title" className="guide-faq">
+            <div className="eyebrow">Preguntas frecuentes</div>
+            <h2 id="calculation-faq-title">Respuestas para comprobar tu cálculo</h2>
+            {faq.map((entry) => (
+              <div className="guide-faq__item" key={entry.question}>
+                <h3>{entry.question}</h3>
+                <p>{entry.answer}</p>
+              </div>
+            ))}
+          </section>
 
           <div className="article-cta">
             <div>
@@ -185,19 +466,32 @@ export default function HowToCalculateConsumptionPage() {
           </div>
 
           <div className="source-box">
-            <h3>Fuentes y criterio</h3>
+            <h2>Fuentes y criterio</h2>
             <p>
               VatioClaro prioriza las etiquetas energéticas y los datos del
               fabricante para cada modelo. Las fórmulas explican una estimación,
               no sustituyen una medición real en aparatos que regulan su potencia.
             </p>
-            <a
-              href="https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Comisión Europea — Etiqueta energética y ecodiseño ↗
-            </a>
+            <ul className="source-list">
+              <li>
+                <a
+                  href="https://energy-efficient-products.ec.europa.eu/ecodesign-and-energy-label_en"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Comisión Europea — Etiqueta energética y ecodiseño ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  IDAE — Guía práctica de la energía ↗
+                </a>
+              </li>
+            </ul>
           </div>
         </article>
       </section>

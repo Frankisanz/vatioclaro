@@ -4,7 +4,14 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
-import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { LEGAL_OWNER } from "@/lib/legal";
+import {
+  absoluteUrl,
+  EDITORIAL_PERSON_ID,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -15,8 +22,8 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
-  authors: [{ name: SITE_NAME, url: SITE_URL }],
-  creator: SITE_NAME,
+  authors: [{ name: LEGAL_OWNER.name, url: "/sobre-vatioclaro" }],
+  creator: LEGAL_OWNER.name,
   publisher: SITE_NAME,
   robots: {
     index: true,
@@ -38,9 +45,9 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/og.png",
-        width: 1672,
-        height: 941,
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
         alt: "VatioClaro — Calcula y entiende tu consumo eléctrico",
       },
     ],
@@ -49,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "VatioClaro — Calcula y entiende tu consumo eléctrico",
     description: SITE_DESCRIPTION,
-    images: ["/og.png"],
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -62,6 +69,15 @@ const siteJsonLd = {
       name: SITE_NAME,
       url: SITE_URL,
       logo: absoluteUrl("/og.png"),
+      publishingPrinciples: absoluteUrl("/metodologia"),
+    },
+    {
+      "@type": "Person",
+      "@id": EDITORIAL_PERSON_ID,
+      name: LEGAL_OWNER.name,
+      url: absoluteUrl("/sobre-vatioclaro"),
+      jobTitle: `Responsable editorial de ${SITE_NAME}`,
+      worksFor: { "@id": `${SITE_URL}/#organization` },
     },
     {
       "@type": "WebSite",
@@ -70,6 +86,7 @@ const siteJsonLd = {
       url: SITE_URL,
       inLanguage: "es-ES",
       publisher: { "@id": `${SITE_URL}/#organization` },
+      author: { "@id": EDITORIAL_PERSON_ID },
     },
   ],
 };

@@ -25,6 +25,18 @@ export type EditorialRelatedLink = {
   title: string;
 };
 
+export type EditorialComparison = {
+  title: string;
+  description: string;
+  firstLabel: string;
+  secondLabel: string;
+  rows: {
+    criterion: string;
+    first: string;
+    second: string;
+  }[];
+};
+
 export type EditorialGuide = {
   slug: string;
   eyebrow: string;
@@ -35,6 +47,7 @@ export type EditorialGuide = {
   intro: string;
   directAnswer: string;
   quickFacts: EditorialQuickFact[];
+  comparison?: EditorialComparison;
   sections: EditorialSection[];
   faq: EditorialFaq[];
   sources: EditorialSource[];
@@ -826,6 +839,580 @@ export const editorialGuides: EditorialGuide[] = [
         href: "/guias/como-calcular-consumo-electrico",
         title: "Cómo calcular kWh y coste",
       },
+    ],
+  },
+  {
+    slug: "induccion-vs-vitroceramica-consumo",
+    eyebrow: "Comparativa de cocina",
+    title: "Inducción vs vitrocerámica: consumo y coste",
+    seoTitle: "Inducción vs vitrocerámica: consumo, coste y diferencias",
+    description:
+      "Compara inducción y vitrocerámica sin porcentajes mágicos: tiempo de cocción, recipiente, potencia, calor residual y método para calcular tus kWh.",
+    updatedAt: "2026-08-02",
+    intro:
+      "La pregunta útil no es qué placa tiene más vatios, sino cuánta electricidad necesita cada una para completar la misma receta. Una zona de inducción puede declarar una potencia máxima alta y terminar antes; una vitrocerámica radiante calienta primero el cristal y conserva más calor residual. El resultado cambia con la olla, el diámetro, el nivel elegido y el tiempo efectivo.",
+    directAnswer:
+      "Para comparar consumo, cocina la misma cantidad con recipientes adecuados y registra los kWh de cada sesión, o multiplica la potencia media medida por el tiempo. La Comisión Europea recomienda considerar la inducción al elegir placa, pero no existe una etiqueta energética europea específica para comparar placas. No uses solo la potencia máxima ni un porcentaje genérico como resultado de tu casa.",
+    quickFacts: [
+      { label: "Dato comparable", value: "kWh para la misma tarea" },
+      { label: "No basta", value: "Potencia máxima en W" },
+      { label: "Inducción", value: "Necesita recipiente compatible" },
+      { label: "Etiqueta UE", value: "Las placas no tienen una específica" },
+    ],
+    comparison: {
+      title: "Qué cambia entre inducción y vitrocerámica radiante",
+      description:
+        "La tabla no asigna un ganador universal: identifica qué dato debes comprobar para comparar dos equipos y una misma tarea de cocina.",
+      firstLabel: "Inducción",
+      secondLabel: "Vitrocerámica radiante",
+      rows: [
+        {
+          criterion: "Cómo aporta calor",
+          first: "El campo electromagnético calienta un recipiente compatible; el cristal recibe calor principalmente de la olla.",
+          second: "Una resistencia calienta la superficie de vidrio y esta transfiere calor al recipiente.",
+        },
+        {
+          criterion: "Dato para estimar",
+          first: "kWh medidos durante una receta completa, incluyendo el arranque y el mantenimiento.",
+          second: "El mismo dato y la misma receta; conviene incluir el calor que sigue entregando tras apagar.",
+        },
+        {
+          criterion: "Recipiente",
+          first: "Debe ser compatible y tener una base adecuada al diámetro de la zona.",
+          second: "La base plana y el diámetro correcto siguen siendo importantes, aunque no exige compatibilidad magnética.",
+        },
+        {
+          criterion: "Control al apagar",
+          first: "La entrega de energía cesa rápidamente, aunque la olla y el cristal siguen calientes.",
+          second: "El cristal conserva más calor; puede aprovecharse al final, pero también prolonga la respuesta.",
+        },
+        {
+          criterion: "Comparación de compra",
+          first: "Revisa potencia total, reparto entre zonas, ventilación, instalación y batería de cocina.",
+          second: "Revisa potencia total, zonas, instalación, regulación y estado de la superficie.",
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "Compara una tarea, no dos cifras de potencia",
+        paragraphs: [
+          "Los vatios indican la velocidad máxima a la que una zona puede demandar electricidad en determinadas condiciones. No indican por sí solos la energía final. Una zona de 2.000 W durante quince minutos consume teóricamente 0,5 kWh; otra de 1.500 W durante veinte minutos también consume 0,5 kWh. Si ambas regulan la potencia, necesitas la potencia media o, mejor aún, los kWh registrados.",
+          "Define una tarea repetible: calentar la misma cantidad de agua con tapa, preparar una receta de peso parecido o mantener un hervor durante un tiempo concreto. Usa recipientes equivalentes y parte de temperaturas similares. Así el resultado responde a «qué consume para hacer esto» y no a «qué número aparece en el manual».",
+        ],
+        callout:
+          "Fórmula de cada sesión: kWh = potencia media en kW × horas. Quince minutos son 0,25 horas; treinta minutos, 0,5 horas.",
+      },
+      {
+        title: "Por qué la inducción puede terminar antes sin consumir su máximo todo el tiempo",
+        paragraphs: [
+          "La inducción actúa sobre un recipiente compatible y puede elevar su temperatura con rapidez. La función de refuerzo suele aumentar temporalmente la potencia de una zona, pero no significa que ese valor se mantenga durante toda la receta. Al alcanzar la consigna o bajar el nivel, la electrónica modula o alterna la entrega.",
+          "En una placa radiante, la resistencia calienta el vidrio y el vidrio la olla. Ese recorrido añade inercia: tarda más en responder y conserva calor después de reducir o apagar. Aprovechar ese calor al final puede evitar parte del uso, pero mantener una zona encendida por rutina puede anularlo. La técnica de cocina influye junto a la tecnología.",
+        ],
+      },
+      {
+        title: "Cómo medir inducción o vitrocerámica de forma segura",
+        paragraphs: [
+          "Las placas suelen estar conectadas de forma fija y pueden superar los límites de un medidor de enchufe. No las adaptes ni abras el cuadro para medirlas. Consulta si el propio equipo ofrece estadísticas, usa los datos horarios del contador para una prueba controlada sin otras cargas importantes o encarga una medición adecuada a una persona cualificada.",
+          "Si usas la curva del contador, anota el consumo antes y después de una sesión y evita atribuir a la placa el frigorífico, el termo u otros equipos que hayan funcionado al mismo tiempo. Repite varias veces. El promedio de sesiones parecidas es más útil que un único ensayo doméstico.",
+        ],
+        bullets: [
+          "Registra cantidad, recipiente, zona, nivel y duración.",
+          "Compara kWh, no solo minutos ni potencia instantánea.",
+          "Repite con el uso normal, no únicamente con la función de refuerzo.",
+          "No intervengas en cableado o protecciones para obtener una lectura.",
+        ],
+      },
+      {
+        title: "La olla, la tapa y el diámetro pueden cambiar la comparación",
+        paragraphs: [
+          "Una base deformada o demasiado pequeña reduce el contacto útil en una vitrocerámica y puede dificultar el reconocimiento o el aprovechamiento en inducción. Comprueba la compatibilidad magnética y los diámetros indicados por los fabricantes. Sustituir toda la batería de cocina también forma parte del coste de cambiar de tecnología.",
+          "Usar tapa cuando la receta lo permite reduce las pérdidas y acorta el calentamiento. Preparar la cantidad necesaria, bajar el nivel tras hervir y coordinar los pasos evita tiempo a alta potencia. Estas mejoras son verificables en tu propia cocina y pueden importar más que una diferencia pequeña entre dos sesiones.",
+        ],
+      },
+      {
+        title: "Cuándo compensa cambiar de placa",
+        paragraphs: [
+          "No calcules la amortización multiplicando un porcentaje de Internet por toda la factura. Parte de los kWh que realmente corresponden a cocinar, compara sesiones o modelos y añade compra, instalación, posible adaptación eléctrica y recipientes. Una placa que ya funciona y se usa poco puede tardar mucho en compensar un cambio motivado solo por energía.",
+          "Si necesitas renovar, valora además control, seguridad de uso, accesibilidad, ruido de ventilación, dimensiones y servicio técnico. La Comisión Europea señala la inducción como opción a considerar, pero la decisión del hogar requiere comprobar instalación y hábitos. Un cálculo transparente puede favorecer una tecnología sin convertirla en recomendación universal.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿La inducción siempre consume menos que la vitrocerámica?",
+        answer:
+          "No puede asegurarse para cualquier receta y equipo. Suele transferir calor de forma más directa, pero el resultado depende de recipiente, potencia regulada, cantidad, tiempo y uso. Compara kWh para la misma tarea.",
+      },
+      {
+        question: "¿Una placa de más vatios gasta más?",
+        answer:
+          "Solo si mantiene más potencia durante el mismo tiempo. Una potencia alta puede acortar el calentamiento. La energía se calcula con potencia media multiplicada por duración.",
+      },
+      {
+        question: "¿Puedo medir la placa con un vatímetro de enchufe?",
+        answer:
+          "Normalmente no si tiene conexión fija o supera sus límites. No adaptes la instalación. Usa funciones del equipo, datos del contador o una medición profesional adecuada.",
+      },
+      {
+        question: "¿Hay etiqueta energética europea para las placas?",
+        answer:
+          "La Comisión Europea indica que no existe una etiqueta energética específica para placas, aunque sí requisitos de ecodiseño. Consulta documentación del modelo y compara usos equivalentes.",
+      },
+    ],
+    sources: [
+      {
+        title: "Comisión Europea — Placas de cocina y ecodiseño",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/hobs_en",
+      },
+      {
+        title: "Comisión Europea — Por qué no hay etiqueta específica para placas",
+        url: "https://energy-efficient-products.ec.europa.eu/faqs-0/there-specific-label-electric-hobscooktops_en",
+      },
+      {
+        title: "IDAE — Guía de la energía",
+        url: "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+      },
+    ],
+    related: [
+      { href: "/consumo/vitroceramica", title: "Calcular el consumo de tu placa" },
+      { href: "/guias/como-calcular-consumo-electrico", title: "Pasar vatios y minutos a kWh" },
+      { href: "/guias/horno-vs-freidora-aire-consumo", title: "Comparar horno y freidora de aire" },
+    ],
+  },
+  {
+    slug: "horno-vs-freidora-aire-consumo",
+    eyebrow: "Comparativa por ración",
+    title: "Horno vs freidora de aire: consumo y coste",
+    seoTitle: "Horno vs freidora de aire: consumo, coste y cálculo",
+    description:
+      "Aprende a comparar horno y freidora de aire por ración, tiempo, precalentamiento y kWh medidos, sin dar por universal un ahorro publicitario.",
+    updatedAt: "2026-08-02",
+    intro:
+      "Una freidora de aire es un pequeño horno de convección, pero una cavidad menor no garantiza el mismo resultado para cualquier cantidad. Para pocas raciones puede calentarse antes; para cocinar varias bandejas, repetir tandas puede reducir o eliminar esa ventaja. La comparación justa usa la misma comida preparada y suma todos los ciclos necesarios.",
+    directAnswer:
+      "Compara los kWh necesarios para obtener la misma cantidad y punto de cocción. Incluye precalentamiento, tandas y mantenimiento de temperatura. En hornos sujetos a etiquetado europeo puedes partir de los kWh por ciclo; las freidoras de aire portátiles no forman parte de esa misma etiqueta, por lo que necesitas la ficha del modelo o una medición compatible.",
+    quickFacts: [
+      { label: "Unidad justa", value: "kWh por comida o por ración" },
+      { label: "Incluye", value: "Precalentamiento y tandas" },
+      { label: "Horno", value: "La etiqueta muestra kWh por ciclo" },
+      { label: "Freidora", value: "No usa esa misma etiqueta de horno" },
+    ],
+    comparison: {
+      title: "Qué revisar antes de elegir el aparato",
+      description:
+        "La capacidad y el número de tandas cambian la respuesta. Esta tabla ayuda a definir una prueba equivalente en lugar de comparar vatios máximos.",
+      firstLabel: "Horno",
+      secondLabel: "Freidora de aire",
+      rows: [
+        {
+          criterion: "Cantidad",
+          first: "Puede preparar una bandeja grande o varios niveles si el fabricante lo permite.",
+          second: "La cesta es menor; sobrecargarla puede empeorar circulación y resultado.",
+        },
+        {
+          criterion: "Dato disponible",
+          first: "La etiqueta europea indica kWh por ciclo convencional y con ventilador en los modelos incluidos.",
+          second: "Consulta potencia y documentación; para el uso real puede ser útil medir el ciclo completo.",
+        },
+        {
+          criterion: "Precalentamiento",
+          first: "La cavidad grande puede requerir más tiempo, según receta y modelo.",
+          second: "La cavidad pequeña suele alcanzar antes la condición de uso, aunque algunas recetas también lo requieren.",
+        },
+        {
+          criterion: "Varias raciones",
+          first: "Una sola sesión puede cubrir toda la cantidad.",
+          second: "Suma los kWh y minutos de todas las tandas necesarias.",
+        },
+        {
+          criterion: "Decisión",
+          first: "Interesa cuando ya se usa, se necesita capacidad o se combinan preparaciones.",
+          second: "Interesa estudiar para porciones pequeñas y usos frecuentes que quepan sin amontonar.",
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "La comparación correcta es por comida terminada",
+        paragraphs: [
+          "Comparar un horno de 2.000 W con una freidora de 1.500 W no resuelve la pregunta. Si el horno regula y funciona cuarenta minutos, y la freidora necesita dos tandas de veinticinco, la potencia nominal por sí sola oculta el resultado. Registra la energía de todo el proceso y divide entre las raciones realmente servidas.",
+          "Define cantidad, temperatura inicial, preparación, punto final y número de tandas. No compares una ración en freidora con una bandeja familiar en horno. Tampoco confundas rapidez con menor energía: suelen estar relacionadas, pero la única cifra comparable son los kWh acumulados en condiciones equivalentes.",
+        ],
+        callout:
+          "Coste por comida = kWh de precalentamiento y cocción × precio analizado. Coste por ración = coste total ÷ raciones servidas.",
+      },
+      {
+        title: "Cómo usar la etiqueta del horno",
+        paragraphs: [
+          "La etiqueta energética europea de un horno doméstico muestra el consumo de energía por ciclo para modo convencional y, cuando existe, con ventilador. Es un dato normalizado que sirve para comparar hornos de volumen similar, pero no describe automáticamente cada receta ni permite enfrentar sin ajustes un horno completo con un aparato portátil fuera de ese esquema.",
+          "Busca el valor en kWh/ciclo del modo que usarías. Multiplícalo por los ciclos mensuales para estimar el horno y contrástalo con tu rutina. Si una sesión incluye dos platos a la vez, asignar todo el ciclo a una sola ración exageraría el coste. Explica siempre qué has contado.",
+        ],
+      },
+      {
+        title: "Cómo estimar una freidora de aire sin inventar un porcentaje",
+        paragraphs: [
+          "Consulta la potencia eléctrica de entrada, pero recuerda que el termostato puede alternar calentamiento y pausa. Para una aproximación conservadora puedes multiplicar la potencia por toda la duración; para conocer tu uso, un medidor de enchufe compatible con potencia, picos y condiciones del fabricante registra los kWh del ciclo.",
+          "Mide desde el inicio hasta el final e incluye todas las tandas. Repite una receta habitual varias veces. Si el aparato queda muy cerca de su límite de carga o el enchufe se calienta, detén la prueba y sigue las instrucciones de seguridad; una medición doméstica no justifica superar límites.",
+        ],
+        bullets: [
+          "Anota gramos o raciones y número de tandas.",
+          "Incluye cualquier precalentamiento recomendado.",
+          "Registra los kWh totales, no solo los W instantáneos.",
+          "No extrapoles una receta pequeña a todo el consumo anual de cocina.",
+        ],
+      },
+      {
+        title: "Ejemplo de método, sin afirmar cuál gana en tu casa",
+        paragraphs: [
+          "Supón que una sesión de horno registra 1,10 kWh y produce cuatro raciones: son 0,275 kWh por ración. Si una freidora registra 0,42 kWh por tanda de dos raciones y necesitas dos tandas, suma 0,84 kWh y divide entre cuatro: 0,21 kWh por ración. A 0,25 €/kWh, los costes de esa comparación serían 0,275 € y 0,21 € por comida completa.",
+          "Estas cifras son una demostración matemática, no mediciones de VatioClaro ni valores típicos garantizados. Al cambiar receta, cantidad, aparato o precio cambia el resultado. La utilidad del ejemplo es mostrar que omitir la segunda tanda habría comparado 0,42 con 1,10 kWh y habría respondido a dos cantidades distintas.",
+        ],
+      },
+      {
+        title: "Cuándo comprar una freidora no reduce el gasto total",
+        paragraphs: [
+          "Ahorrar parte de la energía de cocina no implica amortizar rápidamente un aparato nuevo. Multiplica la diferencia medida por tus sesiones reales al año y por el precio del kWh; después compara con compra, espacio, limpieza, durabilidad y el uso que ya cubre tu horno. Evita sumar un ahorro si la freidora añade recetas en vez de sustituir sesiones.",
+          "Si ya tienes ambos equipos, asigna cada uno a las cantidades que resuelve mejor. Si solo tienes horno, prueba primero a cocinar varias preparaciones juntas, evitar precalentamientos no exigidos y apagar cuando la receta lo permita. La mejor decisión combina energía, resultado, capacidad y evitar compras innecesarias.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Una freidora de aire consume siempre menos que un horno?",
+        answer:
+          "No. Para porciones pequeñas puede necesitar menos tiempo y calentar menos volumen, pero varias tandas, una cesta sobrecargada o recetas largas cambian el resultado. Compara kWh por la misma cantidad.",
+      },
+      {
+        question: "¿Debo incluir el precalentamiento?",
+        answer:
+          "Sí, cuando forma parte del procedimiento real. Omitirlo hace que el cálculo no represente la comida completa. Sigue además la receta y el manual de cada aparato.",
+      },
+      {
+        question: "¿Sirve comparar solo los vatios?",
+        answer:
+          "No. Los kWh dependen de la potencia media y el tiempo. Un aparato de más potencia puede terminar antes y ambos pueden regular con el termostato.",
+      },
+      {
+        question: "¿La etiqueta del horno permite compararlo directamente con una freidora?",
+        answer:
+          "No de forma directa. Es un dato normalizado para hornos incluidos en su regulación; los pequeños aparatos portátiles quedan fuera. Úsalo como punto de partida y compara la tarea completa.",
+      },
+    ],
+    sources: [
+      {
+        title: "Comisión Europea — Hornos domésticos y etiqueta energética",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/domestic-ovens_en",
+      },
+      {
+        title: "EUR-Lex — Reglamento delegado (UE) 65/2014 sobre etiquetado de hornos",
+        url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32014R0065",
+      },
+      {
+        title: "EUR-Lex — Reglamento (UE) 66/2014 sobre ecodiseño",
+        url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32014R0066",
+      },
+    ],
+    related: [
+      { href: "/consumo/horno", title: "Calcular el consumo del horno" },
+      { href: "/consumo/freidora-de-aire", title: "Calcular el consumo de la freidora de aire" },
+      { href: "/guias/induccion-vs-vitroceramica-consumo", title: "Comparar inducción y vitrocerámica" },
+    ],
+  },
+  {
+    slug: "aire-acondicionado-split-vs-portatil",
+    eyebrow: "Comparativa de refrigeración",
+    title: "Aire acondicionado split vs portátil: consumo",
+    seoTitle: "Aire acondicionado split vs portátil: consumo y coste",
+    description:
+      "Compara aire acondicionado split y portátil por eficiencia declarada, conductos, ruido, kWh y capacidad útil, con un método aplicable a tu habitación.",
+    updatedAt: "2026-08-02",
+    intro:
+      "Un split y un portátil pueden anunciar una capacidad de refrigeración parecida y comportarse de forma muy distinta en una habitación. El equipo portátil expulsa aire caliente mediante uno o dos conductos y necesita gestionar ese intercambio con el exterior; el split separa unidad interior y exterior. El consumo depende también del clima, aislamiento, infiltraciones, tamaño y consigna.",
+    directAnswer:
+      "No compares solo BTU, frigorías ni vatios de entrada. Comprueba la capacidad útil y la eficiencia declarada en condiciones equivalentes, el consumo horario o anual de la etiqueta, el ruido y el tipo de conducto. Para el coste real, registra kWh durante varios días comparables y anota temperatura exterior, consigna y horas de ocupación.",
+    quickFacts: [
+      { label: "Split", value: "Unidad exterior e interior separadas" },
+      { label: "Portátil", value: "Expulsa calor por uno o dos conductos" },
+      { label: "Compara", value: "Capacidad, eficiencia y kWh" },
+      { label: "Contexto", value: "Clima, aislamiento y consigna" },
+    ],
+    comparison: {
+      title: "Diferencias que afectan a consumo, confort e instalación",
+      description:
+        "Las clases y métricas no siempre son directamente equivalentes entre configuraciones. Lee la etiqueta completa y el manual del modelo.",
+      firstLabel: "Split fijo",
+      secondLabel: "Portátil",
+      rows: [
+        {
+          criterion: "Intercambio de calor",
+          first: "La unidad exterior disipa el calor y la interior distribuye aire en la estancia.",
+          second: "La unidad situada dentro expulsa aire caliente por conducto y puede generar entradas de aire exterior según su diseño.",
+        },
+        {
+          criterion: "Instalación",
+          first: "Requiere ubicación, paso de tuberías, desagüe y una instalación conforme por personal habilitado cuando corresponda.",
+          second: "Evita una unidad exterior fija, pero necesita salida al exterior bien resuelta, espacio y gestión de condensados.",
+        },
+        {
+          criterion: "Dato de etiqueta",
+          first: "Revisa eficiencia estacional, consumo anual orientativo, capacidad y ruido interior/exterior.",
+          second: "Revisa la categoría aplicable, configuración de conductos, eficiencia, consumo horario y ruido.",
+        },
+        {
+          criterion: "Ruido",
+          first: "El compresor está en el exterior; la unidad interior mantiene ventilador y circulación de refrigerante.",
+          second: "Compresor y ventiladores están en la habitación, por lo que el ruido declarado es especialmente relevante.",
+        },
+        {
+          criterion: "Uso razonable",
+          first: "Adecuado para uso recurrente cuando la instalación, la vivienda y el presupuesto lo permiten.",
+          second: "Puede resolver necesidades temporales o viviendas donde no es viable instalar, aceptando sus condicionantes.",
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "Capacidad térmica y potencia eléctrica son datos distintos",
+        paragraphs: [
+          "La capacidad de refrigeración describe el calor que el equipo puede extraer; la potencia eléctrica describe lo que demanda para funcionar. Dividir una por otra forma parte de las métricas de eficiencia, pero no debes mezclar kW térmicos con kW eléctricos al calcular la factura. Busca expresamente «power input», potencia absorbida o consumo eléctrico.",
+          "Un equipo inverter regula el compresor al acercarse a la consigna, de modo que la potencia máxima no permanece necesariamente constante. Un portátil también cicla o regula según diseño. Por eso multiplicar la cifra máxima por todas las horas puede servir como escenario conservador, no como predicción exacta.",
+        ],
+      },
+      {
+        title: "Qué explica la diferencia entre split y portátil",
+        paragraphs: [
+          "En un split, la parte que expulsa calor se encuentra fuera. En un portátil monoconducto, el aparato toma aire de la habitación para refrigerarse y lo expulsa; ese flujo puede favorecer que entre aire exterior por rendijas. Los modelos de doble conducto separan mejor entrada y salida, pero deben identificarse correctamente.",
+          "Sellar de forma segura el hueco previsto para el conducto reduce entradas no deseadas. No prolongues, aplastes ni calientes el tubo fuera de las condiciones del fabricante. La ubicación, el desagüe y la limpieza de filtros influyen tanto en el funcionamiento como en la cifra nominal.",
+        ],
+      },
+      {
+        title: "Cómo leer la etiqueta europea de aire acondicionado",
+        paragraphs: [
+          "La información europea incluye capacidad, clase de eficiencia, indicadores estacionales u horarios según el tipo, consumo orientativo y niveles de potencia acústica. La propia Comisión distingue equipos de conducto único, doble conducto y otras configuraciones; no compares una letra aislada sin confirmar que las condiciones y métricas son las mismas.",
+          "El consumo anual de la etiqueta se basa en supuestos normalizados, útiles para comparar productos de una categoría. No es una factura prevista para Úbeda, Madrid o una buhardilla concreta. Usa ese dato para cribar modelos y una estimación con tus horas y condiciones para presupuestar el uso.",
+        ],
+        bullets: [
+          "Capacidad de refrigeración adecuada a la carga de la estancia.",
+          "Eficiencia y consumo declarados para la configuración concreta.",
+          "Potencia acústica, especialmente si el compresor queda dentro.",
+          "Refrigerante, instalación, mantenimiento y evacuación de condensados.",
+        ],
+      },
+      {
+        title: "Método para comparar el coste en tu habitación",
+        paragraphs: [
+          "Elige varios días con temperaturas exteriores parecidas. Mantén igual consigna, horario, persianas, puertas y ocupación. Registra los kWh del circuito o del aparato con un método compatible y seguro. Anota también si el equipo alcanzó la temperatura: consumir menos sin proporcionar el mismo confort no es una comparación equivalente.",
+          "Divide los kWh entre las horas ocupadas y conserva el total diario. Repite al menos varios ciclos de calor. Si comparas datos de dos viviendas o semanas muy diferentes, el aislamiento y el clima pueden dominar el resultado. Presenta siempre las condiciones junto a la cifra.",
+        ],
+        callout:
+          "Coste del periodo = kWh registrados × precio analizado. Para comparar confort, añade temperatura inicial, consigna y si llegó a mantenerla.",
+      },
+      {
+        title: "Qué opción conviene cuando no puedes instalar un split",
+        paragraphs: [
+          "La alternativa no siempre es «split o portátil». Antes de comprar, reduce ganancias solares con sombra exterior o persianas, ventila cuando el aire exterior sea favorable y comprueba si un ventilador cubre parte de la necesidad. Estas medidas no sustituyen refrigeración en episodios extremos, pero pueden reducir horas de compresor.",
+          "Si el alquiler, la comunidad, la fachada o el presupuesto impiden una instalación fija, un portátil puede ser una solución práctica pese a sus límites. Elige capacidad razonable, salida al exterior correctamente sellada y ruido asumible. Evita promesas de «sin tubo»: un equipo que solo evapora agua no es equivalente a un aire acondicionado que extrae calor de la estancia.",
+        ],
+      },
+      {
+        title: "Calcula el coste total antes de decidir",
+        paragraphs: [
+          "Para un split suma equipo, instalación, posibles trabajos eléctricos, mantenimiento y consumo esperado. Para un portátil suma aparato, accesorio de ventana, espacio, ruido y consumo. Reparte los costes iniciales durante un periodo prudente sin asumir que el equipo durará indefinidamente ni que el precio eléctrico será constante.",
+          "Una elección eficiente puede mejorar el coste de uso, pero un dimensionamiento incorrecto, filtros obstruidos o una consigna extrema degradan el resultado. Cuando la instalación afecte a refrigerante, electricidad o fachada, recurre a profesionales y permisos aplicables.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Un split consume menos que un aire portátil?",
+        answer:
+          "A menudo ofrece mejores condiciones de eficiencia, pero la respuesta concreta depende del modelo, tamaño, instalación, conductos, clima y uso. Compara etiqueta y kWh para un confort equivalente.",
+      },
+      {
+        question: "¿Puedo calcular el coste con los BTU?",
+        answer:
+          "No directamente. Los BTU/h describen capacidad térmica. Para la factura necesitas potencia eléctrica o kWh consumidos y el precio por kWh.",
+      },
+      {
+        question: "¿Un portátil sin tubo enfría igual?",
+        answer:
+          "Un aire acondicionado debe evacuar el calor extraído. Los climatizadores evaporativos sin conducto funcionan con otro principio y no ofrecen el mismo resultado, especialmente con humedad alta.",
+      },
+      {
+        question: "¿Qué temperatura debo usar en la prueba?",
+        answer:
+          "La misma consigna y condiciones comparables en ambos casos. Sigue recomendaciones sanitarias, necesidades personales y manual; VatioClaro no prescribe una temperatura universal.",
+      },
+    ],
+    sources: [
+      {
+        title: "Comisión Europea — Acondicionadores de aire y ventiladores",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/air-conditioners-and-comfort-fans_en",
+      },
+      {
+        title: "EUR-Lex — Reglamento delegado (UE) 626/2011 de etiquetado",
+        url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32011R0626",
+      },
+      {
+        title: "IDAE — Guía de la energía",
+        url: "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+      },
+    ],
+    related: [
+      { href: "/consumo/aire-acondicionado", title: "Calcular el consumo de un aire acondicionado" },
+      { href: "/consumo/aire-acondicionado-portatil", title: "Calcular el consumo de un aire portátil" },
+      { href: "/recomendaciones/termohigrometros-casa", title: "Medir temperatura y humedad" },
+    ],
+  },
+  {
+    slug: "radiador-electrico-vs-bomba-calor",
+    eyebrow: "Comparativa de calefacción",
+    title: "Radiador eléctrico vs bomba de calor: consumo",
+    seoTitle: "Radiador eléctrico vs bomba de calor: consumo y coste",
+    description:
+      "Compara calefacción por resistencia y bomba de calor con energía térmica, COP, rendimiento estacional, clima y un ejemplo calculado sin promesas universales.",
+    updatedAt: "2026-08-02",
+    intro:
+      "Un radiador o calefactor de resistencia convierte electricidad en calor dentro de la estancia. Una bomba de calor usa electricidad para trasladar calor desde el exterior y puede entregar varias unidades térmicas por cada unidad eléctrica en condiciones adecuadas. Esa ventaja depende de temperatura, equipo, instalación, desescarche, mantenimiento y demanda real.",
+    directAnswer:
+      "Para aportar la misma cantidad de calor, una bomba de calor correctamente dimensionada puede necesitar menos electricidad que una resistencia. No conviertas un COP de catálogo en ahorro anual: usa rendimiento estacional para tu clima y sistema. Si solo necesitas calentar una zona durante poco tiempo, compara también inversión, rapidez, ruido y pérdidas del espacio.",
+    quickFacts: [
+      { label: "Resistencia", value: "Calor local a partir de electricidad" },
+      { label: "Bomba de calor", value: "Traslada calor desde otra fuente" },
+      { label: "COP", value: "Calor entregado ÷ electricidad" },
+      { label: "Para el año", value: "Importa el rendimiento estacional" },
+    ],
+    comparison: {
+      title: "Qué debes comparar además del precio de compra",
+      description:
+        "La tabla separa principio de funcionamiento, variables y limitaciones. Un aparato portátil de resistencia no equivale a un sistema completo para toda la vivienda.",
+      firstLabel: "Radiador o resistencia eléctrica",
+      secondLabel: "Bomba de calor",
+      rows: [
+        {
+          criterion: "Principio",
+          first: "Transforma la electricidad en calor en el punto de uso.",
+          second: "Usa un ciclo frigorífico para trasladar calor del exterior, aire o terreno al interior.",
+        },
+        {
+          criterion: "Dato clave",
+          first: "Potencia eléctrica, horas y control por termostato.",
+          second: "Capacidad, COP en condiciones declaradas y rendimiento estacional para el clima de diseño.",
+        },
+        {
+          criterion: "Instalación",
+          first: "Puede ser portátil o fija; hay que respetar toma, circuito, estabilidad y distancias.",
+          second: "Necesita dimensionamiento, unidades o circuitos, refrigerante y una instalación adecuada.",
+        },
+        {
+          criterion: "Respuesta",
+          first: "Aporta calor directo; la inercia cambia según emisor y control.",
+          second: "Puede calentar y, en muchos sistemas, refrigerar; requiere gestionar aire, ruido y desescarche.",
+        },
+        {
+          criterion: "Decisión económica",
+          first: "Menor inversión inicial en soluciones simples, con mayor consumo para el mismo calor útil en el ejemplo.",
+          second: "Mayor inversión y complejidad, que deben compararse con ahorro de uso, vida prevista y mantenimiento.",
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "La diferencia física que cambia el cálculo",
+        paragraphs: [
+          "Una resistencia eléctrica produce calor a partir de la electricidad que consume. Para un cálculo educativo, aportar 4 kWh térmicos exige aproximadamente 4 kWh eléctricos en el punto de uso, sin contar pérdidas de distribución o control. No importa que el emisor se llame radiador, convector o calefactor: si usa resistencia, bajar su potencia alarga el tiempo necesario para aportar la misma energía, salvo que cambie la demanda.",
+          "La bomba de calor no crea todo el calor mediante resistencia: lo transporta. IDAE define el COP como energía térmica suministrada dividida entre energía eléctrica consumida en unas condiciones. Un COP de 3 significa que, en ese punto de funcionamiento, 1 kWh eléctrico permite suministrar 3 kWh térmicos. No significa un rendimiento fijo todo el invierno.",
+        ],
+        callout:
+          "Ejemplo calculado: para 4 kWh térmicos, resistencia ≈ 4 kWh eléctricos; bomba de calor con COP ilustrativo 3 ≈ 1,33 kWh. Es una operación, no una medición ni una garantía estacional.",
+      },
+      {
+        title: "Por qué el COP de catálogo no es tu ahorro anual",
+        paragraphs: [
+          "El COP se declara para temperaturas y cargas concretas. Cuando baja la temperatura exterior, cambia la temperatura de impulsión o aparece desescarche, el rendimiento puede variar. Para una temporada interesa el SCOP u otro indicador estacional aplicable al producto y a la zona climática, junto con el consumo auxiliar.",
+          "El dimensionamiento también importa. Un equipo insuficiente puede trabajar al límite y necesitar apoyo; uno mal seleccionado puede ciclar o no cubrir correctamente la distribución. Compara documentación técnica y encarga un estudio cuando la decisión afecta a toda la vivienda, radiadores de agua, suelo radiante o producción de agua caliente.",
+        ],
+      },
+      {
+        title: "Ejemplo de coste con supuestos visibles",
+        paragraphs: [
+          "Con el escenario anterior y un precio de análisis de 0,25 €/kWh, la resistencia usaría 4 × 0,25 = 1 € de electricidad para esa aportación térmica. La bomba de calor con COP ilustrativo 3 usaría 4 ÷ 3 = 1,33 kWh y costaría aproximadamente 0,33 €. La diferencia del ejercicio es 0,67 €, antes de inversión, mantenimiento y variación real del rendimiento.",
+          "Para convertirlo en un escenario mensual, primero estima la demanda térmica del espacio con criterio técnico o usa consumos medidos comparables. No multipliques el ejemplo por todas las horas del invierno como si el equipo funcionara siempre a plena carga. Termostato, ganancias solares, ocupación, aislamiento y clima cambian la demanda.",
+        ],
+      },
+      {
+        title: "Cuándo una resistencia puede seguir siendo una decisión razonable",
+        paragraphs: [
+          "Una solución de resistencia puede resolver un uso breve, una estancia ocasional o una necesidad de respaldo con poca inversión. Eso no la hace energéticamente equivalente a una bomba de calor para aportar el mismo calor durante muchas horas. Calcula horas reales y evita calentar zonas vacías.",
+          "Comprueba potencia, circuito, toma de pared, estabilidad, distancia a textiles y requisitos del fabricante. No uses alargadores o regletas salvo autorización expresa y compatibilidad total. Un temporizador no convierte una carga alta en segura ni reemplaza el termostato y las protecciones del aparato.",
+        ],
+      },
+      {
+        title: "Qué revisar antes de instalar una bomba de calor",
+        paragraphs: [
+          "Determina carga térmica, clima, aislamiento, temperatura que necesita el sistema de emisión, ubicación de unidades, ruido, drenaje y potencia eléctrica disponible. En aerotermia con agua, la temperatura de impulsión y los emisores existentes condicionan el rendimiento; no basta sustituir la caldera sin estudiar el conjunto.",
+          "Solicita previsiones bajo condiciones identificadas, no un COP máximo aislado. Pide alcance de instalación, puesta en marcha, mantenimiento, garantía y consumo de apoyos. Si el equipo también refrigerará, incorpora ese servicio al análisis sin contarlo dos veces como ahorro.",
+        ],
+        bullets: [
+          "Carga térmica y temperaturas de diseño.",
+          "Rendimiento estacional y condición de ensayo.",
+          "Compatibilidad con emisores y agua caliente.",
+          "Ruido, ubicación, permisos, mantenimiento y servicio técnico.",
+        ],
+      },
+      {
+        title: "Prioriza reducir demanda antes de dimensionar",
+        paragraphs: [
+          "Sellar infiltraciones, mejorar aislamiento donde sea viable, controlar persianas y programar por ocupación reduce el calor que cualquier sistema debe aportar. Mide temperatura y humedad en zonas representativas y no sobrecalientes para compensar una distribución deficiente sin investigar la causa.",
+          "Una bomba de calor puede ser una mejora importante, pero la mejor solución combina envolvente, control, instalación y hábitos. Presenta escenarios con varios precios, inviernos y rendimientos; descarta cualquier propuesta que garantice un ahorro fijo sin conocer la vivienda.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Una bomba de calor gasta tres veces menos?",
+        answer:
+          "No puede generalizarse. Un COP 3 permite esa relación en una condición concreta, pero el rendimiento cambia durante la temporada. Usa indicadores estacionales y datos de tu instalación.",
+      },
+      {
+        question: "¿Un radiador de 1.000 W consume menos que uno de 2.000 W?",
+        answer:
+          "Consume menos por hora a máxima potencia, pero puede tardar más en aportar el mismo calor. El consumo final depende de demanda, tiempo, termostato, pérdidas y uso.",
+      },
+      {
+        question: "¿La aerotermia es una bomba de calor?",
+        answer:
+          "Sí, utiliza el aire exterior como fuente o sumidero. Puede alimentar aire o agua según el sistema. El rendimiento depende de temperaturas y diseño.",
+      },
+      {
+        question: "¿Puedo sustituir radiadores sin hacer un estudio?",
+        answer:
+          "No es prudente para una instalación completa. La carga térmica, temperatura de impulsión, emisores, potencia eléctrica y clima requieren revisión por profesionales competentes.",
+      },
+    ],
+    sources: [
+      {
+        title: "IDAE — Guía de la bomba de calor (2023)",
+        url: "https://www.idae.es/sites/default/files/documentos/publicaciones_idae/Guias_IDAE_La_Bomba_de_calor_2023_V11.pdf",
+      },
+      {
+        title: "IDAE — Síntesis sobre bombas de calor y COP",
+        url: "https://www.idae.es/uploads/documentos/documentos_Bombas-de-calor_FINAL_04ee7f42.pdf",
+      },
+      {
+        title: "Comisión Europea — Bombas de calor",
+        url: "https://energy.ec.europa.eu/topics/energy-efficiency/heat-pumps_en",
+      },
+      {
+        title: "Comisión Europea — Calefactores locales y etiqueta energética",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+      },
+    ],
+    related: [
+      { href: "/consumo/calefactor-electrico", title: "Calcular el consumo de un calefactor" },
+      { href: "/consumo/aire-acondicionado", title: "Calcular una bomba de calor aire-aire" },
+      { href: "/guias/potencia-contratada", title: "Revisar potencia y simultaneidad" },
     ],
   },
 ];

@@ -20,6 +20,9 @@ test("renders a canonical, indexable homepage with the primary calculator", asyn
   assert.match(html, /id="contenido"/);
   assert.match(html, /Saltar al contenido principal/);
   assert.match(html, /COSTE ANUAL/);
+  assert.match(html, /vatioclaro-hogar-energia\.[a-z0-9_-]+\.webp/);
+  assert.match(html, /\/guias\/induccion-vs-vitroceramica-consumo/);
+  assert.match(html, /\/guias\/radiador-electrico-vs-bomba-calor/);
 });
 
 test("publishes the complete consumption library and its newest guides", async () => {
@@ -42,6 +45,11 @@ test("adds complete structured data and a cycle calculator to appliance pages", 
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"FAQPage"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
+  assert.match(
+    html,
+    /"author":\{"@id":"https:\/\/vatioclaro\.es\/sobre-vatioclaro#responsable-editorial"\}/,
+  );
+  assert.match(html, /Francisco Javier Sanchez Fuentes/);
   assert.match(html, /CALCULADORA POR CICLO/);
   assert.match(html, /Guías relacionadas/);
 });
@@ -70,6 +78,16 @@ test("exposes all key URLs through robots and sitemap", async () => {
     sitemap,
     /https:\/\/vatioclaro\.es\/guias\/potencia-contratada<\/loc>/,
   );
+  for (const slug of [
+    "induccion-vs-vitroceramica-consumo",
+    "horno-vs-freidora-aire-consumo",
+    "aire-acondicionado-split-vs-portatil",
+    "radiador-electrico-vs-bomba-calor",
+  ]) {
+    assert.ok(
+      sitemap.includes("https://vatioclaro.es/guias/" + slug + "</loc>"),
+    );
+  }
   assert.match(
     sitemap,
     /https:\/\/vatioclaro\.es\/recomendaciones\/medidores-consumo-electrico-enchufe<\/loc>/,
@@ -92,6 +110,64 @@ test("publishes problem-solving guides with sources, FAQs and tools", async () =
 
   assert.match(power, /REVISIÓN ORIENTATIVA/);
   assert.match(label, /kWh por 100 ciclos/);
+});
+
+test("publishes substantial comparison guides with visible schemas and primary sources", async () => {
+  const slugs = [
+    "induccion-vs-vitroceramica-consumo",
+    "horno-vs-freidora-aire-consumo",
+    "aire-acondicionado-split-vs-portatil",
+    "radiador-electrico-vs-bomba-calor",
+  ];
+  const guides = await Promise.all(
+    slugs.map((slug) => readOutput("guias/" + slug + ".html")),
+  );
+
+  for (const html of guides) {
+    assert.match(html, /"@type":"Article"/);
+    assert.match(html, /"@type":"FAQPage"/);
+    assert.match(html, /"@type":"BreadcrumbList"/);
+    assert.match(
+      html,
+      /"author":\{"@id":"https:\/\/vatioclaro\.es\/sobre-vatioclaro#responsable-editorial"\}/,
+    );
+    assert.match(html, /Comparación directa/);
+    assert.match(html, /Fuentes oficiales y criterio de revisión/);
+    assert.match(html, /vatioclaro-hogar-energia\.[a-z0-9_-]+\.webp/);
+    assert.match(html, /Método y criterios/);
+  }
+
+  assert.match(guides[0], /Placas de cocina y ecodiseño/);
+  assert.match(guides[1], /Hornos domésticos y etiqueta energética/);
+  assert.match(guides[2], /Acondicionadores de aire y ventiladores/);
+  assert.match(guides[3], /Guía de la bomba de calor/);
+  assert.doesNotMatch(guides[2], /SEER.*EER|EER.*SEER/);
+});
+
+test("answers long-tail calculation questions with visible FAQ and calculated visuals", async () => {
+  const html = await readOutput("guias/como-calcular-consumo-electrico.html");
+
+  assert.match(html, /"@type":"HowTo"/);
+  assert.match(html, /"@type":"FAQPage"/);
+  assert.match(html, /¿Cuánto consume un aparato de 1\.000 W en una hora\?/);
+  assert.match(html, /Cuatro ejemplos mensuales calculados con la misma fórmula/);
+  assert.match(html, /Cuánto consumen 100, 500, 1\.000 o 2\.000 W durante una hora/);
+  assert.match(html, /\/guias\/horno-vs-freidora-aire-consumo/);
+  assert.match(html, /vatioclaro-hogar-energia\.[a-z0-9_-]+\.webp/);
+  assert.match(html, /Francisco Javier Sanchez Fuentes/);
+});
+
+test("publishes an honest responsible-editor profile and keeps publication dates distinct", async () => {
+  const [about, calculation] = await Promise.all([
+    readOutput("sobre-vatioclaro.html"),
+    readOutput("guias/como-calcular-consumo-electrico.html"),
+  ]);
+
+  assert.match(about, /"@type":"ProfilePage"/);
+  assert.match(about, /Responsable editorial de VatioClaro/);
+  assert.match(about, /no equivale a una acreditación como instalador/);
+  assert.match(calculation, /"datePublished":"2026-07-29"/);
+  assert.match(calculation, /"dateModified":"2026-08-02"/);
 });
 
 test("publishes complete legal, privacy and cookie information", async () => {
@@ -156,7 +232,6 @@ test("publishes useful and transparent Amazon buying guides", async () => {
     "B0C7FJYTR2",
     "B001F8MRFM",
     "B0DNMRNRF2",
-    "B0F24JK3D5",
   ];
 
   assert.match(
@@ -167,22 +242,48 @@ test("publishes useful and transparent Amazon buying guides", async () => {
   for (const guide of guides) {
     assert.match(guide, /"@type":"Article"/);
     assert.match(guide, /"@type":"FAQPage"/);
-    assert.match(guide, /Tres perfiles, no un podio/);
+    assert.match(guide, /perfiles verificados, no un podio/);
     assert.match(guide, /Publicidad · enlace de afiliado/);
     assert.match(guide, /tag=vatio-21/);
     assert.doesNotMatch(guide, /amazon\.es\/s\?/);
-    assert.equal(
-      guide.match(
-        /href="https:\/\/www\.amazon\.es\/dp\/[A-Z0-9]{10}\?tag=vatio-21"/g,
-      )?.length,
-      3,
-    );
     assert.match(
       guide,
       /rel="sponsored nofollow noopener noreferrer"/,
     );
     assert.doesNotMatch(guide, /"@type":"Product"/);
   }
+
+  for (const [index, guide] of guides.entries()) {
+    const expectedProductCount = index === guides.length - 1 ? 2 : 3;
+    assert.equal(
+      guide.match(
+        /href="https:\/\/www\.amazon\.es\/dp\/[A-Z0-9]{10}\?tag=vatio-21"/g,
+      )?.length,
+      expectedProductCount,
+    );
+  }
+
+  assert.doesNotMatch(allGuides, /B0F24JK3D5|ORIA termómetro/);
+  assert.match(
+    guides[0],
+    /brennenstuhl\.com\/en-DE\/products\/travel-adapters-adapter-plugs\/primera-line-wattage-and-current-meter-pm-231-e/,
+  );
+  assert.match(
+    guides[2],
+    /brennenstuhl\.com\/en-DE\/products\/extension-leads\/extension-lead-individually-switchable-6-way-2m-h05vv-f-3g1\.5-white/,
+  );
+  assert.match(
+    guides[2],
+    /idae\.es\/guia-practica-de-la-energia-consumo-eficiente-y-responsable/,
+  );
+  assert.match(
+    guides[4],
+    /aesan\.gob\.es\/AECOSAN\/web\/para_el_consumidor\/ampliacion\/colocar_segura\.htm/,
+  );
+  assert.doesNotMatch(
+    allGuides,
+    /publicaciones\/guia-practica-de-la-energia|seguridad_alimentaria_hogar/,
+  );
 
   for (const asin of expectedAsins) {
     assert.match(

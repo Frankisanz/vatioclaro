@@ -23,6 +23,11 @@ test("renders a canonical, indexable homepage with the primary calculator", asyn
   assert.match(html, /vatioclaro-hogar-energia\.[a-z0-9_-]+\.webp/);
   assert.match(html, /\/guias\/induccion-vs-vitroceramica-consumo/);
   assert.match(html, /\/guias\/radiador-electrico-vs-bomba-calor/);
+  assert.match(html, /\/consumo\/secadora/);
+  assert.match(
+    html,
+    /\/recomendaciones\/termometros-frigorifico-congelador/,
+  );
 });
 
 test("publishes the complete consumption library and its newest guides", async () => {
@@ -92,6 +97,70 @@ test("exposes all key URLs through robots and sitemap", async () => {
     sitemap,
     /https:\/\/vatioclaro\.es\/recomendaciones\/medidores-consumo-electrico-enchufe<\/loc>/,
   );
+
+  const pendingIndexingPaths = [
+    "/consumo/secadora",
+    "/guias/aire-acondicionado-split-vs-portatil",
+    "/guias/etiqueta-energetica-a-euros",
+    "/guias/horno-vs-freidora-aire-consumo",
+    "/guias/induccion-vs-vitroceramica-consumo",
+    "/guias/por-que-ha-subido-factura-luz",
+    "/guias/potencia-contratada",
+    "/guias/radiador-electrico-vs-bomba-calor",
+    "/recomendaciones",
+    "/recomendaciones/termometros-frigorifico-congelador",
+  ];
+
+  for (const path of pendingIndexingPaths) {
+    assert.ok(
+      sitemap.includes(`https://vatioclaro.es${path}</loc>`),
+      `${path} debe aparecer en el sitemap`,
+    );
+  }
+
+  for (const excludedPath of [
+    "/afiliacion",
+    "/aviso-legal",
+    "/cookies",
+    "/privacidad",
+  ]) {
+    assert.ok(
+      !sitemap.includes(`https://vatioclaro.es${excludedPath}</loc>`),
+      `${excludedPath} no debe aparecer en el sitemap porque lleva noindex`,
+    );
+  }
+});
+
+test("keeps Search Console discovery candidates indexable and self-canonical", async () => {
+  const paths = [
+    "consumo/secadora",
+    "guias/aire-acondicionado-split-vs-portatil",
+    "guias/etiqueta-energetica-a-euros",
+    "guias/horno-vs-freidora-aire-consumo",
+    "guias/induccion-vs-vitroceramica-consumo",
+    "guias/por-que-ha-subido-factura-luz",
+    "guias/potencia-contratada",
+    "guias/radiador-electrico-vs-bomba-calor",
+    "recomendaciones",
+    "recomendaciones/termometros-frigorifico-congelador",
+  ];
+
+  const pages = await Promise.all(
+    paths.map(async (path) => ({
+      html: await readOutput(`${path}.html`),
+      path,
+    })),
+  );
+
+  for (const { html, path } of pages) {
+    assert.match(html, /<meta name="robots" content="index, follow"/);
+    assert.ok(
+      html.includes(
+        `<link rel="canonical" href="https://vatioclaro.es/${path}"`,
+      ),
+      `/${path} debe declarar una canonical propia`,
+    );
+  }
 });
 
 test("publishes problem-solving guides with sources, FAQs and tools", async () => {

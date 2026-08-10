@@ -37,9 +37,28 @@ export const metadata: Metadata = {
 };
 
 const featured = appliances.slice(0, 6);
-const featuredBuyingGuides = buyingGuides.slice(0, 3);
+const featuredBuyingGuideSlugs = [
+  "medidores-consumo-electrico-enchufe",
+  "temporizadores-regletas-consumo-fantasma",
+  "termometros-frigorifico-congelador",
+] as const;
+const featuredBuyingGuides = featuredBuyingGuideSlugs.map((slug) => {
+  const guide = buyingGuides.find((candidate) => candidate.slug === slug);
+
+  if (!guide) {
+    throw new Error(`No se ha encontrado la guía de compra ${slug}`);
+  }
+
+  return guide;
+});
 const heroItem = appliances[0];
-const tickerSlugs = ["ventilador", "router-wifi", "horno", "termo-electrico"];
+const tickerSlugs = [
+  "ventilador",
+  "router-wifi",
+  "horno",
+  "termo-electrico",
+  "secadora",
+];
 const tickerItems = tickerSlugs.map((slug) => {
   const item = appliances.find((candidate) => candidate.slug === slug);
 

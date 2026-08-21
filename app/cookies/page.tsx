@@ -25,8 +25,10 @@ export default function CookiesPage() {
         <div className="simple-body__inner">
           <div className="callout">
             Última revisión: {LEGAL_OWNER.updatedAt}. La web utiliza medición
-            anónima de Vercel sin cookies. No se instalan cookies de publicidad,
-            redes sociales ni personalización.
+            anónima de Vercel sin cookies. El script de Google AdSense se carga
+            únicamente para la verificación técnica del dominio ante Google,
+            sin mostrar anuncios ni instalar cookies publicitarias activas en
+            esta fase.
           </div>
 
           <h2>1. Qué son las cookies</h2>
@@ -42,10 +44,13 @@ export default function CookiesPage() {
             VatioClaro utiliza Vercel Web Analytics para obtener estadísticas
             agregadas de visitas y Speed Insights para medir Core Web Vitals.
             Según Vercel, ambas herramientas funcionan sin instalar cookies ni
-            utilizar almacenamiento local. No cargamos Google Analytics, Google
-            AdSense, etiquetas publicitarias ni widgets de redes sociales. Las
-            calculadoras funcionan en el navegador y sus valores no se envían a
-            estas herramientas.
+            utilizar almacenamiento local. El script de Google AdSense está
+            presente en la cabecera exclusivamente para la verificación y
+            revisión técnica del sitio por parte de Google; en esta fase no se
+            muestran bloques de anuncios ni formatos publicitarios automáticos
+            (Auto Ads). No cargamos Google Analytics, etiquetas publicitarias de
+            terceros ni widgets de redes sociales. Las calculadoras funcionan en
+            el navegador y sus valores no se envían a estas herramientas.
           </p>
           <p>
             Algunas guías contienen enlaces de afiliado identificados hacia
@@ -68,8 +73,12 @@ export default function CookiesPage() {
               <dd>Rendimiento real sin cookies</dd>
             </div>
             <div>
+              <dt>Google AdSense</dt>
+              <dd>Script de verificación técnica (sin anuncios en esta fase)</dd>
+            </div>
+            <div>
               <dt>Cookies publicitarias</dt>
-              <dd>No se utilizan</dd>
+              <dd>No activadas (sin anuncios en esta fase)</dd>
             </div>
             <div>
               <dt>Enlaces de afiliado</dt>
@@ -97,22 +106,26 @@ export default function CookiesPage() {
 
           <h2>3. Por qué no aparece un banner de consentimiento</h2>
           <p>
-            Las herramientas de medición configuradas no guardan ni leen cookies
-            o identificadores persistentes en tu dispositivo. Por ello no
-            solicitamos consentimiento para instalarlas y no condicionamos el
-            acceso a los contenidos a aceptar tecnologías opcionales. Si esta
-            configuración cambia, mostraremos el mecanismo de consentimiento
-            antes de activar cualquier tecnología que lo requiera.
+            Las herramientas de medición configuradas funcionan sin cookies ni
+            identificadores persistentes en tu dispositivo, y el script de Google
+            AdSense se encuentra limitado a la validación técnica del dominio
+            sin emitir anuncios ni perfiles. Por ello no se requiere
+            consentimiento para acceder a los contenidos. Antes de activar la
+            publicación de anuncios, publicidad personalizada o cualquier
+            tecnología que requiera consentimiento según la normativa, se
+            habilitará la correspondiente Plataforma de Gestión del Consentimiento
+            (CMP) para recabar y gestionar las elecciones de las personas
+            usuarias.
           </p>
 
           <h2>4. Cambios futuros</h2>
           <p>
-            Antes de añadir publicidad —incluido Google AdSense—, analítica con
-            identificadores persistentes o cualquier otra tecnología no
-            esencial, actualizaremos esta política con los proveedores,
-            finalidades y plazos aplicables. También mostraremos el mecanismo de
-            consentimiento correspondiente antes de que esas tecnologías se
-            activen.
+            Antes de activar la publicación efectiva de anuncios mediante
+            Google AdSense, publicidad personalizada o cualquier otra tecnología
+            no esencial, actualizaremos esta política con los proveedores,
+            finalidades y plazos aplicables. Asimismo, se desplegará una
+            Plataforma de Gestión del Consentimiento (CMP) certificada antes de
+            que dichas tecnologías se activen.
           </p>
 
           <h2>5. Cómo controlar las cookies</h2>

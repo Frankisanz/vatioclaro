@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SourceLink } from "@/app/components/SourceLink";
+import { StandbyCalculator } from "@/app/components/StandbyCalculator";
 import { LEGAL_OWNER } from "@/lib/legal";
 import {
   absoluteUrl,
@@ -29,28 +31,63 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `Consumo fantasma: qué es y cómo calcularlo | ${SITE_NAME}`,
+    description:
+      "Una guía para diferenciar el modo espera de los equipos que deben estar conectados y priorizar qué medir.",
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
+  },
 };
 
 export default function PhantomConsumptionGuidePage() {
   const pageUrl = absoluteUrl("/guias/consumo-fantasma");
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${pageUrl}#article`,
-    headline: "Consumo fantasma: qué es y cómo calcularlo",
-    description:
-      "Guía práctica para identificar equipos en espera, estimar su coste anual y decidir cuáles conviene desconectar.",
-    url: pageUrl,
-    mainEntityOfPage: pageUrl,
-    inLanguage: "es-ES",
-    datePublished: CONTENT_PUBLISHED_AT,
-    dateModified: CONTENT_UPDATED_AT,
-    author: { "@id": EDITORIAL_PERSON_ID },
-    editor: { "@id": EDITORIAL_PERSON_ID },
-    publisher: { "@id": `${absoluteUrl("/")}#organization` },
-    image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
-    citation:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${pageUrl}#article`,
+        headline: "Consumo fantasma: qué es y cómo calcularlo",
+        description:
+          "Guía práctica para identificar equipos en espera, estimar su coste anual y decidir cuáles conviene desconectar.",
+        url: pageUrl,
+        mainEntityOfPage: pageUrl,
+        inLanguage: "es-ES",
+        datePublished: CONTENT_PUBLISHED_AT,
+        dateModified: CONTENT_UPDATED_AT,
+        author: { "@id": EDITORIAL_PERSON_ID },
+        editor: { "@id": EDITORIAL_PERSON_ID },
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        citation:
+          "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Inicio",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Guías",
+            item: absoluteUrl("/guias"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: "Consumo fantasma",
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (
@@ -97,6 +134,10 @@ export default function PhantomConsumptionGuidePage() {
             Coste anual (€) = consumo anual × precio (€ / kWh)
           </div>
 
+          <div className="embedded-tool">
+            <StandbyCalculator />
+          </div>
+
           <h2>No todo lo conectado es un desperdicio</h2>
           <p>
             Un router, una alarma, un equipo médico, una caldera conectada o la
@@ -123,7 +164,11 @@ export default function PhantomConsumptionGuidePage() {
             <li>Elige un medidor de enchufe compatible con la potencia del aparato y sigue sus instrucciones de seguridad.</li>
             <li>Déjalo varias horas o un día completo si el consumo varía por tareas automáticas.</li>
             <li>Apunta los kWh acumulados, no solo una lectura instantánea en vatios.</li>
-            <li>Prueba el coste anual en la <Link href="/calculadora">calculadora de consumo</Link> con 24 horas y 365 días.</li>
+            <li>
+              Prueba el coste anual en la{" "}
+              <Link href="/calculadora/standby">calculadora de standby</Link>
+              {" "}con las horas y los días que hayas medido.
+            </li>
           </ol>
           <p>
             Si todavía no tienes uno, consulta cómo elegir un{" "}
@@ -163,7 +208,7 @@ export default function PhantomConsumptionGuidePage() {
                 consumo continuo en euros al año.
               </p>
             </div>
-            <Link className="button button--dark" href="/calculadora">
+            <Link className="button button--dark" href="/calculadora/standby">
               Calcular ahora
             </Link>
           </div>
@@ -175,13 +220,21 @@ export default function PhantomConsumptionGuidePage() {
               conectadas. Para decisiones concretas, prioriza la ficha técnica y
               una medición de tu propio equipo.
             </p>
-            <a
+            <SourceLink
+              context="consumo-fantasma"
               href="https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf"
-              rel="noopener noreferrer"
-              target="_blank"
+              sourceId="idae-spahousec-iii-2026"
             >
               IDAE — SPAHOUSEC III (2026) ↗
-            </a>
+            </SourceLink>
+            <br />
+            <SourceLink
+              context="consumo-fantasma"
+              href="https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826"
+              sourceId="eu-regulation-2023-826-standby"
+            >
+              EUR-Lex — Reglamento (UE) 2023/826 sobre modos de bajo consumo ↗
+            </SourceLink>
           </div>
         </article>
       </section>

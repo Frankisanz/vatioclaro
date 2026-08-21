@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ComparisonChart } from "@/app/components/ComparisonChart";
+import {
+  EXAMPLE_ELECTRICITY_PRICE,
+  formatCurrency,
+  formatElectricityPrice,
+} from "@/lib/electricity";
 import { EditorialIllustration } from "@/app/components/EditorialIllustration";
 import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
 import { LEGAL_OWNER } from "@/lib/legal";
@@ -12,17 +17,36 @@ import {
   SITE_NAME,
 } from "@/lib/site";
 
-const examplePrice = 0.25;
+const examplePrice = EXAMPLE_ELECTRICITY_PRICE;
+const formattedExamplePrice = formatElectricityPrice(examplePrice);
 const hourlyExamples = [100, 500, 1000, 2000].map((watts) => ({
   watts,
   kwh: watts / 1000,
   cost: (watts / 1000) * examplePrice,
 }));
 
+function describeChartCalculation(
+  calculation: (typeof appliances)[number]["calculation"],
+) {
+  if (calculation.method === "power") {
+    return `${calculation.watts.toLocaleString("es-ES")} W × ${calculation.hoursPerDay.toLocaleString("es-ES")} h/día × ${calculation.daysPerMonth.toLocaleString("es-ES")} días`;
+  }
+  if (calculation.method === "cycle") {
+    return `${calculation.kwhPerCycle.toLocaleString("es-ES")} kWh/ciclo × ${calculation.cycles.toLocaleString("es-ES")} ciclos/mes`;
+  }
+  if (calculation.method === "annual") {
+    return `${calculation.annualKwh.toLocaleString("es-ES")} kWh/año`;
+  }
+  if (calculation.method === "daily") {
+    return `${calculation.dailyKwh.toLocaleString("es-ES")} kWh/día`;
+  }
+  return `${calculation.watts.toLocaleString("es-ES")} W en espera`;
+}
+
 const chartAppliances = [
   "ventilador",
   "router-wifi",
-  "horno",
+  "ordenador",
   "termo-electrico",
 ].map((slug) => {
   const item = appliances.find((candidate) => candidate.slug === slug);
@@ -34,15 +58,14 @@ const chartAppliances = [
   return {
     label: item.name,
     value: getApplianceMonthlyKwh(item),
-    note: `${item.watts.toLocaleString("es-ES")} W × ${item.hours.toLocaleString("es-ES")} h/día × ${item.days} días`,
+    note: describeChartCalculation(item.calculation),
   };
 });
 
 const faq = [
   {
     question: "¿Cuánto consume un aparato de 1.000 W en una hora?",
-    answer:
-      "Si mantiene 1.000 W durante una hora, consume 1 kWh. A un precio usado como ejemplo de 0,25 €/kWh, esa hora de energía costaría 0,25 €. Un termostato o regulador puede reducir la potencia media real.",
+    answer: `Si mantiene 1.000 W durante una hora, consume 1 kWh. A un precio usado como ejemplo de ${formattedExamplePrice}, esa hora de energía costaría ${formatCurrency(examplePrice)}. Un termostato o regulador puede reducir la potencia media real.`,
   },
   {
     question: "¿Cuánto gastan 2.000 W durante 30 minutos?",
@@ -251,8 +274,8 @@ export default function HowToCalculateConsumptionPage() {
           <p>
             Si un aparato de 1.000 W funciona cuatro horas al día durante 30
             días, el cálculo es: 1 kW × 4 horas × 30 días = 120 kWh al mes. Si
-            pruebas un precio de 0,25 € / kWh, el coste estimado de esa energía es
-            30 € al mes.
+            pruebas un precio de {formattedExamplePrice}, el coste estimado de
+            esa energía es {formatCurrency(120 * examplePrice)} al mes.
           </p>
           <p>
             El ejemplo no pretende decir que todos los equipos de 1.000 W estén
@@ -272,16 +295,24 @@ export default function HowToCalculateConsumptionPage() {
             Estas búsquedas expresan potencia y tiempo, así que pueden resolverse
             sin asumir un aparato concreto. Durante una hora, 1.000 W equivalen
             a 1 kWh. Para media hora multiplica por 0,5; para quince minutos, por
-            0,25. La tabla aplica un precio de ejemplo de {examplePrice.toLocaleString("es-ES")} €/kWh,
+            0,25. La tabla aplica un precio de ejemplo de {formattedExamplePrice},
             que debes sustituir por el que quieras estudiar.
           </p>
-          <div className="table-scroll">
+          <div
+            aria-label="Conversión de potencia durante una hora"
+            className="table-scroll"
+            role="region"
+            tabIndex={0}
+          >
             <table className="comparison-table">
+              <caption className="comparison-table__caption">
+                Conversión de vatios a kWh y coste durante una hora
+              </caption>
               <thead>
                 <tr>
                   <th scope="col">Potencia durante 1 hora</th>
                   <th scope="col">Energía</th>
-                  <th scope="col">Coste con 0,25 €/kWh</th>
+                  <th scope="col">Coste con {formattedExamplePrice}</th>
                 </tr>
               </thead>
               <tbody>
@@ -321,7 +352,8 @@ export default function HowToCalculateConsumptionPage() {
           <h3>Cuánto cuesta dejar 100 W encendidos 24 horas</h3>
           <p>
             El cálculo teórico es 0,1 kW × 24 h = 2,4 kWh al día. Durante 30 días
-            serían 72 kWh; con 0,25 €/kWh, 18 €. Antes de aplicarlo a un equipo,
+            serían 72 kWh; con {formattedExamplePrice},{" "}
+            {formatCurrency(72 * examplePrice)}. Antes de aplicarlo a un equipo,
             verifica que realmente mantenga 100 W de forma continua: un
             frigorífico, un ordenador o una fuente de alimentación suelen variar.
           </p>

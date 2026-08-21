@@ -15,7 +15,7 @@ test("renders a canonical, indexable homepage with the primary calculator", asyn
     html,
     /<link rel="canonical" href="https:\/\/vatioclaro\.es"/,
   );
-  assert.match(html, /<meta name="robots" content="index, follow"/);
+  assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
   assert.match(html, /Consumo eléctrico en casa: calcula cuánto gastas/);
   assert.match(html, /id="contenido"/);
   assert.match(html, /Saltar al contenido principal/);
@@ -98,6 +98,19 @@ test("exposes all key URLs through robots and sitemap", async () => {
     /https:\/\/vatioclaro\.es\/recomendaciones\/medidores-consumo-electrico-enchufe<\/loc>/,
   );
 
+  for (const path of [
+    "/comparativas",
+    "/calculadora/comparar",
+    "/calculadora/standby",
+    "/calculadora/etiqueta-energetica",
+    "/calculadora/amortizacion",
+  ]) {
+    assert.ok(
+      sitemap.includes(`https://vatioclaro.es${path}</loc>`),
+      `${path} debe aparecer en el sitemap`,
+    );
+  }
+
   const pendingIndexingPaths = [
     "/consumo/secadora",
     "/guias/aire-acondicionado-split-vs-portatil",
@@ -153,7 +166,7 @@ test("keeps Search Console discovery candidates indexable and self-canonical", a
   );
 
   for (const { html, path } of pages) {
-    assert.match(html, /<meta name="robots" content="index, follow"/);
+    assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
     assert.ok(
       html.includes(
         `<link rel="canonical" href="https://vatioclaro.es/${path}"`,
@@ -161,6 +174,55 @@ test("keeps Search Console discovery candidates indexable and self-canonical", a
       `/${path} debe declarar una canonical propia`,
     );
   }
+});
+
+test("publishes the comparison hub and all specialized calculators", async () => {
+  const [hub, comparison, standby, label, payback] = await Promise.all([
+    readOutput("comparativas.html"),
+    readOutput("calculadora/comparar.html"),
+    readOutput("calculadora/standby.html"),
+    readOutput("calculadora/etiqueta-energetica.html"),
+    readOutput("calculadora/amortizacion.html"),
+  ]);
+
+  assert.match(hub, /"@type":"CollectionPage"/);
+  assert.match(hub, /"@type":"ItemList"/);
+  assert.match(hub, /Dos opciones, una misma tarea y las cuentas a la vista/);
+
+  for (const [html, path] of [
+    [comparison, "/calculadora/comparar"],
+    [standby, "/calculadora/standby"],
+    [label, "/calculadora/etiqueta-energetica"],
+    [payback, "/calculadora/amortizacion"],
+  ]) {
+    assert.match(html, /"@type":"WebApplication"/);
+    assert.ok(
+      html.includes(`<link rel="canonical" href="https://vatioclaro.es${path}"`),
+      `${path} debe declarar una canonical propia`,
+    );
+  }
+});
+
+test("keeps assumptions visible and uses the appropriate appliance method", async () => {
+  const [fridge, washer, oven, phantom] = await Promise.all([
+    readOutput("consumo/frigorifico.html"),
+    readOutput("consumo/lavadora.html"),
+    readOutput("consumo/horno.html"),
+    readOutput("guias/consumo-fantasma.html"),
+  ]);
+
+  for (const html of [fridge, washer, oven]) {
+    assert.match(html, /SUPUESTOS VISIBLES/);
+    assert.match(html, /Calcula tu caso/);
+    assert.match(html, /Fuentes, alcance y revisión/);
+  }
+
+  assert.match(fridge, /CALCULADORA POR CONSUMO ANUAL/);
+  assert.match(washer, /CALCULADORA POR CICLO/);
+  assert.match(oven, /CALCULADORA POR CICLO/);
+  assert.match(oven, /1,1 kWh\/ciclo/);
+  assert.match(phantom, /"@type":"BreadcrumbList"/);
+  assert.match(phantom, /calculadora\/standby/);
 });
 
 test("publishes problem-solving guides with sources, FAQs and tools", async () => {
@@ -211,6 +273,13 @@ test("publishes substantial comparison guides with visible schemas and primary s
   assert.match(guides[2], /Acondicionadores de aire y ventiladores/);
   assert.match(guides[3], /Guía de la bomba de calor/);
   assert.doesNotMatch(guides[2], /SEER.*EER|EER.*SEER/);
+  assert.match(guides[0], /comparison-calculator/);
+  assert.doesNotMatch(guides[1], /comparison-calculator/);
+  assert.doesNotMatch(guides[2], /comparison-calculator/);
+  assert.doesNotMatch(guides[3], /comparison-calculator/);
+  assert.match(guides[1], /potencia por tiempo no captura el termostato/);
+  assert.match(guides[2], /no modela COP, SCOP/);
+  assert.match(guides[3], /no modela COP, SCOP/);
 });
 
 test("answers long-tail calculation questions with visible FAQ and calculated visuals", async () => {
@@ -236,7 +305,7 @@ test("publishes an honest responsible-editor profile and keeps publication dates
   assert.match(about, /Responsable editorial de VatioClaro/);
   assert.match(about, /no equivale a una acreditación como instalador/);
   assert.match(calculation, /"datePublished":"2026-07-29"/);
-  assert.match(calculation, /"dateModified":"2026-08-02"/);
+  assert.match(calculation, /"dateModified":"2026-08-17"/);
 });
 
 test("publishes complete legal, privacy and cookie information", async () => {
@@ -267,6 +336,13 @@ test("publishes complete legal, privacy and cookie information", async () => {
     /En calidad de Afiliado de Amazon, obtengo ingresos por las compras adscritas/,
   );
   assert.match(affiliate, /noindex, follow/);
+});
+
+test("keeps the 404 noindex without inheriting the homepage canonical", async () => {
+  const html = await readOutput("_not-found.html");
+
+  assert.match(html, /<meta name="robots" content="noindex/);
+  assert.doesNotMatch(html, /<link rel="canonical"/);
 });
 
 test("publishes useful and transparent Amazon buying guides", async () => {
@@ -345,10 +421,7 @@ test("publishes useful and transparent Amazon buying guides", async () => {
     guides[2],
     /idae\.es\/guia-practica-de-la-energia-consumo-eficiente-y-responsable/,
   );
-  assert.match(
-    guides[4],
-    /aesan\.gob\.es\/AECOSAN\/web\/para_el_consumidor\/ampliacion\/colocar_segura\.htm/,
-  );
+  assert.doesNotMatch(allGuides, /aesan\.gob\.es\/AECOSAN/);
   assert.doesNotMatch(
     allGuides,
     /publicaciones\/guia-practica-de-la-energia|seguridad_alimentaria_hogar/,
@@ -360,4 +433,20 @@ test("publishes useful and transparent Amazon buying guides", async () => {
       new RegExp(`amazon\\.es\\/dp\\/${asin}\\?tag=vatio-21`),
     );
   }
+});
+
+test("includes AdSense script in head and provides a valid ads.txt", async () => {
+  const [html, adsTxt] = await Promise.all([
+    readOutput("index.html"),
+    readFile(new URL("../public/ads.txt", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(
+    html,
+    /<script[^>]*src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5290446197600060"[^>]*><\/script>/,
+  );
+  assert.equal(
+    adsTxt.trim(),
+    "google.com, pub-5290446197600060, DIRECT, f08c47fec0942fa0",
+  );
 });

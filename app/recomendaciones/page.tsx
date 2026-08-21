@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AMAZON_ASSOCIATE_DISCLOSURE } from "@/lib/affiliate";
-import { buyingGuides } from "@/lib/buying-guides";
+import { indexableBuyingGuides } from "@/lib/buying-guides";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,12 +17,19 @@ export const metadata: Metadata = {
       "Compara funciones y compatibilidad antes de comprar herramientas para medir o controlar el consumo doméstico.",
     images: [
       {
-        url: "/og.png",
-        width: 1672,
-        height: 941,
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
         alt: "Recomendaciones de medición y ahorro de VatioClaro",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Productos útiles para medir y ahorrar | ${SITE_NAME}`,
+    description:
+      "Compara funciones y compatibilidad antes de comprar herramientas para medir o controlar el consumo doméstico.",
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -35,7 +42,7 @@ export default function RecommendationsPage() {
     inLanguage: "es-ES",
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: buyingGuides.map((guide, index) => ({
+      itemListElement: indexableBuyingGuides.map((guide, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: guide.title,
@@ -78,7 +85,7 @@ export default function RecommendationsPage() {
         </div>
 
         <div className="recommendation-grid">
-          {buyingGuides.map((guide, index) => (
+          {indexableBuyingGuides.map((guide, index) => (
             <Link
               className="recommendation-card"
               href={`/recomendaciones/${guide.slug}`}

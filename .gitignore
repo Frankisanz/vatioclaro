@@ -40,7 +40,12 @@ yarn-error.log*
 
 # typescript
 next-env.d.ts
+tsconfig.tsbuildinfo
 /dist/
 /.wrangler/
 /outputs/
 /work/
+
+# unrelated local work and archives
+/FrescoCerca-work/
+/vatioclaro-site.tar.gz

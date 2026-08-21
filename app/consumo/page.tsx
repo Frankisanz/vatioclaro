@@ -16,7 +16,12 @@ export const metadata: Metadata = {
     description:
       "Calcula cuánto consumen tus aparatos y descubre los factores que más cambian el coste.",
     images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "Biblioteca de consumo de VatioClaro" },
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Biblioteca de consumo de VatioClaro",
+      },
     ],
   },
   twitter: {
@@ -24,12 +29,13 @@ export const metadata: Metadata = {
     title: `Guías de consumo eléctrico por aparato | ${SITE_NAME}`,
     description:
       "Calcula cuánto consumen tus aparatos y descubre los factores que más cambian el coste.",
-    images: ["/og.png"],
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
 export default function ConsumptionLibraryPage() {
-  const byCategory = appliances.reduce<Record<string, typeof appliances>>(
+  const indexableAppliances = appliances.filter((item) => item.indexable);
+  const byCategory = indexableAppliances.reduce<Record<string, typeof appliances>>(
     (groups, item) => {
       groups[item.category] ??= [];
       groups[item.category].push(item);
@@ -48,7 +54,7 @@ export default function ConsumptionLibraryPage() {
     isPartOf: { "@id": `${absoluteUrl("/")}#website` },
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: appliances.map((item, index) => ({
+      itemListElement: indexableAppliances.map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: `Cuánto consume ${item.articleName}`,

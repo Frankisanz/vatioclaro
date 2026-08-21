@@ -21,21 +21,9 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
-  alternates: { canonical: "/" },
   authors: [{ name: LEGAL_OWNER.name, url: "/sobre-vatioclaro" }],
   creator: LEGAL_OWNER.name,
   publisher: SITE_NAME,
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
   openGraph: {
     type: "website",
     locale: "es_ES",
@@ -68,7 +56,7 @@ const siteJsonLd = {
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
       url: SITE_URL,
-      logo: absoluteUrl("/og.png"),
+      logo: absoluteUrl("/apple-icon"),
       publishingPrinciples: absoluteUrl("/metodologia"),
     },
     {
@@ -91,13 +79,22 @@ const siteJsonLd = {
   ],
 };
 
+const isVercelDeployment = process.env.VERCEL === "1";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html data-scroll-behavior="smooth" lang="es">
+      <head>
+        <script
+          async
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5290446197600060"
+        />
+      </head>
       <body>
         <script
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
@@ -109,8 +106,12 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <SiteFooter />
-        <Analytics />
-        <SpeedInsights />
+        {isVercelDeployment ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

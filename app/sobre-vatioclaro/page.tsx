@@ -3,10 +3,11 @@ import Link from "next/link";
 import { LEGAL_OWNER } from "@/lib/legal";
 import {
   absoluteUrl,
-  CONTENT_UPDATED_AT,
   EDITORIAL_PERSON_ID,
   SITE_NAME,
 } from "@/lib/site";
+
+const ABOUT_UPDATED_AT = "2026-08-17";
 
 export const metadata: Metadata = {
   title: "Sobre VatioClaro y su criterio editorial",
@@ -20,8 +21,20 @@ export const metadata: Metadata = {
     description:
       "Una web de calculadoras y guías claras para entender el consumo eléctrico doméstico.",
     images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "Sobre VatioClaro" },
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Sobre VatioClaro",
+      },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Sobre ${SITE_NAME} y su criterio editorial`,
+    description:
+      "Una web de calculadoras y guías claras para entender el consumo eléctrico doméstico.",
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 
@@ -33,7 +46,7 @@ export default function AboutPage() {
     "@id": `${pageUrl}#profile-page`,
     url: pageUrl,
     name: `Sobre ${SITE_NAME} y su responsable editorial`,
-    dateModified: CONTENT_UPDATED_AT,
+    dateModified: ABOUT_UPDATED_AT,
     mainEntity: {
       "@type": "Person",
       "@id": EDITORIAL_PERSON_ID,
@@ -53,18 +66,36 @@ export default function AboutPage() {
         <div className="eyebrow">Sobre VatioClaro</div>
         <h1>Menos jerga. Mejores decisiones en casa.</h1>
         <p>
-          VatioClaro convierte datos técnicos en estimaciones que puedas revisar,
-          adaptar y usar para priorizar dónde merece la pena ahorrar energía.
+          VatioClaro es un proyecto editorial independiente que convierte datos
+          técnicos en estimaciones que puedas revisar, adaptar y usar para
+          priorizar dónde merece la pena ahorrar energía.
         </p>
       </section>
       <section className="simple-body">
         <article className="simple-body__inner article-guide">
-          <p className="article-updated">Criterio editorial actualizado: {CONTENT_UPDATED_AT}</p>
+          <p className="article-updated">
+            Criterio editorial actualizado: {ABOUT_UPDATED_AT}
+          </p>
           <h2>Qué hacemos</h2>
           <p>
             Publicamos calculadoras y guías sobre consumo eléctrico doméstico en
-            España. Cada página parte de una fórmula visible y explica qué datos
+            España. Cada cálculo o estimación parte de una fórmula visible y explica qué datos
             puedes cambiar: potencia, horas de uso, ciclos y precio por kWh.
+          </p>
+
+          <h2>Qué significa que seamos independientes</h2>
+          <p>
+            VatioClaro no es una comercializadora eléctrica, una distribuidora,
+            una administración pública ni un servicio de instalación. Su función
+            es ayudarte a interpretar datos y comparar escenarios, no venderte
+            una tarifa ni sustituir el criterio de un profesional cuando sea
+            necesario.
+          </p>
+          <p>
+            Una relación comercial futura no podrá comprar una conclusión,
+            retirar una limitación relevante ni convertir una fuente débil en
+            válida. Las fuentes, fórmulas y supuestos se eligen antes de decidir
+            si una página admite alguna vía de financiación.
           </p>
 
           <h2>Qué no prometemos</h2>
@@ -83,7 +114,7 @@ export default function AboutPage() {
             <li>Actualizamos las páginas cuando encontramos un dato obsoleto, una fórmula mejorable o una fuente más sólida.</li>
           </ul>
 
-          <h2>Responsabilidad editorial y correcciones</h2>
+          <h2>Autoría y responsabilidad editorial honestas</h2>
           <p>
             El responsable editorial y titular de VatioClaro es{" "}
             <strong>{LEGAL_OWNER.name}</strong>. Su función es revisar que las
@@ -93,7 +124,7 @@ export default function AboutPage() {
             estén verificadas.
           </p>
           <p>
-            Francisco Javier Sanchez Fuentes coordina el calendario editorial,
+            {LEGAL_OWNER.name} coordina el calendario editorial,
             comprueba que cada ejemplo pueda reproducirse con la fórmula
             publicada, revisa que las afirmaciones importantes estén limitadas
             por sus fuentes y decide si una corrección exige actualizar el texto
@@ -101,12 +132,22 @@ export default function AboutPage() {
             acreditación como instalador, técnico electricista, auditor
             energético ni asesor profesional.
           </p>
+
+          <h2>Cómo proponer una corrección</h2>
           <p>
             Si detectas un enlace roto, una cifra desactualizada o una
             explicación mejorable, puedes escribir a{" "}
             <a href={`mailto:${LEGAL_OWNER.email}`}>{LEGAL_OWNER.email}</a>.
-            Revisaremos la observación y actualizaremos la fecha cuando exista
-            un cambio editorial significativo.
+            Ayuda incluir la URL, el fragmento cuestionado y una fuente primaria
+            que permita comprobarlo. Revisaremos la observación, corregiremos el
+            dato si procede y actualizaremos la fecha cuando exista un cambio
+            editorial significativo.
+          </p>
+          <p>
+            Una corrección no se rechaza porque contradiga una recomendación o
+            reduzca una oportunidad de monetización. Si no podemos verificar una
+            cifra, la retiramos, la limitamos o la identificamos como supuesto en
+            lugar de defenderla como un hecho.
           </p>
 
           <h2>Cómo documentamos una comparación</h2>
@@ -143,9 +184,20 @@ export default function AboutPage() {
             qué perfiles aparecen ni su orden.
           </p>
           <p>
-            Explicamos cuándo no comprar, mostramos las limitaciones y
-            distinguimos el análisis documental de una prueba propia. Puedes
-            consultar todos los detalles en la{" "}
+            En el momento de esta revisión no mostramos espacios de publicidad.
+            La arquitectura permite activarlos más adelante sin colocarlos sobre
+            controles ni impedir acceder a un resultado. También podrían
+            estudiarse otros afiliados o contactos con proveedores de servicios
+            relevantes, siempre con identificación clara, revisión legal y
+            separación editorial.
+          </p>
+          <p>
+            No damos por implantada ninguna vía futura ni prometemos que vaya a
+            utilizarse. Si cambia la financiación, esta página y la documentación
+            legal deberán actualizarse antes o al mismo tiempo. Explicamos cuándo
+            no comprar, mostramos las limitaciones y distinguimos el análisis
+            documental de una prueba propia. Puedes consultar los detalles
+            actuales en la{" "}
             <Link href="/afiliacion">política de afiliación</Link>.
           </p>
 

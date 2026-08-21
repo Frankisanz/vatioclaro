@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { editorialGuides } from "@/lib/editorial-guides";
+import { indexableEditorialGuides } from "@/lib/editorial-guides";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 const foundationalGuides = [
@@ -25,7 +25,7 @@ const foundationalGuides = [
 ];
 
 const guides = [
-  ...editorialGuides.map((guide) => ({
+  ...indexableEditorialGuides.map((guide) => ({
     href: `/guias/${guide.slug}`,
     eyebrow: guide.eyebrow,
     title: guide.title,
@@ -46,8 +46,20 @@ export const metadata: Metadata = {
     description:
       "Aprende a calcular el consumo de tu hogar y toma mejores decisiones antes de comprar, instalar o encender.",
     images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "Guías de ahorro energético de VatioClaro" },
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Guías de ahorro energético de VatioClaro",
+      },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Guías de ahorro y consumo eléctrico | ${SITE_NAME}`,
+    description:
+      "Aprende a calcular el consumo de tu hogar y toma mejores decisiones antes de comprar, instalar o encender.",
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
   },
 };
 

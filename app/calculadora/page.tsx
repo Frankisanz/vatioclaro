@@ -1,43 +1,94 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EnergyCalculator } from "../components/EnergyCalculator";
+import { UniversalCalculator } from "../components/UniversalCalculator";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Calculadora de consumo eléctrico en euros",
-  description:
-    "Calcula cuántos kWh consume un aparato y cuánto cuesta por hora, al mes y al año a partir de su potencia y tiempo de uso.",
-  alternates: { canonical: "/calculadora" },
-  openGraph: {
-    type: "website",
-    url: "/calculadora",
-    title: `Calculadora de consumo eléctrico | ${SITE_NAME}`,
-    description:
-      "Convierte vatios y horas de uso en kWh, coste por hora, coste mensual y coste anual.",
-    images: [
-      { url: "/og.png", width: 1672, height: 941, alt: "Calculadora de consumo eléctrico" },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Calculadora de consumo eléctrico | ${SITE_NAME}`,
-    description:
-      "Convierte vatios y horas de uso en kWh, coste por hora, coste mensual y coste anual.",
-    images: ["/og.png"],
-  },
-};
+type SearchParams = Record<string, string | string[] | undefined>;
+type CalculatorPageProps = { searchParams: Promise<SearchParams> };
 
-export default function CalculatorPage() {
+const description =
+  "Calcula consumo y coste con vatios y tiempo, kWh por ciclo, kWh al año o consumo diario. Edita todos los supuestos y compara escenarios.";
+
+function hasSearchParams(searchParams: SearchParams) {
+  return Object.values(searchParams).some((value) => value !== undefined);
+}
+
+function firstSafeValue(value: string | string[] | undefined, maxLength = 32) {
+  const candidate = Array.isArray(value) ? value[0] : value;
+  return candidate?.slice(0, maxLength);
+}
+
+export async function generateMetadata({
+  searchParams,
+}: CalculatorPageProps): Promise<Metadata> {
+  const values = await searchParams;
+  const isSharedCalculation = hasSearchParams(values);
+
+  return {
+    title: "Calculadora de consumo eléctrico en euros",
+    description,
+    alternates: { canonical: "/calculadora" },
+    ...(isSharedCalculation
+      ? { robots: { index: false, follow: true } }
+      : undefined),
+    openGraph: {
+      type: "website",
+      url: "/calculadora",
+      title: "Calculadora de consumo eléctrico | " + SITE_NAME,
+      description,
+      images: [
+        {
+          url: "/images/vatioclaro-hogar-energia-og.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Calculadora de consumo eléctrico de VatioClaro",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Calculadora de consumo eléctrico | " + SITE_NAME,
+      description,
+      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
+    },
+  };
+}
+
+export default async function CalculatorPage({
+  searchParams,
+}: CalculatorPageProps) {
+  const query = await searchParams;
+  const initialValues = {
+    method: firstSafeValue(query.metodo),
+    watts: firstSafeValue(query.watts),
+    hours: firstSafeValue(query.horas),
+    days: firstSafeValue(query.dias),
+    price: firstSafeValue(query.precio),
+    kwhPerCycle: firstSafeValue(query.kwh_ciclo),
+    cycles: firstSafeValue(query.ciclos),
+    cyclePeriod: firstSafeValue(query.periodo),
+    kwhPerYear: firstSafeValue(query.kwh_anio),
+    kwhPerDay: firstSafeValue(query.kwh_dia),
+    applianceName: firstSafeValue(query.aparato, 80),
+  };
+  const pageUrl = absoluteUrl("/calculadora");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
+    "@id": pageUrl + "#app",
     name: "Calculadora de consumo eléctrico de VatioClaro",
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",
-    url: absoluteUrl("/calculadora"),
+    url: pageUrl,
     inLanguage: "es-ES",
-    description:
-      "Herramienta gratuita para estimar el consumo eléctrico y el coste de un aparato a partir de vatios, horas, días y precio por kWh.",
+    description,
+    featureList: [
+      "Cálculo por potencia y tiempo",
+      "Cálculo por kWh por ciclo",
+      "Cálculo por kWh al año",
+      "Cálculo por consumo diario",
+      "Escenarios de reducción de uso",
+    ],
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
   };
 
@@ -47,72 +98,85 @@ export default function CalculatorPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />
-      <section className="simple-hero">
-        <div className="eyebrow">Herramienta gratuita</div>
-        <h1>Calculadora de consumo eléctrico.</h1>
+      <section className="simple-hero calculator-page-hero">
+        <div className="eyebrow">Herramienta gratuita · sin registro</div>
+        <h1>Convierte el consumo de tu aparato en euros.</h1>
         <p>
-          Introduce los vatios del aparato, el tiempo de uso y el precio por kWh
-          que quieras probar. El resultado se actualiza al instante.
+          Elige el dato que realmente tienes —potencia, ciclos, etiqueta anual o
+          consumo diario— y sustituye el ejemplo por tus propios valores.
         </p>
       </section>
-      <section className="article-body">
+      <section className="article-body calculator-workspace">
         <div className="simple-body__inner">
-          <EnergyCalculator />
+          <UniversalCalculator initialValues={initialValues} />
+
+          <nav aria-label="Otras calculadoras" className="calculator-tools-grid">
+            <Link href="/calculadora/comparar" prefetch={false}>
+              <span>Comparar</span>
+              <strong>Dos escenarios A/B</strong>
+              <small>Potencia, tiempo y diferencia anual.</small>
+            </Link>
+            <Link href="/calculadora/standby" prefetch={false}>
+              <span>Standby</span>
+              <strong>Consumo en espera</strong>
+              <small>Aparatos, horas y coste anual.</small>
+            </Link>
+            <Link href="/calculadora/etiqueta-energetica" prefetch={false}>
+              <span>Etiqueta</span>
+              <strong>kWh declarados</strong>
+              <small>Coste a 1, 5 y 10 años.</small>
+            </Link>
+            <Link href="/calculadora/amortizacion" prefetch={false}>
+              <span>Compra + energía</span>
+              <strong>Coste de propiedad</strong>
+              <small>Compara las cuentas, sin recomendar por ti.</small>
+            </Link>
+          </nav>
 
           <div className="calculator-explainer">
             <div>
               <span>01</span>
-              <h2>Busca el dato correcto</h2>
+              <h2>Elige el método adecuado</h2>
               <p>
-                La potencia suele aparecer en la etiqueta técnica, cerca del cable
-                o en el manual. Si solo ves kilovatios, multiplica por 1.000: 1,5
-                kW son 1.500 W.
+                Usa potencia y tiempo cuando el consumo sea relativamente
+                estable. Para programas o aparatos con etiqueta, prioriza los
+                kWh por ciclo, por 100 ciclos o al año.
               </p>
             </div>
             <div>
               <span>02</span>
-              <h2>Usa tu rutina real</h2>
+              <h2>Sustituye el ejemplo</h2>
               <p>
-                Anota horas y días de una semana normal. Para aparatos por
-                programas, como lavadora o lavavajillas, es preferible usar los
-                kWh por ciclo de la etiqueta.
+                Busca los W o kWh en la placa, etiqueta o manual y usa el precio
+                variable por kWh que quieras analizar. Ningún valor inicial se
+                presenta como universal.
               </p>
             </div>
             <div>
               <span>03</span>
-              <h2>Interpreta el resultado</h2>
+              <h2>Lee el resultado como estimación</h2>
               <p>
-                El cálculo estima la energía asociada al aparato. Los cargos fijos
-                y otros conceptos de tu factura no cambian por cada hora de uso.
+                Termostatos, compresores, modos de uso y condiciones exteriores
+                pueden cambiar el consumo real. Los costes fijos de la factura no
+                se atribuyen al aparato.
               </p>
             </div>
           </div>
 
-          <h2>La fórmula que usa la calculadora</h2>
+          <h2>Fórmulas visibles</h2>
           <div className="formula-box">
-            Consumo (kWh) = potencia (W) ÷ 1.000 × horas de uso × días
+            Potencia: W ÷ 1.000 × horas × días
             <br />
-            Coste (€) = consumo (kWh) × precio (€ / kWh)
+            Ciclos: kWh/ciclo × número de ciclos
+            <br />
+            Coste: energía (kWh) × precio introducido (€/kWh)
           </div>
-
-          <h2>Cuándo la estimación puede desviarse</h2>
-          <ul>
-            <li>Un termostato, compresor o resistencia puede encenderse y apagarse durante el uso.</li>
-            <li>La potencia máxima de una fuente o cargador no siempre es el consumo real del dispositivo.</li>
-            <li>Los programas eco pueden durar más y, aun así, consumir menos energía.</li>
-          </ul>
           <p>
-            Para una cifra más precisa, mide varios días con un medidor de enchufe
-            adecuado para la potencia del aparato y usa una muestra representativa
-            de tu rutina. Antes de comprar, revisa nuestra{" "}
-            <Link href="/recomendaciones/medidores-consumo-electrico-enchufe">
-              guía para elegir un medidor de consumo
-            </Link>.
-          </p>
-          <p>
-            Si quieres entender cada paso, lee la guía sobre{" "}
+            Los escenarios del 25 % y 50 % menos reducen proporcionalmente el
+            uso introducido; no prometen ese ahorro en un caso real. Consulta
+            también nuestra guía para{" "}
             <Link href="/guias/como-calcular-consumo-electrico">
-              cómo calcular el consumo eléctrico
+              calcular y comprobar cada paso
             </Link>
             .
           </p>

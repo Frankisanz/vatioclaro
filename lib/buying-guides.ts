@@ -46,10 +46,12 @@ export type BuyingGuideLink = {
 
 export type BuyingGuide = {
   slug: string;
+  indexable: boolean;
   eyebrow: string;
   title: string;
   seoTitle: string;
   description: string;
+  publishedAt: string;
   updatedAt: string;
   intro: string;
   directAnswer: string;
@@ -65,11 +67,13 @@ export type BuyingGuide = {
 export const buyingGuides: BuyingGuide[] = [
   {
     slug: "medidores-consumo-electrico-enchufe",
+    indexable: true,
     eyebrow: "Medición doméstica",
     title: "Medidores de consumo eléctrico de enchufe: cómo elegir",
     seoTitle: "Medidores de consumo eléctrico de enchufe: guía 2026",
     description:
       "Compara un vatímetro con pantalla, un enchufe con historial y un medidor avanzado. Aprende qué carga, precisión y datos debes comprobar antes de comprar.",
+    publishedAt: "2026-08-02",
     updatedAt: "2026-08-02",
     intro:
       "Un medidor de enchufe permite observar la potencia instantánea y acumular kWh de un aparato conectado. Es útil para comprobar un frigorífico, un televisor, un ordenador o pequeños equipos, pero no sirve para instalaciones fijas ni debe usarse por encima de la carga admitida. La elección depende de si quieres una lectura puntual, historial en el móvil o integración domótica.",
@@ -153,8 +157,8 @@ export const buyingGuides: BuyingGuide[] = [
           "Su umbral de medición declarado parte de 0,5 W, por lo que no es la mejor opción para cuantificar consumos inferiores. No debe conectarse a alargadores ni regletas.",
         amazonAsin: "B0CKR762DL",
         source: {
-          title: "Manual Goobay 64590 en español",
-          url: "https://asset.conrad.com/media10/add/160267/c1/-/de/871121286ML00/bedienungsanleitung-871121338-goobay-64590-digitales-energiekostenmessgeraet-pro-steckdose-stromzaehler-3680w-16a-230v-strommessgeraet-lc-display.pdf",
+          title: "Ficha y manual oficiales Goobay 64590",
+          url: "https://www.wentronic.com/en/digital-energy-cost-meter-pro-64590",
         },
       },
     ],
@@ -221,8 +225,8 @@ export const buyingGuides: BuyingGuide[] = [
         url: "https://www.tapo.com/es/product/smart-plug/tapo-p110/",
       },
       {
-        title: "Goobay — manual 64590 Digital Pro",
-        url: "https://asset.conrad.com/media10/add/160267/c1/-/de/871121286ML00/bedienungsanleitung-871121338-goobay-64590-digitales-energiekostenmessgeraet-pro-steckdose-stromzaehler-3680w-16a-230v-strommessgeraet-lc-display.pdf",
+        title: "Goobay — ficha y manual oficiales 64590 Digital Pro",
+        url: "https://www.wentronic.com/en/digital-energy-cost-meter-pro-64590",
       },
     ],
     related: [
@@ -233,11 +237,13 @@ export const buyingGuides: BuyingGuide[] = [
   },
   {
     slug: "enchufes-inteligentes-medidor-consumo",
+    indexable: true,
     eyebrow: "Control y automatización",
     title: "Enchufes inteligentes con medidor de consumo: qué comparar",
     seoTitle: "Enchufes inteligentes con medidor de consumo: guía",
     description:
       "Tapo P110, P110M y Shelly Plug S Gen3 comparados por medición, Matter, carga, funcionamiento local y límites. Elige sin pagar por funciones que no usarás.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "Un enchufe inteligente con monitorización combina un medidor con un interruptor controlable. Puede registrar consumo, ejecutar horarios y cortar determinadas cargas, pero añade aplicación, conectividad y condiciones de compatibilidad. No debe elegirse únicamente por los amperios impresos en un anuncio.",
@@ -398,11 +404,13 @@ export const buyingGuides: BuyingGuide[] = [
   },
   {
     slug: "temporizadores-regletas-consumo-fantasma",
+    indexable: true,
     eyebrow: "Consumo en espera",
     title: "Temporizador o regleta con interruptor: qué conviene",
     seoTitle: "Temporizador o regleta para reducir consumo fantasma",
     description:
       "Elige entre temporizador mecánico, regleta desconectable y regleta inteligente según horario, carga, número de tomas y consumo fantasma medido.",
+    publishedAt: "2026-08-02",
     updatedAt: "2026-08-02",
     intro:
       "Una regleta o un temporizador puede cortar varios consumos en espera, pero no todos los equipos deben desconectarse y no toda regleta protege frente a sobretensiones. La compra correcta empieza midiendo el grupo y definiendo si necesitas un horario repetido, un único interruptor o control independiente.",
@@ -563,11 +571,13 @@ export const buyingGuides: BuyingGuide[] = [
   },
   {
     slug: "termohigrometros-casa",
+    indexable: true,
     eyebrow: "Temperatura y humedad",
     title: "Termohigrómetros para casa: cómo elegir y dónde colocarlos",
     seoTitle: "Termohigrómetros para casa: guía para elegir uno",
     description:
       "Compara termohigrómetros con pantalla, Bluetooth y alertas remotas. Aprende a valorar tolerancia, historial, calibración y ubicación.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "Medir temperatura y humedad ayuda a entender si la sensación de confort cambia por el ambiente antes de ajustar calefacción, ventilación o deshumidificación. Un sensor sencillo responde qué ocurre ahora; uno con historial muestra patrones; y uno conectado puede avisar a distancia.",
@@ -725,12 +735,14 @@ export const buyingGuides: BuyingGuide[] = [
   },
   {
     slug: "termometros-frigorifico-congelador",
+    indexable: true,
     eyebrow: "Conservación y diagnóstico",
     title: "Termómetros para frigorífico y congelador: tipos y alarmas",
     seoTitle: "Termómetro para frigorífico y congelador: cómo elegir",
     description:
       "Compara termómetros colgantes, digitales y con sonda para frigorífico o congelador. Revisa rango, alarma, memoria y colocación antes de comprar.",
-    updatedAt: "2026-08-02",
+    publishedAt: "2026-08-02",
+    updatedAt: "2026-08-17",
     intro:
       "La rueda del frigorífico no indica necesariamente grados. Un termómetro independiente ayuda a comprobar estabilidad, detectar cambios y ajustar con más criterio. Para el congelador, el rango y la resistencia al frío son especialmente importantes.",
     directAnswer:
@@ -848,8 +860,8 @@ export const buyingGuides: BuyingGuide[] = [
     ],
     sources: [
       {
-        title: "AESAN — colocar los alimentos de forma segura",
-        url: "https://www.aesan.gob.es/AECOSAN/web/para_el_consumidor/ampliacion/colocar_segura.htm",
+        title: "EFSA — conservación segura de alimentos por debajo de 5 °C",
+        url: "https://www.efsa.europa.eu/en/safe2eat/food-poisoning",
       },
       {
         title: "VatioClaro — consumo del frigorífico",
@@ -871,8 +883,20 @@ export const buyingGuides: BuyingGuide[] = [
   },
 ];
 
+export const indexableBuyingGuides = buyingGuides.filter(
+  (guide) => guide.indexable,
+);
+
 export function getBuyingGuide(slug: string) {
   return buyingGuides.find((guide) => guide.slug === slug);
+}
+
+export function isIndexableBuyingGuideHref(href: string) {
+  const match = /^\/recomendaciones\/([^/?#]+)/.exec(href);
+  if (!match) return true;
+
+  const guide = getBuyingGuide(match[1]);
+  return guide ? guide.indexable : true;
 }
 
 const applianceGuideMap: Record<string, BuyingGuideLink> = {
@@ -919,5 +943,6 @@ const applianceGuideMap: Record<string, BuyingGuideLink> = {
 };
 
 export function getBuyingGuideForAppliance(slug: string) {
-  return applianceGuideMap[slug];
+  const guide = applianceGuideMap[slug];
+  return guide && isIndexableBuyingGuideHref(guide.href) ? guide : undefined;
 }

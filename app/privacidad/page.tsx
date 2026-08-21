@@ -126,8 +126,11 @@ export default function PrivacyPage() {
           <p>
             No vendemos datos personales ni enviamos los valores introducidos en
             las calculadoras a Vercel Analytics, redes publicitarias o
-            plataformas sociales. No utilizamos Google Analytics ni Google
-            AdSense en esta versión del sitio.
+            plataformas sociales. No utilizamos Google Analytics. El script de
+            Google AdSense se encuentra integrado exclusivamente para la
+            verificación y revisión técnica del sitio ante Google, sin que
+            actualmente se muestren anuncios ni se elaboren perfiles
+            publicitarios.
           </p>
 
           <h2>5. Derechos</h2>
@@ -151,17 +154,22 @@ export default function PrivacyPage() {
             contacto en la <Link href="/cookies">Política de cookies</Link>.
           </p>
           <p>
-            No hay anuncios de display ni Google AdSense activos. Sí existen
-            enlaces de afiliado identificados que llevan a Amazon.es. Estos son
-            enlaces externos normales: no cargamos en VatioClaro píxeles,
-            anuncios ni scripts de Amazon. Al pulsarlos abandonas este sitio y
-            se aplican la privacidad y las tecnologías del destino. Consulta
-            nuestra <Link href="/afiliacion">política de afiliación</Link>.
+            El script de Google AdSense está incorporado en la cabecera del
+            sitio únicamente para la verificación técnica del dominio por parte
+            de Google; en esta fase no se muestran bloques de anuncios ni
+            formatos publicitarios automáticos (Auto Ads). Sí existen enlaces de
+            afiliado identificados que llevan a Amazon.es. Estos son enlaces
+            externos normales: no cargamos en VatioClaro píxeles, anuncios ni
+            scripts de Amazon. Al pulsarlos abandonas este sitio y se aplican la
+            privacidad y las tecnologías del destino. Consulta nuestra{" "}
+            <Link href="/afiliacion">política de afiliación</Link>.
           </p>
           <p>
-            Antes de incorporar Google AdSense u otro proveedor publicitario
-            actualizaremos esta política, identificaremos a los proveedores y
-            habilitaremos el mecanismo de consentimiento previo que corresponda.
+            Antes de activar la publicación de anuncios, publicidad
+            personalizada o tecnologías que requieran consentimiento según la
+            normativa aplicable (RGPD y LSSI), se habilitará la Plataforma de
+            Gestión del Consentimiento (CMP) correspondiente para recabar y
+            gestionar las preferencias de las personas usuarias.
           </p>
 
           <h2>7. Actualizaciones</h2>

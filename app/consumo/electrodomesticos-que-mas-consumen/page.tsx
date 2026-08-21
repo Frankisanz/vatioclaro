@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { appliances } from "@/lib/appliances";
+import { appliances, type Appliance } from "@/lib/appliances";
 import { LEGAL_OWNER } from "@/lib/legal";
 import {
   absoluteUrl,
@@ -28,6 +28,30 @@ const examples = selectedSlugs.map((slug) => {
 
   return item;
 });
+
+function describeExample(item: Appliance) {
+  const input = item.calculation;
+
+  if (input.method === "annual") {
+    return `${input.annualKwh.toLocaleString("es-ES")} kWh/año`;
+  }
+
+  if (input.method === "cycle") {
+    return item.labelKwhPer100Cycles
+      ? `${item.labelKwhPer100Cycles.toLocaleString("es-ES")} kWh/100 ciclos · ${input.cycles.toLocaleString("es-ES")} ciclos/mes`
+      : `${input.kwhPerCycle.toLocaleString("es-ES")} kWh/ciclo · ${input.cycles.toLocaleString("es-ES")} ciclos/mes`;
+  }
+
+  if (input.method === "daily") {
+    return `${input.dailyKwh.toLocaleString("es-ES")} kWh/día`;
+  }
+
+  if (input.method === "standby") {
+    return `${input.watts.toLocaleString("es-ES")} W · ${input.hoursPerDay.toLocaleString("es-ES")} h/día`;
+  }
+
+  return `${input.watts.toLocaleString("es-ES")} W · ${input.hoursPerDay.toLocaleString("es-ES")} h/día`;
+}
 
 export const metadata: Metadata = {
   title: "Qué electrodomésticos consumen más y cómo calcularlo",
@@ -153,8 +177,16 @@ export default function HighestConsumptionGuidePage() {
             ejemplo editable. Sirve para decidir qué aparatos merece la pena
             medir primero; no representa el gasto de todos los hogares.
           </p>
-          <div className="table-scroll">
+          <div
+            aria-label="Ejemplos mensuales de consumo por aparato"
+            className="table-scroll"
+            role="region"
+            tabIndex={0}
+          >
             <table className="comparison-table">
+              <caption className="comparison-table__caption">
+                Ejemplos editables de consumo y coste mensual por aparato
+              </caption>
               <thead>
                 <tr>
                   <th scope="col">Aparato</th>
@@ -170,9 +202,7 @@ export default function HighestConsumptionGuidePage() {
                       <Link href={`/consumo/${item.slug}`}>{item.name}</Link>
                     </th>
                     <td>
-                      {item.calculationMode === "cycle"
-                        ? `${item.kwhPerCycle?.toLocaleString("es-ES")} kWh/ciclo · ${item.cyclesPerMonth} ciclos/mes`
-                        : `${item.watts.toLocaleString("es-ES")} W · ${item.hours} h/día`}
+                      {describeExample(item)}
                     </td>
                     <td>
                       {item.exampleCost.toLocaleString("es-ES", {

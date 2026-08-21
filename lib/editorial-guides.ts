@@ -1,3 +1,10 @@
+import {
+  EXAMPLE_ELECTRICITY_PRICE,
+  formatCurrency,
+  formatElectricityPrice,
+  formatKwh,
+} from "./electricity";
+
 export type EditorialQuickFact = {
   label: string;
   value: string;
@@ -39,10 +46,12 @@ export type EditorialComparison = {
 
 export type EditorialGuide = {
   slug: string;
+  indexable: boolean;
   eyebrow: string;
   title: string;
   seoTitle: string;
   description: string;
+  publishedAt: string;
   updatedAt: string;
   intro: string;
   directAnswer: string;
@@ -57,11 +66,13 @@ export type EditorialGuide = {
 export const editorialGuides: EditorialGuide[] = [
   {
     slug: "por-que-ha-subido-factura-luz",
+    indexable: true,
     eyebrow: "Diagnóstico de factura",
     title: "¿Por qué ha subido mi factura de la luz?",
     seoTitle: "Por qué ha subido tu factura de la luz: qué revisar",
     description:
       "Compara consumo, precio, periodo, potencia, lecturas y servicios para localizar por qué ha subido tu factura eléctrica y saber a quién reclamar.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "Una factura más alta no demuestra por sí sola que el contador esté mal ni que hayas consumido mucho más. El total puede cambiar por los días facturados, el precio del contrato, servicios adicionales o la regularización de una lectura estimada. Para encontrar la causa, compara dos recibos equivalentes y separa cada componente.",
@@ -216,11 +227,13 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "potencia-contratada",
+    indexable: true,
     eyebrow: "Coste fijo y simultaneidad",
     title: "Qué potencia eléctrica contratar en casa",
     seoTitle: "Qué potencia contratar: guía para punta y valle",
     description:
       "Aprende a revisar tu potencia máxima demandada, estimar aparatos simultáneos y elegir potencias punta y valle sin promesas de ahorro ni cortes evitables.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "La potencia contratada limita cuánta electricidad puedes demandar a la vez y forma parte del coste fijo. No equivale al consumo mensual: los kW describen capacidad instantánea y los kWh, energía acumulada. Para elegirla, observa usos simultáneos y máximos registrados, no una tabla genérica.",
@@ -371,11 +384,13 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "etiqueta-energetica-a-euros",
+    indexable: true,
     eyebrow: "Compra informada",
     title: "Cómo convertir la etiqueta energética en euros",
     seoTitle: "Etiqueta energética: calcula el coste en euros",
     description:
       "Interpreta kWh al año o por 100 ciclos, usa el QR de EPREL y compara el coste de dos electrodomésticos con tus hábitos y precio de electricidad.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "La letra de eficiencia es útil, pero no cuenta toda la historia. Dos electrodomésticos de la misma clase pueden tener distinto tamaño, capacidad y consumo declarado. Para estimar lo que pagarás necesitas localizar la unidad correcta de la etiqueta, adaptarla a tu uso y multiplicarla por el precio de energía de tu propio contrato. El resultado será una estimación comparable, no una garantía de consumo.",
@@ -528,11 +543,13 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "como-entender-factura-luz",
+    indexable: true,
     eyebrow: "Factura paso a paso",
     title: "Cómo entender la factura de la luz",
     seoTitle: "Cómo entender la factura de la luz en 2026",
     description:
       "Guía para localizar contrato, potencia, energía, lecturas, impuestos, servicios y autoconsumo en una factura eléctrica sin confundir conceptos.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "Las facturas cambian de diseño según la comercializadora, pero contienen bloques comparables. Saber dónde está cada dato permite comprobar el recibo, estimar cambios y usar las herramientas oficiales sin entregar información sensible a intermediarios. Esta guía explica el recorrido de lectura; no sustituye las condiciones particulares de tu contrato.",
@@ -686,11 +703,13 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "compensacion-excedentes-solares",
+    indexable: true,
     eyebrow: "Autoconsumo sin promesas",
     title: "Cómo funciona la compensación de excedentes solares",
     seoTitle: "Compensación de excedentes solares: cómo funciona",
     description:
       "Entiende qué energía se compensa, cuál es el límite económico, cómo cambia entre PVPC y mercado libre y por qué no garantiza una factura cero.",
+    publishedAt: "2026-07-29",
     updatedAt: "2026-07-29",
     intro:
       "Cuando una instalación fotovoltaica produce más electricidad de la que la vivienda usa en ese instante, la energía sobrante puede verterse a la red. En determinadas modalidades, la comercializadora valora esos excedentes y descuenta su importe en la factura. No es un balance físico anual ni una promesa de cobrar por toda la producción.",
@@ -843,12 +862,14 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "induccion-vs-vitroceramica-consumo",
+    indexable: true,
     eyebrow: "Comparativa de cocina",
     title: "Inducción vs vitrocerámica: consumo y coste",
     seoTitle: "Inducción vs vitrocerámica: consumo, coste y diferencias",
     description:
       "Compara inducción y vitrocerámica sin porcentajes mágicos: tiempo de cocción, recipiente, potencia, calor residual y método para calcular tus kWh.",
-    updatedAt: "2026-08-02",
+    publishedAt: "2026-08-02",
+    updatedAt: "2026-08-17",
     intro:
       "La pregunta útil no es qué placa tiene más vatios, sino cuánta electricidad necesita cada una para completar la misma receta. Una zona de inducción puede declarar una potencia máxima alta y terminar antes; una vitrocerámica radiante calienta primero el cristal y conserva más calor residual. El resultado cambia con la olla, el diámetro, el nivel elegido y el tiempo efectivo.",
     directAnswer:
@@ -982,12 +1003,14 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "horno-vs-freidora-aire-consumo",
+    indexable: true,
     eyebrow: "Comparativa por ración",
     title: "Horno vs freidora de aire: consumo y coste",
     seoTitle: "Horno vs freidora de aire: consumo, coste y cálculo",
     description:
       "Aprende a comparar horno y freidora de aire por ración, tiempo, precalentamiento y kWh medidos, sin dar por universal un ahorro publicitario.",
-    updatedAt: "2026-08-02",
+    publishedAt: "2026-08-02",
+    updatedAt: "2026-08-17",
     intro:
       "Una freidora de aire es un pequeño horno de convección, pero una cavidad menor no garantiza el mismo resultado para cualquier cantidad. Para pocas raciones puede calentarse antes; para cocinar varias bandejas, repetir tandas puede reducir o eliminar esa ventaja. La comparación justa usa la misma comida preparada y suma todos los ciclos necesarios.",
     directAnswer:
@@ -1065,7 +1088,7 @@ export const editorialGuides: EditorialGuide[] = [
       {
         title: "Ejemplo de método, sin afirmar cuál gana en tu casa",
         paragraphs: [
-          "Supón que una sesión de horno registra 1,10 kWh y produce cuatro raciones: son 0,275 kWh por ración. Si una freidora registra 0,42 kWh por tanda de dos raciones y necesitas dos tandas, suma 0,84 kWh y divide entre cuatro: 0,21 kWh por ración. A 0,25 €/kWh, los costes de esa comparación serían 0,275 € y 0,21 € por comida completa.",
+          `Supón que una sesión de horno registra 1,10 kWh y produce cuatro raciones: son 0,275 kWh por ración. Si una freidora registra 0,42 kWh por tanda de dos raciones y necesitas dos tandas, suma 0,84 kWh y divide entre cuatro: 0,21 kWh por ración. A ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}, los costes de esa comparación serían ${formatCurrency(1.1 * EXAMPLE_ELECTRICITY_PRICE)} y ${formatCurrency(0.84 * EXAMPLE_ELECTRICITY_PRICE)} por comida completa.`,
           "Estas cifras son una demostración matemática, no mediciones de VatioClaro ni valores típicos garantizados. Al cambiar receta, cantidad, aparato o precio cambia el resultado. La utilidad del ejemplo es mostrar que omitir la segunda tanda habría comparado 0,42 con 1,10 kWh y habría respondido a dos cantidades distintas.",
         ],
       },
@@ -1121,12 +1144,14 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "aire-acondicionado-split-vs-portatil",
+    indexable: true,
     eyebrow: "Comparativa de refrigeración",
     title: "Aire acondicionado split vs portátil: consumo",
     seoTitle: "Aire acondicionado split vs portátil: consumo y coste",
     description:
       "Compara aire acondicionado split y portátil por eficiencia declarada, conductos, ruido, kWh y capacidad útil, con un método aplicable a tu habitación.",
-    updatedAt: "2026-08-02",
+    publishedAt: "2026-08-02",
+    updatedAt: "2026-08-17",
     intro:
       "Un split y un portátil pueden anunciar una capacidad de refrigeración parecida y comportarse de forma muy distinta en una habitación. El equipo portátil expulsa aire caliente mediante uno o dos conductos y necesita gestionar ese intercambio con el exterior; el split separa unidad interior y exterior. El consumo depende también del clima, aislamiento, infiltraciones, tamaño y consigna.",
     directAnswer:
@@ -1267,12 +1292,14 @@ export const editorialGuides: EditorialGuide[] = [
   },
   {
     slug: "radiador-electrico-vs-bomba-calor",
+    indexable: true,
     eyebrow: "Comparativa de calefacción",
     title: "Radiador eléctrico vs bomba de calor: consumo",
     seoTitle: "Radiador eléctrico vs bomba de calor: consumo y coste",
     description:
       "Compara calefacción por resistencia y bomba de calor con energía térmica, COP, rendimiento estacional, clima y un ejemplo calculado sin promesas universales.",
-    updatedAt: "2026-08-02",
+    publishedAt: "2026-08-02",
+    updatedAt: "2026-08-17",
     intro:
       "Un radiador o calefactor de resistencia convierte electricidad en calor dentro de la estancia. Una bomba de calor usa electricidad para trasladar calor desde el exterior y puede entregar varias unidades térmicas por cada unidad eléctrica en condiciones adecuadas. Esa ventaja depende de temperatura, equipo, instalación, desescarche, mantenimiento y demanda real.",
     directAnswer:
@@ -1337,7 +1364,7 @@ export const editorialGuides: EditorialGuide[] = [
       {
         title: "Ejemplo de coste con supuestos visibles",
         paragraphs: [
-          "Con el escenario anterior y un precio de análisis de 0,25 €/kWh, la resistencia usaría 4 × 0,25 = 1 € de electricidad para esa aportación térmica. La bomba de calor con COP ilustrativo 3 usaría 4 ÷ 3 = 1,33 kWh y costaría aproximadamente 0,33 €. La diferencia del ejercicio es 0,67 €, antes de inversión, mantenimiento y variación real del rendimiento.",
+          `Con el escenario anterior y un precio de análisis de ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}, la resistencia usaría 4 kWh y costaría ${formatCurrency(4 * EXAMPLE_ELECTRICITY_PRICE)} de electricidad para esa aportación térmica. La bomba de calor con COP ilustrativo 3 usaría 4 ÷ 3 = ${formatKwh(4 / 3, 2)} y costaría aproximadamente ${formatCurrency((4 / 3) * EXAMPLE_ELECTRICITY_PRICE)}. La diferencia del ejercicio es ${formatCurrency((4 - 4 / 3) * EXAMPLE_ELECTRICITY_PRICE)}, antes de inversión, mantenimiento y variación real del rendimiento.`,
           "Para convertirlo en un escenario mensual, primero estima la demanda térmica del espacio con criterio técnico o usa consumos medidos comparables. No multipliques el ejemplo por todas las horas del invierno como si el equipo funcionara siempre a plena carga. Termostato, ganancias solares, ocupación, aislamiento y clima cambian la demanda.",
         ],
       },
@@ -1417,6 +1444,18 @@ export const editorialGuides: EditorialGuide[] = [
   },
 ];
 
+export const indexableEditorialGuides = editorialGuides.filter(
+  (guide) => guide.indexable,
+);
+
 export function getEditorialGuide(slug: string) {
   return editorialGuides.find((guide) => guide.slug === slug);
+}
+
+export function isIndexableEditorialGuideHref(href: string) {
+  const match = /^\/guias\/([^/?#]+)/.exec(href);
+  if (!match) return true;
+
+  const guide = getEditorialGuide(match[1]);
+  return guide ? guide.indexable : true;
 }

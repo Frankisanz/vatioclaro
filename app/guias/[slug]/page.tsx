@@ -2,15 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContractedPowerReview } from "@/app/components/ContractedPowerReview";
+import { ComparisonCalculator } from "@/app/components/ComparisonCalculator";
 import { EditorialComparisonTable } from "@/app/components/EditorialComparisonTable";
 import { EditorialIllustration } from "@/app/components/EditorialIllustration";
 import { EnergyLabelCalculator } from "@/app/components/EnergyLabelCalculator";
+import { SourceLink } from "@/app/components/SourceLink";
+import { isIndexableBuyingGuideHref } from "@/lib/buying-guides";
 import {
   editorialGuides,
   getEditorialGuide,
+  isIndexableEditorialGuideHref,
 } from "@/lib/editorial-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
 import { absoluteUrl, EDITORIAL_PERSON_ID, SITE_NAME } from "@/lib/site";
+
+export const dynamicParams = false;
+
+const powerAndTimeComparisonGuides = new Set([
+  "induccion-vs-vitroceramica-consumo",
+]);
 
 export function generateStaticParams() {
   return editorialGuides.map((guide) => ({ slug: guide.slug }));
@@ -34,12 +44,15 @@ export async function generateMetadata({
     title: guide.seoTitle,
     description: guide.description,
     alternates: { canonical: path },
+    robots: guide.indexable
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: "article",
       url: path,
       title: `${guide.seoTitle} | ${SITE_NAME}`,
       description: guide.description,
-      publishedTime: guide.updatedAt,
+      publishedTime: guide.publishedAt,
       modifiedTime: guide.updatedAt,
       images: [
         {
@@ -82,6 +95,14 @@ export default async function EditorialGuidePage({
 
   const path = `/guias/${guide.slug}`;
   const pageUrl = absoluteUrl(path);
+  const supportsPowerAndTimeComparison = powerAndTimeComparisonGuides.has(
+    guide.slug,
+  );
+  const related = guide.related.filter(
+    (item) =>
+      isIndexableEditorialGuideHref(item.href) &&
+      isIndexableBuyingGuideHref(item.href),
+  );
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -93,7 +114,7 @@ export default async function EditorialGuidePage({
         url: pageUrl,
         mainEntityOfPage: pageUrl,
         inLanguage: "es-ES",
-        datePublished: guide.updatedAt,
+        datePublished: guide.publishedAt,
         dateModified: guide.updatedAt,
         image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
         author: { "@id": EDITORIAL_PERSON_ID },
@@ -189,7 +210,39 @@ export default async function EditorialGuidePage({
           </div>
 
           {guide.comparison ? (
-            <EditorialComparisonTable comparison={guide.comparison} />
+            <>
+              <EditorialComparisonTable comparison={guide.comparison} />
+              {supportsPowerAndTimeComparison ? (
+                <section
+                  aria-labelledby="guide-comparison-calculator-title"
+                  className="embedded-tool embedded-comparison-tool"
+                >
+                  <div className="eyebrow">Calcula tus dos escenarios</div>
+                  <h2 id="guide-comparison-calculator-title">
+                    Sustituye el ejemplo por una tarea comparable
+                  </h2>
+                  <p>
+                    Introduce la potencia y el tiempo de cada alternativa. El
+                    resultado compara energía, no prestaciones ni rendimiento útil.
+                  </p>
+                  <ComparisonCalculator />
+                </section>
+              ) : (
+                <section
+                  aria-labelledby="guide-comparison-method-title"
+                  className="measurement-note"
+                >
+                  <h2 id="guide-comparison-method-title">
+                    Compara el mismo servicio, no solo vatios y horas
+                  </h2>
+                  <p>
+                    {guide.slug === "horno-vs-freidora-aire-consumo"
+                      ? "En esta comparación no incrustamos el comparador simple: potencia por tiempo no captura el termostato, el precalentado ni las tandas. Usa los kWh medidos de la comida completa y conserva visibles cantidad y resultado."
+                      : "En climatización no incrustamos el comparador simple porque no modela COP, SCOP, carga térmica ni condiciones exteriores. Usa kWh medidos o declarados para un servicio equivalente y conserva visibles las condiciones de cada dato."}
+                  </p>
+                </section>
+              )}
+            </>
           ) : null}
 
           {guide.sections.map((section, index) => (
@@ -233,21 +286,25 @@ export default async function EditorialGuidePage({
             ))}
           </section>
 
-          <section
-            aria-labelledby="related-reading-title"
-            className="related-reading"
-          >
-            <div className="eyebrow">Sigue con el siguiente paso</div>
-            <h2 id="related-reading-title">Lecturas y herramientas relacionadas</h2>
-            <div className="related-reading__grid">
-              {guide.related.map((item) => (
-                <Link href={item.href} key={item.href}>
-                  <span>{item.title}</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
-              ))}
-            </div>
-          </section>
+          {related.length ? (
+            <section
+              aria-labelledby="related-reading-title"
+              className="related-reading"
+            >
+              <div className="eyebrow">Sigue con el siguiente paso</div>
+              <h2 id="related-reading-title">
+                Lecturas y herramientas relacionadas
+              </h2>
+              <div className="related-reading__grid">
+                {related.map((item) => (
+                  <Link href={item.href} key={item.href}>
+                    <span>{item.title}</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           <div className="source-box">
             <h2>Fuentes oficiales y criterio de revisión</h2>
@@ -257,11 +314,15 @@ export default async function EditorialGuidePage({
               autorizada ni la información vigente del organismo competente.
             </p>
             <ul className="source-list">
-              {guide.sources.map((source) => (
+              {guide.sources.map((source, index) => (
                 <li key={source.url}>
-                  <a href={source.url} rel="noopener noreferrer" target="_blank">
+                  <SourceLink
+                    context={guide.slug}
+                    href={source.url}
+                    sourceId={`${guide.slug}:${index + 1}`}
+                  >
                     {source.title} ↗
-                  </a>
+                  </SourceLink>
                 </li>
               ))}
             </ul>

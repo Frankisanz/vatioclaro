@@ -2,17 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplianceCard } from "@/app/components/ApplianceCard";
-import { CycleCalculator } from "@/app/components/CycleCalculator";
-import { EnergyCalculator } from "@/app/components/EnergyCalculator";
+import { SourceLink } from "@/app/components/SourceLink";
+import { UniversalCalculator } from "@/app/components/UniversalCalculator";
+import { UseYourLabel } from "@/app/components/UseYourLabel";
 import {
   appliances,
   getAppliance,
-  getApplianceMonthlyKwh,
   getApplianceUpdatedAt,
   getRelatedAppliances,
   getRelatedGuideLinks,
+  type Appliance,
 } from "@/lib/appliances";
 import { getBuyingGuideForAppliance } from "@/lib/buying-guides";
+import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
+import {
+  calculateElectricity,
+  formatCurrency,
+  formatKwh,
+} from "@/lib/electricity";
 import { LEGAL_OWNER } from "@/lib/legal";
 import {
   absoluteUrl,
@@ -20,6 +27,19 @@ import {
   EDITORIAL_PERSON_ID,
   SITE_NAME,
 } from "@/lib/site";
+
+const calculationMethodLabels: Record<
+  Appliance["calculation"]["method"],
+  string
+> = {
+  annual: "Consumo anual de etiqueta",
+  cycle: "Consumo por ciclo",
+  daily: "Consumo diario",
+  power: "Potencia y tiempo de uso",
+  standby: "Potencia en espera",
+};
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return appliances.map((item) => ({ slug: item.slug }));
@@ -33,19 +53,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const item = getAppliance(slug);
 
-  if (!item) {
-    return {};
-  }
+  if (!item) return {};
 
   const path = `/consumo/${item.slug}`;
   const title =
     item.seoTitle ?? `Cuánto consume ${item.articleName}: coste y calculadora`;
-  const description = `Calcula cuánto consume ${item.articleName} y cuánto cuesta con tus datos. Incluye ejemplo, fórmula, factores y consejos para gastar menos.`;
+  const description = `Calcula cuánto consume ${item.articleName} con el dato adecuado de su etiqueta, tus hábitos y un precio editable. Fórmula, supuestos y fuentes visibles.`;
 
   return {
     title,
     description,
     alternates: { canonical: path },
+    robots: item.indexable
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: "article",
       url: path,
@@ -71,6 +92,106 @@ export async function generateMetadata({
   };
 }
 
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T12:00:00Z`));
+}
+
+function describeInputs(item: Appliance) {
+  const input = item.calculation;
+
+  switch (input.method) {
+    case "power":
+      return `${input.watts.toLocaleString("es-ES")} W · ${input.hoursPerDay.toLocaleString("es-ES")} h/día · ${input.daysPerMonth.toLocaleString("es-ES")} días/mes · ${input.pricePerKwh.toLocaleString("es-ES")} €/kWh`;
+    case "cycle":
+      return item.labelKwhPer100Cycles
+        ? `${item.labelKwhPer100Cycles.toLocaleString("es-ES")} kWh/100 ciclos · ${input.cycles.toLocaleString("es-ES")} ciclos/mes · ${input.pricePerKwh.toLocaleString("es-ES")} €/kWh`
+        : `${input.kwhPerCycle.toLocaleString("es-ES")} kWh/ciclo · ${input.cycles.toLocaleString("es-ES")} ciclos/${input.cyclePeriod === "week" ? "semana" : "mes"} · ${input.pricePerKwh.toLocaleString("es-ES")} €/kWh`;
+    case "annual":
+      return `${input.annualKwh.toLocaleString("es-ES")} kWh/año · ${input.pricePerKwh.toLocaleString("es-ES")} €/kWh`;
+    case "daily":
+      return `${input.dailyKwh.toLocaleString("es-ES")} kWh/día · ${input.pricePerKwh.toLocaleString("es-ES")} €/kWh`;
+    case "standby":
+      return `${input.watts.toLocaleString("es-ES")} W · ${input.deviceCount.toLocaleString("es-ES")} aparatos · ${input.hoursPerDay.toLocaleString("es-ES")} h/día`;
+  }
+}
+
+function CalculationFormula({ item }: { item: Appliance }) {
+  const input = item.calculation;
+
+  switch (input.method) {
+    case "power":
+      return (
+        <>
+          <p>
+            La potencia permite estimar aparatos relativamente estables. En
+            equipos que modulan o ciclan, este escenario no equivale a una
+            medición real durante todo el periodo.
+          </p>
+          <div className="formula-box">
+            {input.watts.toLocaleString("es-ES")} W ÷ 1.000 ×{" "}
+            {input.hoursPerDay.toLocaleString("es-ES")} h/día ×{" "}
+            {input.daysPerMonth.toLocaleString("es-ES")} días/mes
+            <br />
+            Consumo mensual × {input.pricePerKwh.toLocaleString("es-ES")} €/kWh
+            = coste mensual
+          </div>
+        </>
+      );
+    case "cycle":
+      return (
+        <>
+          <p>
+            Para un programa completo usamos energía por ciclo. Cuando la
+            etiqueta muestra kWh/100 ciclos, dividimos ese dato entre 100 antes
+            de multiplicar por los ciclos del hogar.
+          </p>
+          <div className="formula-box">
+            {item.labelKwhPer100Cycles
+              ? `${item.labelKwhPer100Cycles.toLocaleString("es-ES")} kWh/100 ciclos ÷ 100`
+              : `${input.kwhPerCycle.toLocaleString("es-ES")} kWh/ciclo`}{" "}
+            × {input.cycles.toLocaleString("es-ES")} ciclos/mes
+            <br />
+            Consumo mensual × {input.pricePerKwh.toLocaleString("es-ES")} €/kWh
+            = coste mensual
+          </div>
+        </>
+      );
+    case "annual":
+      return (
+        <>
+          <p>
+            El consumo anual de la etiqueta describe mejor un aparato que
+            funciona y regula durante todo el año que su potencia instantánea.
+            La media mensual no implica que todos los meses sean iguales.
+          </p>
+          <div className="formula-box">
+            {input.annualKwh.toLocaleString("es-ES")} kWh/año ÷ 12 = media
+            mensual
+            <br />
+            {input.annualKwh.toLocaleString("es-ES")} kWh/año ×{" "}
+            {input.pricePerKwh.toLocaleString("es-ES")} €/kWh = coste anual
+          </div>
+        </>
+      );
+    case "daily":
+      return (
+        <div className="formula-box">
+          {input.dailyKwh.toLocaleString("es-ES")} kWh/día × 365 días = consumo
+          anual
+          <br />
+          Consumo × {input.pricePerKwh.toLocaleString("es-ES")} €/kWh = coste
+        </div>
+      );
+    case "standby":
+      return null;
+  }
+}
+
 export default async function AppliancePage({
   params,
 }: {
@@ -79,25 +200,33 @@ export default async function AppliancePage({
   const { slug } = await params;
   const item = getAppliance(slug);
 
-  if (!item) {
-    notFound();
+  if (!item) notFound();
+
+  const calculation = calculateElectricity(item.calculation);
+  if (!calculation.ok) {
+    throw new Error(`La configuración de ${item.slug} no supera la validación`);
   }
 
+  const result = calculation.value;
   const path = `/consumo/${item.slug}`;
   const pageUrl = absoluteUrl(path);
   const lastUpdated = getApplianceUpdatedAt(item);
-  const monthlyKwh = getApplianceMonthlyKwh(item);
-  const annualCost = item.exampleCost * 12;
-  const isCycleCalculation = item.calculationMode === "cycle";
   const related = getRelatedAppliances(item);
-  const relatedGuideLinks = getRelatedGuideLinks(item);
+  const relatedGuideLinks = getRelatedGuideLinks(item).filter((guide) =>
+    isIndexableEditorialGuideHref(guide.href),
+  );
   const buyingGuide = getBuyingGuideForAppliance(item.slug);
+  const exampleInputs = describeInputs(item);
+  const labelMetric =
+    item.calculation.method === "annual"
+      ? "annual"
+      : item.calculation.method === "cycle"
+        ? "cycles"
+        : "power";
   const faq = [
     {
       question: `¿Cuánto cuesta usar ${item.articleName} al mes?`,
-      answer: isCycleCalculation
-        ? `Con el ejemplo de ${item.kwhPerCycle?.toLocaleString("es-ES")} kWh por ciclo, ${item.cyclesPerMonth} ciclos al mes y ${item.price.toLocaleString("es-ES")} €/kWh, el coste orientativo es ${item.exampleCost.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € al mes.`
-        : `Con el ejemplo de ${item.watts.toLocaleString("es-ES")} W, ${item.hours} horas al día, ${item.days} días y ${item.price.toLocaleString("es-ES")} €/kWh, el coste orientativo es ${item.exampleCost.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € al mes.`,
+      answer: `Con el escenario visible (${exampleInputs}), el coste energético estimado es ${formatCurrency(result.cost.month)} al mes. Sustituye las entradas por las de tu aparato y uso; no incluye los cargos fijos de la factura.`,
     },
     {
       question: `¿Por qué el consumo real de ${item.articleName} puede ser distinto?`,
@@ -121,9 +250,8 @@ export default async function AppliancePage({
         image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
         author: { "@id": EDITORIAL_PERSON_ID },
         editor: { "@id": EDITORIAL_PERSON_ID },
-        publisher: {
-          "@id": `${absoluteUrl("/")}#organization`,
-        },
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        citation: item.sources.map((source) => source.url),
       },
       {
         "@type": "FAQPage",
@@ -131,10 +259,7 @@ export default async function AppliancePage({
         mainEntity: faq.map((entry) => ({
           "@type": "Question",
           name: entry.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: entry.answer,
-          },
+          acceptedAnswer: { "@type": "Answer", text: entry.answer },
         })),
       },
       {
@@ -183,115 +308,73 @@ export default async function AppliancePage({
           <h1>¿Cuánto consume {item.articleName}?</h1>
           <p className="article-hero__intro">{item.intro}</p>
           <p className="article-updated">
-            Actualizado: {lastUpdated} · Responsable editorial:{" "}
+            Revisado el {formatDate(lastUpdated)} · Responsable editorial:{" "}
             <Link href="/sobre-vatioclaro">{LEGAL_OWNER.name}</Link> ·{" "}
             <Link href="/metodologia">Método y criterios</Link>
           </p>
         </div>
         <aside className="quick-result" aria-label="Ejemplo de coste mensual">
-          <small>EJEMPLO ORIENTATIVO</small>
-          <strong>
-            {item.exampleCost.toLocaleString("es-ES", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-            €
-          </strong>
-          <p>
-            {isCycleCalculation
-              ? `${item.kwhPerCycle?.toLocaleString("es-ES")} kWh/ciclo · ${item.cyclesPerMonth} ciclos · ${item.price.toLocaleString("es-ES")} €/kWh`
-              : `${item.watts.toLocaleString("es-ES")} W · ${item.hours} h/día · ${item.days} días · ${item.price.toLocaleString("es-ES")} €/kWh`}
-          </p>
+          <small>
+            {item.exampleKind === "official-statistic"
+              ? "REFERENCIA HISTÓRICA"
+              : "EJEMPLO EDUCATIVO"}
+          </small>
+          <strong>{formatCurrency(result.cost.month)}</strong>
+          <p>{exampleInputs}</p>
         </aside>
       </section>
 
       <section className="article-body">
         <div className="article-body__inner">
           <article className="article-copy">
-            <div className="article-key-facts" aria-label="Datos rápidos del ejemplo">
+            <div
+              className="article-key-facts"
+              aria-label="Datos rápidos del ejemplo"
+            >
               <div>
-                <span>RANGO DE REFERENCIA</span>
+                <span>DATO QUE DEBES BUSCAR</span>
                 <b>{item.range}</b>
               </div>
               <div>
-                <span>CONSUMO DEL EJEMPLO</span>
-                <b>
-                  {monthlyKwh.toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  })}{" "}
-                  kWh/mes
-                </b>
+                <span>CONSUMO DEL ESCENARIO</span>
+                <b>{formatKwh(result.consumption.month, 1)}/mes</b>
               </div>
               <div>
-                <span>COSTE ANUAL ORIENTATIVO</span>
-                <b>
-                  {annualCost.toLocaleString("es-ES", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  €
-                </b>
+                <span>COSTE ENERGÉTICO ANUAL</span>
+                <b>{formatCurrency(result.cost.year)}</b>
               </div>
             </div>
 
-            <h2>El cálculo, paso a paso</h2>
-            {isCycleCalculation ? (
-              <>
-                <p>
-                  Para los aparatos que completan programas, el dato de etiqueta
-                  en kWh por ciclo describe mejor el consumo que la potencia
-                  máxima. Multiplicamos ese consumo por tus ciclos mensuales y
-                  por el precio por kWh.
-                </p>
-                <div className="formula-box">
-                  {item.kwhPerCycle?.toLocaleString("es-ES")} kWh/ciclo ×{" "}
-                  {item.cyclesPerMonth} ciclos ={" "}
-                  {monthlyKwh.toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  })}{" "}
-                  kWh/mes
-                  <br />
-                  {monthlyKwh.toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  })}{" "}
-                  kWh × {item.price.toLocaleString("es-ES")} €/kWh ={" "}
-                  {item.exampleCost.toLocaleString("es-ES", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  €/mes
-                </div>
-              </>
-            ) : (
-              <>
-                <p>
-                  Primero convertimos la potencia a kilovatios:{" "}
-                  {item.watts.toLocaleString("es-ES")} W ÷ 1.000 ={" "}
-                  {(item.watts / 1000).toLocaleString("es-ES")} kW. Después la
-                  multiplicamos por las horas y días de uso.
-                </p>
-                <div className="formula-box">
-                  {(item.watts / 1000).toLocaleString("es-ES")} kW × {item.hours} h
-                  × {item.days} días ={" "}
-                  {monthlyKwh.toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  })}{" "}
-                  kWh/mes
-                  <br />
-                  {monthlyKwh.toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  })}{" "}
-                  kWh × {item.price.toLocaleString("es-ES")} €/kWh ={" "}
-                  {item.exampleCost.toLocaleString("es-ES", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  €/mes
-                </div>
-              </>
-            )}
+            <aside className="assumption-box" aria-labelledby="assumption-title">
+              <span>SUPUESTOS VISIBLES</span>
+              <h2 id="assumption-title">Ejemplo utilizado</h2>
+              <p>
+                <strong>{exampleInputs}</strong>
+              </p>
+              <p>{item.assumptionRationale}</p>
+            </aside>
+
+            <h2>Calcula tu caso</h2>
             <p>
-              Esta cuenta sirve para entender el orden de magnitud. {item.caveat}
+              Estos campos cargan el ejemplo anterior. Sustitúyelos por el dato
+              de tu etiqueta, tu rutina y el precio que quieras analizar.
+            </p>
+            <div className="article-calculator">
+              <UniversalCalculator
+                initialInput={item.calculation}
+                initialName={item.name}
+                lockedMethod
+                shareable={false}
+              />
+            </div>
+
+            <UseYourLabel metric={labelMetric} />
+
+            <h2>El cálculo, paso a paso</h2>
+            <CalculationFormula item={item} />
+            <p>
+              Esta cuenta explica el orden de magnitud y sus límites.{" "}
+              {item.caveat}
             </p>
 
             <h2>Qué hace variar el consumo</h2>
@@ -313,32 +396,8 @@ export default async function AppliancePage({
               <h3>Qué dato conviene usar</h3>
               <p>
                 {item.measurement ??
-                  "Busca la potencia de entrada en la etiqueta o mide varios días con un medidor de enchufe adecuado para la potencia del aparato."}
+                  "Busca la potencia de entrada en la etiqueta o mide varios días con un medidor adecuado para la potencia del aparato."}
               </p>
-            </div>
-
-            <h2>Calcula tu caso</h2>
-            <p>
-              Sustituye los valores del ejemplo por los de tu etiqueta, tu rutina
-              y el precio por kWh que quieras analizar.
-            </p>
-            <div className="article-calculator">
-              {isCycleCalculation && item.kwhPerCycle && item.cyclesPerMonth ? (
-                <CycleCalculator
-                  initialCycles={item.cyclesPerMonth}
-                  initialKwhPerCycle={item.kwhPerCycle}
-                  initialName={item.name}
-                  initialPrice={item.price}
-                />
-              ) : (
-                <EnergyCalculator
-                  initialDays={item.days}
-                  initialHours={item.hours}
-                  initialName={item.name}
-                  initialPrice={item.price}
-                  initialWatts={item.watts}
-                />
-              )}
             </div>
 
             <h2>Preguntas frecuentes</h2>
@@ -356,17 +415,19 @@ export default async function AppliancePage({
                   <h2>Una herramienta para comprobar antes de decidir</h2>
                   <p>
                     Compara funciones, compatibilidad y límites. Incluye enlaces
-                    de afiliado identificados y alternativas para saber cuándo
-                    no necesitas comprar.
+                    de afiliado identificados y alternativas sin compra.
                   </p>
                 </div>
-                <Link href={buyingGuide.href}>
+                <Link href={buyingGuide.href} prefetch={false}>
                   {buyingGuide.title} <span aria-hidden="true">→</span>
                 </Link>
               </aside>
             ) : null}
 
-            <section aria-labelledby="related-guides-title" className="related-guides">
+            <section
+              aria-labelledby="related-guides-title"
+              className="related-guides"
+            >
               <div className="section-heading section-heading--compact">
                 <div>
                   <div className="eyebrow">Sigue explorando</div>
@@ -378,7 +439,7 @@ export default async function AppliancePage({
               </div>
               <div className="appliance-topic-links">
                 {relatedGuideLinks.map((guide) => (
-                  <Link href={guide.href} key={guide.href}>
+                  <Link href={guide.href} key={guide.href} prefetch={false}>
                     <span>{guide.title}</span>
                     <span aria-hidden="true">→</span>
                   </Link>
@@ -386,58 +447,63 @@ export default async function AppliancePage({
               </div>
               <div className="guide-grid guide-grid--related">
                 {related.map((relatedItem, index) => (
-                  <ApplianceCard index={index} item={relatedItem} key={relatedItem.slug} />
+                  <ApplianceCard
+                    index={index}
+                    item={relatedItem}
+                    key={relatedItem.slug}
+                  />
                 ))}
               </div>
             </section>
 
             <div className="source-box">
-              <h3>Fuente y revisión</h3>
+              <h2>Fuentes, alcance y revisión</h2>
               <p>
-                Esta guía es una estimación educativa revisada el {lastUpdated}.
-                Compara siempre con la etiqueta, el manual y la medición de tu
-                propio equipo antes de tomar una decisión de compra o instalación.
+                Revisado el {formatDate(lastUpdated)}. Una fuente sobre la unidad
+                o el contexto no convierte automáticamente el ejemplo en un dato
+                oficial del aparato. Comprueba siempre tu modelo.
               </p>
-              <a href={item.sourceUrl} rel="noopener noreferrer" target="_blank">
-                {item.sourceTitle} ↗
-              </a>
+              <ul className="source-list">
+                {item.sources.map((source) => (
+                  <li key={source.id}>
+                    <SourceLink
+                      context={item.slug}
+                      href={source.url}
+                      sourceId={source.id}
+                    >
+                      {source.title} ↗
+                    </SourceLink>
+                    <p>{source.scope}</p>
+                  </li>
+                ))}
+              </ul>
+              <p>
+                <Link href="/sobre-vatioclaro">
+                  ¿Has encontrado un dato incorrecto? Envíanos una corrección.
+                </Link>
+              </p>
             </div>
           </article>
 
           <aside className="article-aside">
             <div className="article-aside__card">
-              <h3>Resumen del ejemplo</h3>
+              <h3>Resumen del escenario</h3>
               <dl>
                 <div>
-                  <dt>{isCycleCalculation ? "Consumo por ciclo" : "Potencia usada"}</dt>
-                  <dd>
-                    {isCycleCalculation
-                      ? `${item.kwhPerCycle?.toLocaleString("es-ES")} kWh`
-                      : `${item.watts.toLocaleString("es-ES")} W`}
-                  </dd>
-                </div>
-                <div>
-                  <dt>{isCycleCalculation ? "Ciclos al mes" : "Uso diario"}</dt>
-                  <dd>{isCycleCalculation ? item.cyclesPerMonth : `${item.hours} h/día`}</dd>
+                  <dt>Método</dt>
+                  <dd>{calculationMethodLabels[item.calculation.method]}</dd>
                 </div>
                 <div>
                   <dt>Consumo mensual</dt>
-                  <dd>
-                    {monthlyKwh.toLocaleString("es-ES", {
-                      maximumFractionDigits: 1,
-                    })}{" "}
-                    kWh
-                  </dd>
+                  <dd>{formatKwh(result.consumption.month, 1)}</dd>
                 </div>
                 <div>
                   <dt>Coste mensual</dt>
-                  <dd>
-                    {item.exampleCost.toLocaleString("es-ES", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                    €
-                  </dd>
+                  <dd>{formatCurrency(result.cost.month)}</dd>
+                </div>
+                <div>
+                  <dt>Coste anual</dt>
+                  <dd>{formatCurrency(result.cost.year)}</dd>
                 </div>
               </dl>
               <Link className="article-aside__link" href="/calculadora">

@@ -1,5 +1,7 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
+import { MobileNav } from "./MobileNav";
 
 export function SiteHeader() {
   return (
@@ -9,28 +11,26 @@ export function SiteHeader() {
       </Link>
       <nav className="site-nav" aria-label="Navegación principal">
         <Link href="/consumo">Consumo</Link>
+        <Link href="/comparativas">Comparativas</Link>
         <Link href="/guias">Guías</Link>
+        <Link href="/calculadora">Calculadoras</Link>
         <Link href="/recomendaciones">Productos útiles</Link>
-        <Link href="/calculadora">Calculadora</Link>
-        <Link href="/metodologia">Metodología</Link>
       </nav>
       <Link className="header-cta" href="/calculadora">
         Calcular ahora
       </Link>
-      <details className="mobile-nav">
-        <summary>
-          <Menu aria-hidden="true" strokeWidth={1.8} />
-          <span>Menú</span>
-        </summary>
-        <nav aria-label="Navegación móvil">
-          <Link href="/consumo">Guías de consumo</Link>
-          <Link href="/guias">Guías prácticas</Link>
-          <Link href="/recomendaciones">Productos útiles</Link>
-          <Link href="/calculadora">Calculadora</Link>
-          <Link href="/metodologia">Metodología</Link>
-          <Link href="/sobre-vatioclaro">Sobre VatioClaro</Link>
-        </nav>
-      </details>
+      <Suspense
+        fallback={
+          <span aria-hidden="true" className="mobile-nav mobile-nav--fallback">
+            <span className="mobile-nav__trigger">
+              <Menu aria-hidden="true" strokeWidth={1.8} />
+              <span className="mobile-nav__trigger-text">Menú</span>
+            </span>
+          </span>
+        }
+      >
+        <MobileNav />
+      </Suspense>
     </header>
   );
 }

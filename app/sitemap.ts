@@ -7,6 +7,27 @@ import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/site";
 const staticPages = [
   { path: "/", priority: 1, frequency: "weekly" as const },
   { path: "/calculadora", priority: 0.9, frequency: "monthly" as const },
+  {
+    path: "/calculadora/comparar",
+    priority: 0.8,
+    frequency: "monthly" as const,
+  },
+  {
+    path: "/calculadora/standby",
+    priority: 0.8,
+    frequency: "monthly" as const,
+  },
+  {
+    path: "/calculadora/etiqueta-energetica",
+    priority: 0.8,
+    frequency: "monthly" as const,
+  },
+  {
+    path: "/calculadora/amortizacion",
+    priority: 0.8,
+    frequency: "monthly" as const,
+  },
+  { path: "/comparativas", priority: 0.85, frequency: "monthly" as const },
   { path: "/consumo", priority: 0.9, frequency: "weekly" as const },
   {
     path: "/consumo/electrodomesticos-que-mas-consumen",
@@ -41,19 +62,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: page.frequency,
       priority: page.priority,
     })),
-    ...appliances.map((item) => ({
+    ...appliances.filter((item) => item.indexable).map((item) => ({
       url: `${SITE_URL}/consumo/${item.slug}`,
       lastModified: new Date(getApplianceUpdatedAt(item)),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
-    ...editorialGuides.map((guide) => ({
+    ...editorialGuides.filter((guide) => guide.indexable).map((guide) => ({
       url: `${SITE_URL}/guias/${guide.slug}`,
       lastModified: new Date(guide.updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.85,
     })),
-    ...buyingGuides.map((guide) => ({
+    ...buyingGuides.filter((guide) => guide.indexable).map((guide) => ({
       url: `${SITE_URL}/recomendaciones/${guide.slug}`,
       lastModified: new Date(guide.updatedAt),
       changeFrequency: "monthly" as const,

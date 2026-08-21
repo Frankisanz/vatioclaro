@@ -9,9 +9,13 @@ import {
 import {
   buyingGuides,
   getBuyingGuide,
+  isIndexableBuyingGuideHref,
 } from "@/lib/buying-guides";
+import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
 import { absoluteUrl, EDITORIAL_PERSON_ID, SITE_NAME } from "@/lib/site";
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return buyingGuides.map((guide) => ({ slug: guide.slug }));
@@ -35,12 +39,15 @@ export async function generateMetadata({
     title: guide.seoTitle,
     description: guide.description,
     alternates: { canonical: path },
+    robots: guide.indexable
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: "article",
       url: path,
       title: `${guide.seoTitle} | ${SITE_NAME}`,
       description: guide.description,
-      publishedTime: guide.updatedAt,
+      publishedTime: guide.publishedAt,
       modifiedTime: guide.updatedAt,
       images: [
         {
@@ -83,6 +90,11 @@ export default async function BuyingGuidePage({
 
   const path = `/recomendaciones/${guide.slug}`;
   const pageUrl = absoluteUrl(path);
+  const related = guide.related.filter(
+    (item) =>
+      isIndexableBuyingGuideHref(item.href) &&
+      isIndexableEditorialGuideHref(item.href),
+  );
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -94,7 +106,7 @@ export default async function BuyingGuidePage({
         url: pageUrl,
         mainEntityOfPage: pageUrl,
         inLanguage: "es-ES",
-        datePublished: guide.updatedAt,
+        datePublished: guide.publishedAt,
         dateModified: guide.updatedAt,
         image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
         author: { "@id": EDITORIAL_PERSON_ID },
@@ -297,21 +309,23 @@ export default async function BuyingGuidePage({
             ))}
           </section>
 
-          <section
-            aria-labelledby="related-reading-title"
-            className="related-reading"
-          >
-            <div className="eyebrow">Siguiente paso</div>
-            <h2 id="related-reading-title">Mide, calcula y decide</h2>
-            <div className="related-reading__grid">
-              {guide.related.map((item) => (
-                <Link href={item.href} key={item.href}>
-                  <span>{item.title}</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
-              ))}
-            </div>
-          </section>
+          {related.length ? (
+            <section
+              aria-labelledby="related-reading-title"
+              className="related-reading"
+            >
+              <div className="eyebrow">Siguiente paso</div>
+              <h2 id="related-reading-title">Mide, calcula y decide</h2>
+              <div className="related-reading__grid">
+                {related.map((item) => (
+                  <Link href={item.href} key={item.href}>
+                    <span>{item.title}</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           <div className="source-box">
             <h2>Fuentes y criterio de revisión</h2>

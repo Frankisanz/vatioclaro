@@ -12,6 +12,7 @@ export function ApplianceCard({ item, index }: ApplianceCardProps) {
     <Link
       className={`guide-card guide-card--${(index % 3) + 1}`}
       href={`/consumo/${item.slug}`}
+      prefetch={false}
     >
       <div className="guide-card__number">
         {String(index + 1).padStart(2, "0")}

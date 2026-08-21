@@ -1,18 +1,26 @@
 import { CONTENT_UPDATED_AT } from "./site";
+import {
+  calculateElectricity,
+  EXAMPLE_ELECTRICITY_PRICE,
+  type CalculationInput,
+} from "./electricity";
+import {
+  SOURCE_CATALOG,
+  type SourceReference,
+} from "./sources";
 
-export const DEFAULT_ELECTRICITY_PRICE = 0.25;
+/** @deprecated Usa EXAMPLE_ELECTRICITY_PRICE desde lib/electricity. */
+export const DEFAULT_ELECTRICITY_PRICE = EXAMPLE_ELECTRICITY_PRICE;
 
-export type Appliance = {
+export type ApplianceSeed = {
   slug: string;
+  indexable: boolean;
   name: string;
   articleName: string;
   seoTitle?: string;
   category: string;
-  watts: number;
-  hours: number;
-  days: number;
-  price: number;
-  exampleCost: number;
+  calculation: CalculationInput;
+  labelKwhPer100Cycles?: number;
   shortDescription: string;
   intro: string;
   range: string;
@@ -23,34 +31,28 @@ export type Appliance = {
   sourceUrl: string;
   updatedAt?: string;
   measurement?: string;
-  calculationMode?: "power" | "cycle";
-  kwhPerCycle?: number;
-  cyclesPerMonth?: number;
 };
 
-function monthlyCost(
-  watts: number,
-  hours: number,
-  days: number,
-  price = DEFAULT_ELECTRICITY_PRICE,
-) {
-  return (watts / 1000) * hours * days * price;
-}
-
-function monthlyCycleCost(
-  kwhPerCycle: number,
-  cycles: number,
-  price = DEFAULT_ELECTRICITY_PRICE,
-) {
-  return kwhPerCycle * cycles * price;
-}
+export type Appliance = ApplianceSeed & {
+  assumptionRationale: string;
+  exampleCost: number;
+  exampleKind: "educational-example" | "official-statistic";
+  reviewedAt: string;
+  sources: SourceReference[];
+};
 
 export function getApplianceMonthlyKwh(item: Appliance) {
-  if (item.calculationMode === "cycle" && item.kwhPerCycle && item.cyclesPerMonth) {
-    return item.kwhPerCycle * item.cyclesPerMonth;
+  const result = calculateElectricity(item.calculation);
+
+  if (!result.ok) {
+    throw new Error(
+      `Configuración de cálculo inválida para ${item.slug}: ${result.errors
+        .map((entry) => `${entry.field}: ${entry.message}`)
+        .join(", ")}`,
+    );
   }
 
-  return (item.watts / 1000) * item.hours * item.days;
+  return result.value.consumption.month;
 }
 
 export function getApplianceUpdatedAt(item: Appliance) {
@@ -101,7 +103,9 @@ const relatedApplianceSlugs: Record<string, string[]> = {
 export function getRelatedAppliances(item: Appliance, limit = 3) {
   const configured = (relatedApplianceSlugs[item.slug] ?? [])
     .map((slug) => appliances.find((candidate) => candidate.slug === slug))
-    .filter((candidate): candidate is Appliance => Boolean(candidate));
+    .filter(
+      (candidate): candidate is Appliance => Boolean(candidate?.indexable),
+    );
 
   if (configured.length >= limit) {
     return configured.slice(0, limit);
@@ -113,10 +117,12 @@ export function getRelatedAppliances(item: Appliance, limit = 3) {
   const orderedCandidates =
     currentIndex >= 0
       ? [
-          ...appliances.slice(currentIndex + 1),
-          ...appliances.slice(0, currentIndex),
+          ...appliances.slice(currentIndex + 1).filter((candidate) => candidate.indexable),
+          ...appliances.slice(0, currentIndex).filter((candidate) => candidate.indexable),
         ]
-      : appliances.filter((candidate) => candidate.slug !== item.slug);
+      : appliances.filter(
+          (candidate) => candidate.indexable && candidate.slug !== item.slug,
+        );
   const sameCategory = orderedCandidates.filter(
     (candidate) => candidate.category === item.category && candidate.slug !== item.slug,
   );
@@ -239,25 +245,29 @@ export function getRelatedGuideLinks(item: Appliance): RelatedGuideLink[] {
   return links.slice(0, 3);
 }
 
-export const appliances: Appliance[] = [
+const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "aire-acondicionado",
+    indexable: true,
     name: "Aire acondicionado",
     articleName: "un aire acondicionado",
     seoTitle: "Cuánto consume un aire acondicionado: coste",
     category: "Climatización",
-    watts: 1000,
-    hours: 4,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1000, 4, 30),
+    calculation: {
+      method: "power",
+      watts: 1000,
+      hoursPerDay: 4,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Calcula el coste por hora y entiende por qué un inverter no consume siempre lo mismo.",
     intro:
-      "Un equipo doméstico puede moverse aproximadamente entre 500 y 1.500 W de potencia eléctrica mientras trabaja. En un aparato inverter el compresor regula, por lo que la potencia nominal no equivale a un consumo constante.",
-    range: "500–1.500 W mientras funciona",
+      "En un aparato inverter el compresor regula, por lo que la potencia nominal no equivale a un consumo constante. La calculadora parte de un ejemplo educativo que puedes sustituir por la potencia eléctrica de entrada de tu equipo.",
+    range:
+      "Consulta la potencia eléctrica de entrada y el consumo declarado en la etiqueta o ficha del modelo; varían según el equipo y el modo.",
     caveat:
-      "La temperatura exterior, el aislamiento, el tamaño de la estancia y la consigna del termostato pueden alterar mucho el resultado.",
+      "Los 1.000 W y las cuatro horas diarias son un escenario educativo editable. La temperatura exterior, el aislamiento, el tamaño de la estancia y la consigna pueden alterar mucho el resultado.",
     tips: [
       "Busca la potencia eléctrica de entrada, no la potencia térmica ni los BTU.",
       "Evita bajar la consigna de golpe: no enfría más rápido y puede alargar el trabajo del compresor.",
@@ -277,27 +287,31 @@ export const appliances: Appliance[] = [
         text: "Los portátiles suelen perder eficiencia al expulsar aire caliente y pueden gastar más para el mismo confort.",
       },
     ],
-    sourceTitle: "OCU — Cuánto consume el aire acondicionado",
+    sourceTitle: "Comisión Europea — Acondicionadores de aire y ventiladores",
     sourceUrl:
-      "https://www.ocu.org/vivienda-y-energia/aire-acondicionado/consejos/consumo-aire-acondicionado",
+      "https://energy-efficient-products.ec.europa.eu/product-list/air-conditioners-and-comfort-fans_en",
   },
   {
     slug: "ventilador",
+    indexable: true,
     name: "Ventilador",
     articleName: "un ventilador",
     category: "Climatización",
-    watts: 50,
-    hours: 8,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(50, 8, 30),
+    calculation: {
+      method: "power",
+      watts: 50,
+      hoursPerDay: 8,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Una alternativa de bajo consumo cuando mover el aire es suficiente para recuperar confort.",
     intro:
-      "Un ventilador no enfría el aire: acelera la evaporación del sudor y mejora la sensación térmica. Su potencia suele ser mucho menor que la de un aire acondicionado, así que permite muchas horas de uso con un coste contenido.",
-    range: "15–70 W en modelos domésticos eficientes",
+      "Un ventilador no enfría el aire: acelera la evaporación del sudor y mejora la sensación térmica. La calculadora ofrece un ejemplo educativo editable para convertir la potencia indicada por el fabricante en coste.",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por modelo, velocidad y funciones.",
     caveat:
-      "La velocidad seleccionada, el tamaño, el motor y el uso de luz integrada cambian la potencia.",
+      "Los 50 W y las ocho horas diarias son un escenario educativo editable. La velocidad seleccionada, el tamaño, el motor y el uso de luz integrada cambian la potencia.",
     tips: [
       "Apágalo al salir: si no hay personas, mover el aire no aporta confort.",
       "En ventiladores de techo, usa el sentido de giro recomendado para verano.",
@@ -317,28 +331,32 @@ export const appliances: Appliance[] = [
         text: "El ahorro frente al aire acondicionado solo existe si el ventilador cubre tu necesidad de confort.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle: "Comisión Europea — Acondicionadores de aire y ventiladores",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://energy-efficient-products.ec.europa.eu/product-list/air-conditioners-and-comfort-fans_en",
   },
   {
     slug: "horno",
+    indexable: true,
     name: "Horno eléctrico",
     articleName: "un horno eléctrico",
     seoTitle: "Cuánto consume un horno eléctrico: coste",
     category: "Cocina",
-    watts: 2200,
-    hours: 0.75,
-    days: 15,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(2200, 0.75, 15),
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 1.1,
+      cycles: 15,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Potencia alta, uso puntual: precalentado, temperatura y duración marcan la diferencia.",
     intro:
       "El horno tiene una potencia elevada, pero las resistencias se encienden y apagan para mantener la temperatura. Multiplicar toda la potencia por toda la duración suele dar una estimación conservadora.",
-    range: "1.500–3.000 W de potencia nominal",
+    range:
+      "Consulta la potencia eléctrica de entrada y el consumo por ciclo en la etiqueta o el manual; varían por modelo y función.",
     caveat:
-      "El termostato cicla las resistencias, así que un medidor de enchufe apto para esa potencia dará un consumo más real.",
+      "El ejemplo usa 1,10 kWh por ciclo y quince ciclos al mes como demostración editable, no como dato típico ni de fabricante. Copia el kWh/ciclo de la etiqueta o mide una cocción completa comparable.",
     tips: [
       "Evita abrir la puerta durante la cocción para no perder calor.",
       "Aprovecha el espacio y cocina varias preparaciones compatibles a la vez.",
@@ -358,28 +376,32 @@ export const appliances: Appliance[] = [
         text: "Es uno de los periodos de mayor demanda porque las resistencias trabajan de forma continua.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle: "Comisión Europea — Hornos domésticos y etiqueta energética",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://energy-efficient-products.ec.europa.eu/product-list/domestic-ovens_en",
   },
   {
     slug: "termo-electrico",
+    indexable: true,
     name: "Termo eléctrico",
     articleName: "un termo eléctrico",
     seoTitle: "Cuánto consume un termo eléctrico: coste",
     category: "Agua caliente",
-    watts: 1500,
-    hours: 2,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1500, 2, 30),
+    calculation: {
+      method: "power",
+      watts: 1500,
+      hoursPerDay: 2,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Calcula el coste de calentar agua y separa el consumo útil de las pérdidas del depósito.",
     intro:
       "La resistencia de un termo suele trabajar a potencia completa hasta alcanzar la temperatura. Después se activa por intervalos para compensar las pérdidas de calor del depósito.",
-    range: "1.200–2.500 W durante el calentamiento",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por volumen, modelo y modo de control.",
     caveat:
-      "No está dos horas exactas cada día en todos los hogares: depende del volumen, el agua consumida, la temperatura de entrada y el aislamiento.",
+      "Los 1.500 W y las dos horas diarias son un escenario educativo editable, no un uso universal. El resultado depende del volumen, el agua consumida, la temperatura de entrada y el aislamiento.",
     tips: [
       "Ajusta la temperatura sin comprometer las recomendaciones sanitarias del fabricante.",
       "Revisa si el tamaño del depósito está sobredimensionado para el hogar.",
@@ -399,28 +421,33 @@ export const appliances: Appliance[] = [
         text: "El aislamiento del depósito y las tuberías determina cuánto calor se pierde incluso sin abrir un grifo.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "ordenador",
+    indexable: true,
     name: "Ordenador de sobremesa",
     articleName: "un ordenador de sobremesa",
     seoTitle: "Cuánto consume un ordenador: coste y cálculo",
     category: "Tecnología",
-    watts: 250,
-    hours: 8,
-    days: 22,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(250, 8, 22),
+    calculation: {
+      method: "power",
+      watts: 250,
+      hoursPerDay: 8,
+      daysPerMonth: 22,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Ofimática, gaming o renderizado: la carga del equipo importa más que la potencia de la fuente.",
     intro:
       "Una fuente de alimentación de 750 W no significa que el ordenador consuma 750 W todo el tiempo. La demanda real cambia según procesador, gráfica, pantalla, periféricos y tipo de tarea.",
-    range: "60–600 W según equipo y carga",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual y mide una sesión representativa; varía por equipo y carga.",
     caveat:
-      "Para este aparato conviene medir en el enchufe o consultar sensores internos durante una sesión representativa.",
+      "Los 250 W y las ocho horas son un escenario educativo editable. Para este aparato conviene medir el conjunto en el enchufe durante una sesión representativa.",
     tips: [
       "Activa la suspensión automática en pausas cortas.",
       "Limita los fotogramas por segundo si la gráfica trabaja sin aportar una mejora visible.",
@@ -440,27 +467,33 @@ export const appliances: Appliance[] = [
         text: "Un equipo encendido sin trabajar puede acumular más horas que las sesiones intensivas.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "secadora",
+    indexable: true,
     name: "Secadora",
     articleName: "una secadora",
     category: "Lavado",
-    watts: 2500,
-    hours: 1.5,
-    days: 12,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCycleCost(1.4, 12),
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 1.4,
+      cycles: 12,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    labelKwhPer100Cycles: 140,
     shortDescription:
       "Compara una resistencia tradicional con una bomba de calor y calcula por ciclos.",
     intro:
-      "En una secadora importa más la energía por ciclo indicada en la etiqueta que la potencia máxima. Los modelos con bomba de calor suelen trabajar durante más tiempo, pero a menor temperatura y consumo.",
-    range: "Consulta kWh/ciclo en la etiqueta energética",
+      "En una secadora importa más la energía indicada en la etiqueta que la potencia máxima. La etiqueta A–G vigente desde julio de 2025 expresa el consumo ponderado en kWh por 100 ciclos.",
+    range:
+      "Consulta los kWh por 100 ciclos en la etiqueta energética vigente de tu modelo.",
     caveat:
-      "La fórmula por potencia sobreestima muchos ciclos porque el calentador no permanece al máximo toda la sesión.",
+      "El valor de 1,4 kWh por ciclo es un escenario educativo editable, equivalente a 140 kWh por 100 ciclos. La fórmula por potencia sobreestima muchos ciclos.",
     tips: [
       "Centrifuga bien la ropa antes de pasarla a la secadora.",
       "Limpia filtros y condensador según las instrucciones del fabricante.",
@@ -480,32 +513,33 @@ export const appliances: Appliance[] = [
         text: "Sobrecargar, mezclar tejidos o elegir secado extra puede alargar el ciclo.",
       },
     ],
-    sourceTitle: "Comisión Europea — Etiqueta energética de secadoras",
+    sourceTitle: "Comisión Europea — Nueva etiqueta energética de secadoras",
     sourceUrl:
       "https://energy-efficient-products.ec.europa.eu/product-list/tumble-dryers_en",
-    calculationMode: "cycle",
-    kwhPerCycle: 1.4,
-    cyclesPerMonth: 12,
     measurement:
-      "En secadoras, usa preferentemente los kWh por ciclo o por 100 ciclos de la etiqueta energética de tu modelo.",
+      "Divide los kWh por 100 ciclos de la etiqueta entre 100 para obtener los kWh de un ciclo antes de estimar el coste.",
   },
   {
     slug: "router-wifi",
+    indexable: true,
     name: "Router wifi",
     articleName: "un router wifi",
     category: "Tecnología",
-    watts: 10,
-    hours: 24,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(10, 24, 30),
+    calculation: {
+      method: "power",
+      watts: 10,
+      hoursPerDay: 24,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Poca potencia, muchas horas: calcula lo que suma un dispositivo encendido todo el año.",
     intro:
       "El router tiene una potencia pequeña, pero normalmente funciona las 24 horas. Esa continuidad convierte unos pocos vatios en un consumo anual visible.",
-    range: "6–20 W según modelo y funciones",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por modelo, funciones y equipos asociados.",
     caveat:
-      "Los repetidores, sistemas mesh, decodificadores y equipos de red adicionales deben calcularse por separado.",
+      "Los 10 W durante 24 horas son un escenario educativo editable. Los repetidores, sistemas mesh, decodificadores y equipos de red adicionales deben calcularse por separado.",
     tips: [
       "No lo apagues si afecta a alarmas, domótica o telefonía conectada.",
       "Retira repetidores que ya no sean necesarios.",
@@ -525,27 +559,29 @@ export const appliances: Appliance[] = [
         text: "La ONT de fibra o un decodificador suelen ser dispositivos separados con su propio consumo.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "frigorifico",
+    indexable: true,
     name: "Frigorífico",
     articleName: "un frigorífico",
-    category: "Cocina",
-    watts: 70,
-    hours: 8,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(70, 8, 30),
+    category: "Frío",
+    calculation: {
+      method: "annual",
+      annualKwh: 181,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Está encendido todo el año: entiende por qué la etiqueta en kWh/año es más útil que la potencia puntual.",
     intro:
       "Un frigorífico no mantiene el compresor funcionando de forma continua. Alterna periodos de marcha y pausa para conservar la temperatura, de modo que su consumo depende más de los kWh anuales de la etiqueta, la apertura de puertas y la temperatura ambiente que de un único valor de vatios.",
     range: "Consulta los kWh/año de la etiqueta energética; la potencia instantánea varía durante cada ciclo.",
     caveat:
-      "La cifra del ejemplo representa horas equivalentes de funcionamiento, no que el compresor esté encendido ocho horas seguidas. Para comparar modelos, usa los kWh/año declarados en su etiqueta.",
+      "El escenario parte de una referencia anual histórica y la reparte para mostrar medias de coste. No predice el consumo de cada mes ni sustituye los kWh/año declarados en la etiqueta de tu modelo.",
     tips: [
       "Ajusta el frigorífico a una temperatura de conservación adecuada y evita abrirlo más tiempo del necesario.",
       "Deja espacio para que el aire circule por la parte trasera y limpia el polvo de la rejilla cuando el fabricante lo recomiende.",
@@ -573,14 +609,18 @@ export const appliances: Appliance[] = [
   },
   {
     slug: "lavadora",
+    indexable: true,
     name: "Lavadora",
     articleName: "una lavadora",
     category: "Lavado",
-    watts: 2000,
-    hours: 1,
-    days: 16,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCycleCost(0.6, 16),
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 0.6,
+      cycles: 16,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    labelKwhPer100Cycles: 60,
     shortDescription:
       "Para este aparato, los kWh por ciclo de la etiqueta describen mejor el gasto que la potencia máxima.",
     intro:
@@ -610,22 +650,23 @@ export const appliances: Appliance[] = [
     sourceTitle: "Comisión Europea — Etiqueta energética de lavadoras",
     sourceUrl:
       "https://energy-efficient-products.ec.europa.eu/product-list/washing-machines_en",
-    calculationMode: "cycle",
-    kwhPerCycle: 0.6,
-    cyclesPerMonth: 16,
     measurement:
       "Divide los kWh por 100 ciclos que aparecen en la etiqueta entre 100 e introdúcelos como kWh por ciclo.",
   },
   {
     slug: "lavavajillas",
+    indexable: true,
     name: "Lavavajillas",
     articleName: "un lavavajillas",
     category: "Cocina",
-    watts: 1800,
-    hours: 1.5,
-    days: 16,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCycleCost(0.85, 16),
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 0.85,
+      cycles: 16,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    labelKwhPer100Cycles: 85,
     shortDescription:
       "Calcula por ciclo: el programa eco puede durar más y, a la vez, usar menos energía.",
     intro:
@@ -655,30 +696,31 @@ export const appliances: Appliance[] = [
     sourceTitle: "Comisión Europea — Etiqueta energética de lavavajillas",
     sourceUrl:
       "https://energy-efficient-products.ec.europa.eu/product-list/dishwashers_en",
-    calculationMode: "cycle",
-    kwhPerCycle: 0.85,
-    cyclesPerMonth: 16,
     measurement:
       "Divide los kWh por 100 ciclos del programa Eco entre 100 e introdúcelos como kWh por ciclo.",
   },
   {
     slug: "vitroceramica",
+    indexable: true,
     name: "Vitrocerámica o inducción",
     articleName: "una vitrocerámica o placa de inducción",
     seoTitle: "Cuánto consume una vitrocerámica: coste y cálculo",
     category: "Cocina",
-    watts: 1500,
-    hours: 0.75,
-    days: 20,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1500, 0.75, 20),
+    calculation: {
+      method: "power",
+      watts: 1500,
+      hoursPerDay: 0.75,
+      daysPerMonth: 20,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "La potencia es alta, pero cada zona regula: calcula el coste por uso y aprende qué cambia entre inducción y vitro.",
     intro:
       "Una placa puede alcanzar potencias elevadas, especialmente con la función de refuerzo, pero regula la entrega de energía al mantener el hervor. El recipiente, el tamaño de la zona y el tiempo efectivo de cocción pesan más que el máximo de vatios impreso en el manual.",
-    range: "1.200–3.000 W por zona, según tamaño, nivel de potencia y función de refuerzo.",
+    range:
+      "Consulta la potencia eléctrica de la zona en la etiqueta o el manual; varía por tamaño, nivel y función de refuerzo.",
     caveat:
-      "El ejemplo supone una zona de 1.500 W durante 45 minutos al día. Si la resistencia o la inducción se regula durante la cocción, el consumo real será distinto.",
+      "El ejemplo educativo editable supone una zona de 1.500 W durante 45 minutos al día. Si la resistencia o la inducción se regula durante la cocción, el consumo real será distinto.",
     tips: [
       "Usa una olla con base plana y del diámetro de la zona para aprovechar mejor el calor.",
       "Tapa los recipientes cuando la receta lo permita y usa el calor residual al final de la cocción.",
@@ -698,27 +740,32 @@ export const appliances: Appliance[] = [
         text: "Llevar agua a ebullición demanda más energía que mantener una cocción suave tras alcanzar la temperatura.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "microondas",
+    indexable: true,
     name: "Microondas",
     articleName: "un microondas",
     category: "Cocina",
-    watts: 1000,
-    hours: 0.25,
-    days: 20,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1000, 0.25, 20),
+    calculation: {
+      method: "power",
+      watts: 1000,
+      hoursPerDay: 0.25,
+      daysPerMonth: 20,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Tiene una potencia considerable, pero suele usarse pocos minutos: mira el coste por calentamiento y por mes.",
     intro:
       "El microondas concentra bastante potencia en sesiones cortas. Para recalentar o descongelar pequeñas cantidades puede ser una forma eficiente de aportar energía porque evita calentar una cavidad grande durante demasiado tiempo.",
-    range: "700–1.200 W de potencia eléctrica aproximada, según modelo y modo de uso.",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por modelo y modo de uso.",
     caveat:
-      "Los minutos indicados en el panel no siempre se traducen en potencia máxima: los niveles bajos pueden alternar periodos de encendido y pausa.",
+      "Los 1.000 W y los 15 minutos son un escenario educativo editable. Los niveles bajos pueden alternar periodos de encendido y pausa.",
     tips: [
       "Usa recipientes aptos y tapa la comida para reducir salpicaduras y pérdidas de humedad.",
       "Ajusta el tiempo a la cantidad que vas a calentar; sobrecalentar aumenta el gasto y empeora el resultado.",
@@ -738,27 +785,32 @@ export const appliances: Appliance[] = [
         text: "Calentar una ración individual requiere menos energía que una fuente grande, aunque conviene repartir el calor y remover cuando corresponda.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "televisor",
+    indexable: true,
     name: "Televisor",
     articleName: "un televisor",
     category: "Tecnología",
-    watts: 100,
-    hours: 4,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(100, 4, 30),
+    calculation: {
+      method: "power",
+      watts: 100,
+      hoursPerDay: 4,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Tamaño, brillo y horas de pantalla determinan el coste mucho más que el consumo en espera.",
     intro:
       "El consumo de un televisor cambia con el tamaño del panel, el brillo, el contenido mostrado y las horas de uso. En una pantalla moderna el gasto durante la reproducción suele pesar más que el modo de espera, aunque ambos se pueden comprobar en la ficha técnica.",
-    range: "40–200 W durante el uso, según tamaño, tecnología, brillo y modo de imagen.",
+    range:
+      "Consulta el consumo declarado en la etiqueta o ficha del modelo; varía con el tamaño, el brillo y el modo de imagen.",
     caveat:
-      "El ejemplo usa 100 W durante cuatro horas al día. Un modelo grande con brillo alto, consola conectada o barra de sonido necesita un cálculo separado para cada equipo.",
+      "El ejemplo educativo editable usa 100 W durante cuatro horas al día. Una consola, un decodificador o una barra de sonido necesitan un cálculo separado.",
     tips: [
       "Reduce el brillo excesivo y desactiva los modos de imagen más luminosos si no los necesitas.",
       "Activa el apagado automático para evitar que quede encendido sin que nadie lo esté viendo.",
@@ -784,22 +836,26 @@ export const appliances: Appliance[] = [
   },
   {
     slug: "calefactor-electrico",
+    indexable: true,
     name: "Calefactor eléctrico",
     articleName: "un calefactor eléctrico",
     seoTitle: "Cuánto consume un calefactor eléctrico: coste",
     category: "Climatización",
-    watts: 1500,
-    hours: 4,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1500, 4, 30),
+    calculation: {
+      method: "power",
+      watts: 1500,
+      hoursPerDay: 4,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Es una forma rápida de calentar una estancia pequeña, pero sus horas de uso se traducen pronto en euros.",
     intro:
       "Los calefactores eléctricos de resistencia convierten casi toda la electricidad que consumen en calor en la estancia, pero no multiplican la energía: mantener varios kilovatios durante horas puede tener un coste elevado. El aislamiento y el termostato marcan cuánto tiempo necesita funcionar.",
-    range: "1.000–2.000 W en muchos modelos domésticos mientras la resistencia está activa.",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por modelo y nivel seleccionado.",
     caveat:
-      "El ejemplo presupone 1.500 W durante cuatro horas al día. Si el termostato corta con frecuencia o solo se usa de forma puntual, el consumo real será menor.",
+      "El ejemplo educativo editable presupone 1.500 W durante cuatro horas al día. Si el termostato corta con frecuencia o el uso es puntual, el consumo real será menor.",
     tips: [
       "Úsalo para calentar una zona concreta y evita climatizar espacios vacíos.",
       "Cierra puertas y limita las fugas de aire antes de aumentar la potencia o prolongar las horas de uso.",
@@ -819,27 +875,32 @@ export const appliances: Appliance[] = [
         text: "Una consigna estable y el apagado al salir reducen horas innecesarias de funcionamiento.",
       },
     ],
-    sourceTitle: "IDAE — Recomendaciones de ahorro energético",
-    sourceUrl: "https://www.idae.es/",
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
   },
   {
     slug: "deshumidificador",
+    indexable: true,
     name: "Deshumidificador",
     articleName: "un deshumidificador",
     seoTitle: "Cuánto consume un deshumidificador: coste",
     category: "Climatización",
-    watts: 250,
-    hours: 8,
-    days: 20,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(250, 8, 20),
+    calculation: {
+      method: "power",
+      watts: 250,
+      hoursPerDay: 8,
+      daysPerMonth: 20,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Su coste depende de la humedad inicial, la temperatura y el ajuste de humedad que marques.",
     intro:
       "Un deshumidificador extrae agua del aire mediante un ciclo de refrigeración o, en equipos pequeños, con otros sistemas. No consume lo mismo todo el día: el higrostato debería detenerlo o reducir su trabajo al acercarse a la humedad objetivo.",
-    range: "150–500 W mientras el compresor o el sistema de extracción está activo.",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por modelo, temperatura y modo.",
     caveat:
-      "El ejemplo supone 250 W durante ocho horas en veinte días. Un sótano húmedo, la ropa tendida dentro de casa o una temperatura baja pueden cambiar mucho el tiempo real de funcionamiento.",
+      "El ejemplo educativo editable supone 250 W durante ocho horas en veinte días. La humedad, la ropa tendida o una temperatura baja pueden cambiar mucho el tiempo real de funcionamiento.",
     tips: [
       "Ajusta una humedad objetivo razonable y deja que el higrostato pare el equipo cuando la alcance.",
       "Cierra puertas y ventanas de la estancia que quieras tratar para no deshumidificar aire exterior continuamente.",
@@ -859,28 +920,33 @@ export const appliances: Appliance[] = [
         text: "Una habitación grande o conectada a otras estancias exige más trabajo que un espacio cerrado de menor tamaño.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
   {
     slug: "aire-acondicionado-portatil",
+    indexable: true,
     name: "Aire acondicionado portátil",
     articleName: "un aire acondicionado portátil",
     seoTitle: "Consumo de aire acondicionado portátil: coste",
     category: "Climatización",
-    watts: 1200,
-    hours: 4,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1200, 4, 30),
+    calculation: {
+      method: "power",
+      watts: 1200,
+      hoursPerDay: 4,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Entiende el coste por hora de un equipo portátil y por qué la evacuación del aire caliente importa tanto.",
     intro:
       "Un aire acondicionado portátil reúne el compresor en la propia habitación y expulsa calor mediante un tubo. La instalación de ese tubo, el sellado de la ventana y la carga térmica de la estancia pueden hacer que necesite más tiempo para lograr el mismo confort que un equipo fijo bien dimensionado.",
-    range: "800–1.500 W de potencia eléctrica aproximada mientras el compresor funciona.",
+    range:
+      "Consulta la potencia eléctrica de entrada y el consumo declarado en la etiqueta o ficha; varían por modelo y modo.",
     caveat:
-      "El ejemplo usa 1.200 W durante cuatro horas al día. La potencia real y los ciclos del compresor cambian con el modelo, la temperatura exterior y el aislamiento.",
+      "El ejemplo educativo editable usa 1.200 W durante cuatro horas al día. La potencia real y los ciclos del compresor cambian con el modelo, la temperatura exterior y el aislamiento.",
     tips: [
       "Sella bien la ventana alrededor del tubo para limitar la entrada de aire caliente desde el exterior.",
       "Reduce la radiación solar con persianas o toldos antes de encender el equipo.",
@@ -900,27 +966,28 @@ export const appliances: Appliance[] = [
         text: "Los diseños de doble tubo y los sistemas fijos pueden tener un comportamiento distinto; compara siempre la ficha de eficiencia y las condiciones de instalación.",
       },
     ],
-    sourceTitle: "OCU — Consejos sobre aire acondicionado",
+    sourceTitle: "Comisión Europea — Acondicionadores de aire y ventiladores",
     sourceUrl:
-      "https://www.ocu.org/vivienda-y-energia/aire-acondicionado/consejos/consumo-aire-acondicionado",
+      "https://energy-efficient-products.ec.europa.eu/product-list/air-conditioners-and-comfort-fans_en",
   },
   {
     slug: "congelador",
+    indexable: true,
     name: "Congelador",
     articleName: "un congelador",
-    category: "Cocina",
-    watts: 80,
-    hours: 7,
-    days: 30,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(80, 7, 30),
+    category: "Frío",
+    calculation: {
+      method: "annual",
+      annualKwh: 200,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Al funcionar todo el año, su etiqueta en kWh/año es la mejor pista para estimar el coste mensual.",
     intro:
       "Como un frigorífico, un congelador alterna ciclos de compresor para mantener una temperatura baja. El consumo anual declarado en la etiqueta ofrece una comparación más fiable entre modelos que la potencia instantánea, que solo describe un momento de arranque o funcionamiento.",
     range: "Consulta los kWh/año de la etiqueta energética; el compresor no trabaja de manera constante.",
     caveat:
-      "El ejemplo representa horas equivalentes de compresor, no un consumo continuo. La temperatura ambiente, la escarcha y las aperturas de puerta pueden modificar el resultado.",
+      "El escenario anual es un supuesto educativo y se reparte para mostrar medias de coste. La etiqueta de tu modelo, la temperatura ambiente, la escarcha y las aperturas pueden dar un resultado distinto.",
     tips: [
       "Mantén el congelador con una temperatura adecuada y revisa el cierre de la puerta.",
       "Descongela cuando la acumulación de hielo sea importante, siguiendo las indicaciones del fabricante.",
@@ -948,22 +1015,26 @@ export const appliances: Appliance[] = [
   },
   {
     slug: "freidora-de-aire",
+    indexable: true,
     name: "Freidora de aire",
     articleName: "una freidora de aire",
     seoTitle: "Cuánto consume una freidora de aire: coste",
     category: "Cocina",
-    watts: 1500,
-    hours: 0.4,
-    days: 20,
-    price: DEFAULT_ELECTRICITY_PRICE,
-    exampleCost: monthlyCost(1500, 0.4, 20),
+    calculation: {
+      method: "power",
+      watts: 1500,
+      hoursPerDay: 0.4,
+      daysPerMonth: 20,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
     shortDescription:
       "Calcula el coste por cocinado y compárala con un horno sin confundir potencia máxima con consumo total.",
     intro:
       "Una freidora de aire es un horno compacto con circulación de aire caliente. Puede tener una potencia alta, pero al calentar un volumen menor y durante menos tiempo puede reducir la energía total en algunas recetas. La comparación útil se hace por plato y tiempo de cocción, no solo por vatios.",
-    range: "1.000–2.000 W de potencia nominal, según capacidad y programa.",
+    range:
+      "Consulta la potencia eléctrica de entrada en la etiqueta o el manual; varía por capacidad, modelo y programa.",
     caveat:
-      "El ejemplo usa 1.500 W durante 24 minutos en veinte usos mensuales. El termostato puede alternar la resistencia y algunas recetas requieren precalentado o varias tandas.",
+      "El ejemplo educativo editable usa 1.500 W durante 24 minutos en veinte usos mensuales. El termostato puede alternar la resistencia y algunas recetas requieren precalentado o varias tandas.",
     tips: [
       "No la uses para una cantidad que obligue a cocinar muchas tandas si el horno ya está encendido para otros platos.",
       "Evita precalentar más tiempo del necesario y adapta el tiempo a la cantidad de comida.",
@@ -983,11 +1054,118 @@ export const appliances: Appliance[] = [
         text: "El ahorro potencial cambia si sustituyes un horno grande, una sartén o un microondas; compara siempre tiempos y cantidades equivalentes.",
       },
     ],
-    sourceTitle: "IDAE — Estudio SPAHOUSEC III (2026)",
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
-      "https://informesweb.idae.es/descargas/20260123_SPAHOUSEC_III.pdf",
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
 ];
+
+function buildAssumptionRationale(item: ApplianceSeed) {
+  if (item.slug === "frigorifico") {
+    return "Referencia histórica de contexto: 181 kWh/año es la media indicada por la Comisión Europea para frigoríficos-congeladores vendidos en 2020. No representa todos los modelos actuales; usa la etiqueta de tu aparato.";
+  }
+
+  if (item.slug === "congelador") {
+    return "200 kWh/año es un escenario educativo redondo para mostrar la fórmula. No es un promedio oficial ni describe todos los congeladores; sustitúyelo por la etiqueta del modelo.";
+  }
+
+  if (item.labelKwhPer100Cycles !== undefined) {
+    return `${item.labelKwhPer100Cycles.toLocaleString("es-ES")} kWh/100 ciclos es un escenario educativo editable. La fuente explica la unidad de etiqueta; el valor real debe copiarse de la etiqueta del modelo y programa correspondiente.`;
+  }
+
+  if (item.calculation.method === "power") {
+    return `${item.calculation.watts.toLocaleString("es-ES")} W, ${item.calculation.hoursPerDay.toLocaleString("es-ES")} h/día y ${item.calculation.daysPerMonth.toLocaleString("es-ES")} días/mes forman un escenario educativo editable. La fuente aporta contexto o método, no certifica esas entradas para todos los modelos.`;
+  }
+
+  if (item.calculation.method === "cycle") {
+    return `${item.calculation.kwhPerCycle.toLocaleString("es-ES")} kWh/ciclo y ${item.calculation.cycles.toLocaleString("es-ES")} ciclos/mes forman un escenario educativo editable. No es un dato de fabricante: sustitúyelo por la etiqueta o por una medición de una tarea comparable.`;
+  }
+
+  if (item.calculation.method === "annual") {
+    return `${item.calculation.annualKwh.toLocaleString("es-ES")} kWh/año es un escenario educativo editable. Sustitúyelo por el consumo anual de la etiqueta del modelo.`;
+  }
+
+  return "Escenario educativo editable. Sustituye las entradas por datos de tu aparato y uso antes de tomar una decisión.";
+}
+
+const sourceByUrl = new Map<string, SourceReference>(
+  Object.values(SOURCE_CATALOG).map((source) => [source.url, { ...source }]),
+);
+
+function buildSource(item: ApplianceSeed): SourceReference {
+  const catalogSource = sourceByUrl.get(item.sourceUrl);
+  if (catalogSource) {
+    return catalogSource;
+  }
+
+  return {
+    id: `appliance-${item.slug}`,
+    title: item.sourceTitle,
+    url: item.sourceUrl,
+    kind: "official-guidance",
+    scope:
+      "Fuente de contexto enlazada por la guía; no acredita por sí sola el escenario educativo.",
+    accessedAt: CONTENT_UPDATED_AT,
+  };
+}
+
+function enrichAppliance(item: ApplianceSeed): Appliance {
+  const result = calculateElectricity(item.calculation);
+
+  if (!result.ok) {
+    throw new Error(
+      `No se puede publicar ${item.slug}: ${result.errors
+        .map((entry) => `${entry.field}: ${entry.message}`)
+        .join(", ")}`,
+    );
+  }
+
+  return {
+    ...item,
+    exampleCost: result.value.cost.month,
+    assumptionRationale: buildAssumptionRationale(item),
+    exampleKind:
+      item.slug === "frigorifico"
+        ? "official-statistic"
+        : "educational-example",
+    reviewedAt: item.updatedAt ?? CONTENT_UPDATED_AT,
+    sources: [buildSource(item)],
+  };
+}
+
+export const appliances: Appliance[] = applianceSeeds.map(enrichAppliance);
+
+function validateAppliances(items: Appliance[]) {
+  const slugs = new Set<string>();
+
+  for (const item of items) {
+    if (slugs.has(item.slug)) {
+      throw new Error(`Slug de aparato duplicado: ${item.slug}`);
+    }
+    slugs.add(item.slug);
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug)) {
+      throw new Error(`Slug de aparato inválido: ${item.slug}`);
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(item.reviewedAt)) {
+      throw new Error(`Fecha de revisión inválida para ${item.slug}`);
+    }
+
+    if (item.sources.length === 0) {
+      throw new Error(`El aparato ${item.slug} no tiene fuentes`);
+    }
+
+    for (const source of item.sources) {
+      if (new URL(source.url).protocol !== "https:") {
+        throw new Error(`Fuente no HTTPS en ${item.slug}: ${source.url}`);
+      }
+    }
+  }
+}
+
+validateAppliances(appliances);
 
 export function getAppliance(slug: string) {
   return appliances.find((item) => item.slug === slug);

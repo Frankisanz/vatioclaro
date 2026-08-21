@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ApplianceSearch } from "./components/ApplianceSearch";
+import { TrackedGuideLink } from "./components/TrackedGuideLink";
 import { ApplianceCard } from "./components/ApplianceCard";
 import { EditorialIllustration } from "./components/EditorialIllustration";
-import { EnergyCalculator } from "./components/EnergyCalculator";
+import { UniversalCalculator } from "./components/UniversalCalculator";
 import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
 import { buyingGuides } from "@/lib/buying-guides";
+import { formatElectricityPrice } from "@/lib/electricity";
+import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
 import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -36,22 +40,28 @@ export const metadata: Metadata = {
   },
 };
 
-const featured = appliances.slice(0, 6);
+const featured = appliances.filter((item) => item.indexable).slice(0, 6);
 const featuredBuyingGuideSlugs = [
   "medidores-consumo-electrico-enchufe",
   "temporizadores-regletas-consumo-fantasma",
   "termometros-frigorifico-congelador",
 ] as const;
-const featuredBuyingGuides = featuredBuyingGuideSlugs.map((slug) => {
-  const guide = buyingGuides.find((candidate) => candidate.slug === slug);
+const featuredBuyingGuides = featuredBuyingGuideSlugs
+  .map((slug) => {
+    const guide = buyingGuides.find((candidate) => candidate.slug === slug);
 
-  if (!guide) {
-    throw new Error(`No se ha encontrado la guía de compra ${slug}`);
-  }
+    if (!guide) {
+      throw new Error(`No se ha encontrado la guía de compra ${slug}`);
+    }
 
-  return guide;
-});
+    return guide;
+  })
+  .filter((guide) => guide.indexable);
 const heroItem = appliances[0];
+if (heroItem.calculation.method !== "power") {
+  throw new Error("El ejemplo principal debe usar potencia y tiempo");
+}
+const heroCalculation = heroItem.calculation;
 const tickerSlugs = [
   "ventilador",
   "router-wifi",
@@ -69,7 +79,7 @@ const tickerItems = tickerSlugs.map((slug) => {
   return item;
 });
 
-const nextGuides = [
+const nextGuides = ([
   {
     href: "/guias/por-que-ha-subido-factura-luz",
     number: "01",
@@ -94,7 +104,7 @@ const nextGuides = [
     title: "Entiende cada línea de la factura",
     text: "Identifica contrato, potencia, energía, lecturas, servicios, impuestos y el QR oficial de la CNMC.",
   },
-] as const;
+] as const).filter((guide) => isIndexableEditorialGuideHref(guide.href));
 
 export default function Home() {
   const heroKwh = getApplianceMonthlyKwh(heroItem);
@@ -103,26 +113,35 @@ export default function Home() {
     <main id="contenido">
       <section className="hero">
         <div className="hero__copy">
-          <div className="eyebrow">Energía doméstica, sin letra pequeña</div>
+          <div className="eyebrow">
+            Vatios y kWh convertidos en euros comprensibles
+          </div>
           <h1>
             Descubre dónde se va <em>cada euro</em> de tu factura.
           </h1>
           <p className="hero__lede">
-            Convierte la potencia y tus horas de uso en un coste mensual real.
+            Calcula cuánto cuesta utilizar tus aparatos con tus propios datos.
             Sin registros, sin venderte una tarifa y con la fórmula a la vista.
           </p>
+          <ApplianceSearch
+            items={appliances.map(({ name, slug }) => ({ name, slug }))}
+          />
           <div className="hero__actions">
             <a className="button button--dark" href="#calculadora">
               Calcular mi consumo
             </a>
-            <Link className="text-link" href="/consumo">
-              Explorar guías <span aria-hidden="true">→</span>
-            </Link>
+            <TrackedGuideLink
+              className="text-link"
+              context="home-hero"
+              href="/consumo"
+            >
+              Ver aparatos <span aria-hidden="true">→</span>
+            </TrackedGuideLink>
           </div>
-          <div className="trust-row" aria-label="Ventajas">
-            <span>✓ Cálculo instantáneo</span>
-            <span>✓ Precio editable</span>
-            <span>✓ Fuentes visibles</span>
+          <div className="trust-row" aria-label="Ventajas" role="list">
+            <span role="listitem">✓ Cálculo instantáneo</span>
+            <span role="listitem">✓ Precio editable</span>
+            <span role="listitem">✓ Fuentes visibles</span>
           </div>
         </div>
 
@@ -144,8 +163,8 @@ export default function Home() {
             </sup>
           </div>
           <p>
-            {heroItem.name} · {heroItem.watts.toLocaleString("es-ES")} W ·{" "}
-            {heroItem.hours} h/día
+            {heroItem.name} · {heroCalculation.watts.toLocaleString("es-ES")} W ·{" "}
+            {heroCalculation.hoursPerDay} h/día
           </p>
           <div className="bill-card__bar">
             <i />
@@ -156,22 +175,12 @@ export default function Home() {
           </div>
           <div className="bill-card__note">
             <b>{heroKwh.toLocaleString("es-ES")} kWh</b>
-            <span>con un ejemplo de {heroItem.price.toLocaleString("es-ES")} € / kWh</span>
+            <span>
+              con un precio ilustrativo de{" "}
+              {formatElectricityPrice(heroCalculation.pricePerKwh)}
+            </span>
           </div>
         </aside>
-      </section>
-
-      <section className="ticker" aria-label="Ejemplos mensuales">
-        {tickerItems.map((item) => (
-          <Link href={`/consumo/${item.slug}`} key={item.slug}>
-            {item.name.toLocaleUpperCase()} ·{" "}
-            {item.exampleCost.toLocaleString("es-ES", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{" "}
-            € / MES
-          </Link>
-        ))}
       </section>
 
       <section className="calculator-section" id="calculadora">
@@ -185,7 +194,24 @@ export default function Home() {
             total por kWh que quieras analizar.
           </p>
         </div>
-        <EnergyCalculator />
+        <UniversalCalculator initialInput={heroItem.calculation} />
+      </section>
+
+      <section className="ticker" aria-label="Ejemplos mensuales">
+        {tickerItems.map((item) => (
+          <Link
+            href={`/consumo/${item.slug}`}
+            key={item.slug}
+            prefetch={false}
+          >
+            {item.name.toLocaleUpperCase()} ·{" "}
+            {item.exampleCost.toLocaleString("es-ES", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            € / MES
+          </Link>
+        ))}
       </section>
 
       <section className="home-editorial-visual">
@@ -199,16 +225,16 @@ export default function Home() {
             saber dónde termina la fuente y empieza el ejemplo.
           </p>
           <div className="home-editorial-visual__links">
-            <Link href="/guias/induccion-vs-vitroceramica-consumo">
+            <Link href="/guias/induccion-vs-vitroceramica-consumo" prefetch={false}>
               Inducción o vitrocerámica <span aria-hidden="true">→</span>
             </Link>
-            <Link href="/guias/horno-vs-freidora-aire-consumo">
+            <Link href="/guias/horno-vs-freidora-aire-consumo" prefetch={false}>
               Horno o freidora de aire <span aria-hidden="true">→</span>
             </Link>
-            <Link href="/guias/aire-acondicionado-split-vs-portatil">
+            <Link href="/guias/aire-acondicionado-split-vs-portatil" prefetch={false}>
               Split o aire portátil <span aria-hidden="true">→</span>
             </Link>
-            <Link href="/guias/radiador-electrico-vs-bomba-calor">
+            <Link href="/guias/radiador-electrico-vs-bomba-calor" prefetch={false}>
               Radiador o bomba de calor <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -222,7 +248,7 @@ export default function Home() {
             <div className="eyebrow">Biblioteca de consumo</div>
             <h2>Los aparatos que más dudas generan.</h2>
           </div>
-          <Link className="text-link" href="/consumo">
+          <Link className="text-link" href="/consumo" prefetch={false}>
             Ver todas las guías →
           </Link>
         </div>
@@ -251,7 +277,7 @@ export default function Home() {
           aparato regula su potencia —como un frigorífico o un equipo inverter—
           te explicamos por qué la cifra puede cambiar.
         </p>
-        <Link className="button button--light" href="/metodologia">
+        <Link className="button button--light" href="/metodologia" prefetch={false}>
           Ver metodología
         </Link>
       </section>
@@ -272,6 +298,7 @@ export default function Home() {
             <Link
               href={`/recomendaciones/${guide.slug}`}
               key={guide.slug}
+              prefetch={false}
             >
               <div className="eyebrow">{guide.eyebrow}</div>
               <h3>{guide.title}</h3>
@@ -282,7 +309,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
-        <Link className="text-link" href="/recomendaciones">
+        <Link className="text-link" href="/recomendaciones" prefetch={false}>
           Ver todas las recomendaciones →
         </Link>
       </section>
@@ -298,7 +325,7 @@ export default function Home() {
         </div>
         <div className="content-plan__list">
           {nextGuides.map((guide) => (
-            <Link href={guide.href} key={guide.href}>
+            <Link href={guide.href} key={guide.href} prefetch={false}>
               <span>{guide.number}</span>
               <h3>{guide.title}</h3>
               <p>{guide.text}</p>

@@ -24,23 +24,23 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern out --ignore-pattern .wrangler --ignore-pattern .vinext"
   },
   "dependencies": {
-    "lucide-react": "1.27.0",
-    "next": "16.2.12",
+    "lucide-react": "1.34.0",
+    "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.12.1",
-    "@playwright/test": "1.62.0",
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.1",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
     "eslint": "9.39.5",
-    "eslint-config-next": "16.2.12",
+    "eslint-config-next": "16.3.3",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
-    "wrangler": "4.126.0"
+    "wrangler": "4.127.0"
   },
   "overrides": {
     "brace-expansion": "5.0.9",

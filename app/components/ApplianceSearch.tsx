@@ -1,6 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
 import { useRouter } from "next/navigation";
 import { FormEvent, useId, useState } from "react";
 
@@ -38,11 +37,6 @@ export function ApplianceSearch({ items }: { items: SearchItem[] }) {
         normalized.includes(normalize(item.name)),
     );
     const match = exact ?? partial;
-
-    track("appliance_search", {
-      destination: match ? "guide" : "calculator",
-      ...(match ? { slug: match.slug } : {}),
-    });
 
     router.push(
       match

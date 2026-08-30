@@ -8,13 +8,12 @@ import {
   formatKwh,
   type EnergyLabelResult,
 } from "@/lib/electricity";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DecimalField,
   EmptyResult,
   issuesToFieldErrors,
   parseFields,
-  useCalculatorTracking,
   useFieldPrefix,
   type FieldErrors,
 } from "./CalculatorPrimitives";
@@ -77,28 +76,17 @@ export function EnergyLabelCalculator() {
   });
   const [interacted, setInteracted] = useState(false);
   const prefix = useFieldPrefix("label-calculator");
-  const {
-    complete: trackComplete,
-    method: trackMethod,
-    start: trackStart,
-  } = useCalculatorTracking("calculator", "energy-label");
   const outcome = useMemo(() => calculate(mode, raw), [mode, raw]);
-
-  useEffect(() => {
-    if (interacted && outcome.result) trackComplete();
-  }, [interacted, outcome.result, trackComplete]);
 
   function change(field: keyof RawLabel, value: string) {
     setRaw((current) => ({ ...current, [field]: value }));
     setInteracted(true);
-    trackStart(mode === "annual" ? "label-annual" : "label-100-cycles");
   }
 
   function selectMode(nextMode: LabelMode) {
     if (nextMode === mode) return;
     setMode(nextMode);
     setInteracted(true);
-    trackMethod(nextMode === "annual" ? "label-annual" : "label-100-cycles");
   }
 
   const errors = interacted ? outcome.errors : {};

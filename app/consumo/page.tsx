@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ApplianceCard } from "@/app/components/ApplianceCard";
 import { appliances } from "@/lib/appliances";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Consumo de electrodomésticos: guías y costes",
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     "Consulta cuánto consumen electrodomésticos, climatización y tecnología. Cada guía incluye coste, fórmula, factores y calculadora editable.",
   alternates: { canonical: "/consumo" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/consumo",
     title: `Guías de consumo eléctrico por aparato | ${SITE_NAME}`,

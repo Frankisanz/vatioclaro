@@ -8,18 +8,22 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "wrangler dev --config wrangler.jsonc",
+    "preview": "wrangler dev --config wrangler.jsonc",
+    "check:cloudflare": "wrangler deploy --dry-run --config wrangler.jsonc",
+    "predeploy": "npm run build",
+    "deploy": "wrangler deploy --config wrangler.jsonc",
     "test": "npm run test:unit && npm run build && npm run test:static",
     "test:unit": "node --experimental-strip-types --test tests/calculations.test.ts",
     "test:static": "node --test tests/site-output.test.mjs",
+    "pretest:e2e": "npm run build",
     "test:e2e": "playwright test",
+    "pretest:e2e:ui": "npm run build",
     "test:e2e:ui": "playwright test --ui",
     "typecheck": "tsc --noEmit --incremental false",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern out --ignore-pattern .wrangler --ignore-pattern .vinext"
   },
   "dependencies": {
-    "@vercel/analytics": "2.0.1",
-    "@vercel/speed-insights": "2.0.0",
     "lucide-react": "1.27.0",
     "next": "16.2.12",
     "react": "19.2.8",
@@ -35,7 +39,8 @@
     "eslint": "9.39.5",
     "eslint-config-next": "16.2.12",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.126.0"
   },
   "overrides": {
     "brace-expansion": "5.0.9",

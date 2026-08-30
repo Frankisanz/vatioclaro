@@ -13,7 +13,7 @@ import {
 } from "@/lib/buying-guides";
 import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
-import { absoluteUrl, EDITORIAL_PERSON_ID, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, EDITORIAL_PERSON_ID, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -43,6 +43,7 @@ export async function generateMetadata({
       ? { index: true, follow: true }
       : { index: false, follow: true },
     openGraph: {
+      ...OPEN_GRAPH_DEFAULTS,
       type: "article",
       url: path,
       title: `${guide.seoTitle} | ${SITE_NAME}`,

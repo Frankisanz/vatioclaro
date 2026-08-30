@@ -1,7 +1,7 @@
 # Selección de herramientas de GitHub
 
-Revisión realizada el 27 de julio de 2026. Las estrellas son una fotografía de
-ese día; la decisión también considera mantenimiento reciente, licencia,
+Revisión actualizada el 27 de agosto de 2026. Las estrellas son una fotografía
+del 27 de julio; la decisión también considera mantenimiento reciente, licencia,
 compatibilidad con Next.js 16, React 19 y Tailwind CSS 4, coste de JavaScript y
 la necesidad real del proyecto.
 
@@ -28,8 +28,11 @@ la necesidad real del proyecto.
   las plantillas principales.
 - `lucide-react`: sustituye símbolos tipográficos por iconos accesibles y
   consistentes.
-- `@vercel/analytics` y `@vercel/speed-insights`: muestran páginas vistas,
-  procedencia y Core Web Vitals sin instalar cookies.
+- Cloudflare Web Analytics: muestra páginas vistas, procedencia y Core Web
+  Vitals sin cookies ni almacenamiento local; se activa en Cloudflare y no
+  admite eventos personalizados.
+- `wrangler`: valida, previsualiza y publica la exportación estática en Workers
+  Static Assets con una versión fijada en el lockfile.
 - GitHub Actions: ejecuta lint, build, pruebas estáticas, navegador y
   accesibilidad en cada cambio.
 - Dependabot: propone actualizaciones semanales de npm y mensuales de Actions.

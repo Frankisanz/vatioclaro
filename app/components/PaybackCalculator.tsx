@@ -7,13 +7,12 @@ import {
   formatElectricityPrice,
   type OwnershipComparisonResult,
 } from "@/lib/electricity";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DecimalField,
   EmptyResult,
   issuesToFieldErrors,
   parseFields,
-  useCalculatorTracking,
   useFieldPrefix,
   type FieldErrors,
 } from "./CalculatorPrimitives";
@@ -102,18 +101,11 @@ export function PaybackCalculator() {
   });
   const [interacted, setInteracted] = useState(false);
   const prefix = useFieldPrefix("payback-calculator");
-  const { complete: trackComplete, start: trackStart } =
-    useCalculatorTracking("comparison", "ownership");
   const outcome = useMemo(() => calculate(raw), [raw]);
-
-  useEffect(() => {
-    if (interacted && outcome.result) trackComplete();
-  }, [interacted, outcome.result, trackComplete]);
 
   function change(field: keyof RawOwnership, value: string) {
     setRaw((current) => ({ ...current, [field]: value }));
     setInteracted(true);
-    trackStart();
   }
 
   const errors = interacted ? outcome.errors : {};

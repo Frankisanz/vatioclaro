@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PaybackCalculator } from "../../components/PaybackCalculator";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const description =
   "Compara precio de compra y coste energético de dos productos. Muestra diferencias y plazo matemático de recuperación sin recomendar una compra.";
 
 export const metadata: Metadata = {
-  title: "Calculadora de compra y consumo de un electrodoméstico",
+  title: "Calculadora de amortización: compra y consumo",
   description,
   alternates: { canonical: "/calculadora/amortizacion" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/calculadora/amortizacion",
     title: "Compra y consumo: compara el coste total | " + SITE_NAME,

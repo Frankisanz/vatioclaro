@@ -7,9 +7,10 @@ export const LEGAL_OWNER = {
   locality: "Úbeda",
   province: "Jaén",
   country: "España",
-  updatedAt: "29 de julio de 2026",
+  updatedAt: "27 de agosto de 2026",
 } as const;
 
 export const LEGAL_ADDRESS = `${LEGAL_OWNER.streetAddress}, ${LEGAL_OWNER.postalCode} ${LEGAL_OWNER.locality} (${LEGAL_OWNER.province}), ${LEGAL_OWNER.country}`;
 
-export const VERCEL_PRIVACY_NOTICE = "https://vercel.com/legal/privacy-notice";
+export const CLOUDFLARE_PRIVACY_POLICY =
+  "https://www.cloudflare.com/privacypolicy/";

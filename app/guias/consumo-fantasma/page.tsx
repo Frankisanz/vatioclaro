@@ -8,6 +8,7 @@ import {
   CONTENT_PUBLISHED_AT,
   CONTENT_UPDATED_AT,
   EDITORIAL_PERSON_ID,
+  OPEN_GRAPH_DEFAULTS,
   SITE_NAME,
 } from "@/lib/site";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     "Aprende qué es el consumo fantasma, qué equipos conviene revisar y cómo calcular el coste anual del modo espera sin apagar servicios importantes.",
   alternates: { canonical: "/guias/consumo-fantasma" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "article",
     url: "/guias/consumo-fantasma",
     title: `Consumo fantasma: qué es y cómo calcularlo | ${SITE_NAME}`,

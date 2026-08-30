@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LEGAL_OWNER } from "@/lib/legal";
-import { SITE_NAME } from "@/lib/site";
+import { OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const METHODOLOGY_UPDATED_AT = "2026-08-17";
 
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     "Cómo calcula VatioClaro el consumo eléctrico, qué supuestos utiliza y por qué una estimación puede diferir de una medición real.",
   alternates: { canonical: "/metodologia" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/metodologia",
     title: `Metodología de cálculo y fuentes | ${SITE_NAME}`,

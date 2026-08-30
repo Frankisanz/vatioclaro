@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const appRoot = new URL("../.next/server/app/", import.meta.url);
+const appRoot = new URL("../out/", import.meta.url);
 
 async function readOutput(path) {
   return readFile(new URL(path, appRoot), "utf8");
@@ -21,6 +21,7 @@ test("renders a canonical, indexable homepage with the primary calculator", asyn
   assert.match(html, /Saltar al contenido principal/);
   assert.match(html, /COSTE ANUAL/);
   assert.match(html, /vatioclaro-hogar-energia\.[a-z0-9_-]+\.webp/);
+  assert.doesNotMatch(html, /\/_next\/image\?/);
   assert.match(html, /\/guias\/induccion-vs-vitroceramica-consumo/);
   assert.match(html, /\/guias\/radiador-electrico-vs-bomba-calor/);
   assert.match(html, /\/consumo\/secadora/);
@@ -61,8 +62,8 @@ test("adds complete structured data and a cycle calculator to appliance pages", 
 
 test("exposes all key URLs through robots and sitemap", async () => {
   const [robots, sitemap] = await Promise.all([
-    readOutput("robots.txt.body"),
-    readOutput("sitemap.xml.body"),
+    readOutput("robots.txt"),
+    readOutput("sitemap.xml"),
   ]);
 
   assert.match(robots, /Sitemap: https:\/\/vatioclaro\.es\/sitemap\.xml/);
@@ -325,9 +326,10 @@ test("publishes complete legal, privacy and cookie information", async () => {
   }
 
   assert.match(cookies, /Cookies anal/);
-  assert.match(cookies, /Vercel Web Analytics/);
-  assert.match(cookies, /Medici.n agregada sin cookies/);
-  assert.match(privacy, /Speed Insights/);
+  assert.match(cookies, /Cloudflare Web Analytics/);
+  assert.match(cookies, /Visitas y rendimiento real sin cookies/);
+  assert.match(privacy, /m.tricas web esenciales/);
+  assert.doesNotMatch(cookies + privacy, /Vercel/);
   assert.match(cookies, /Google AdSense/);
   assert.match(cookies, /noindex, follow/);
   assert.match(legal, /vatio-21/);
@@ -339,10 +341,35 @@ test("publishes complete legal, privacy and cookie information", async () => {
 });
 
 test("keeps the 404 noindex without inheriting the homepage canonical", async () => {
-  const html = await readOutput("_not-found.html");
+  const html = await readOutput("404.html");
 
   assert.match(html, /<meta name="robots" content="noindex/);
   assert.doesNotMatch(html, /<link rel="canonical"/);
+});
+
+test("packages a static Cloudflare deployment with security headers", async () => {
+  const [headers, wranglerSource, packageSource] = await Promise.all([
+    readOutput("_headers"),
+    readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+  const wrangler = JSON.parse(wranglerSource);
+  const packageJson = JSON.parse(packageSource);
+
+  assert.equal(wrangler.name, "vatioclaro");
+  assert.equal(wrangler.assets.directory, "./out/");
+  assert.equal(wrangler.assets.not_found_handling, "404-page");
+  assert.equal(wrangler.assets.html_handling, "auto-trailing-slash");
+  assert.match(headers, /Content-Security-Policy:/);
+  assert.match(headers, /X-Content-Type-Options: nosniff/);
+  assert.match(headers, /\/apple-icon\s+Content-Type: image\/png/);
+  assert.match(headers, /X-Robots-Tag: noindex/);
+  assert.equal(packageJson.devDependencies.wrangler, "4.126.0");
+  assert.ok(
+    Object.keys(packageJson.dependencies).every(
+      (dependency) => !dependency.startsWith("@vercel/"),
+    ),
+  );
 });
 
 test("publishes useful and transparent Amazon buying guides", async () => {
@@ -435,7 +462,7 @@ test("publishes useful and transparent Amazon buying guides", async () => {
   }
 });
 
-test("includes AdSense script in head and provides a valid ads.txt", async () => {
+test("verifies AdSense with a meta tag (no ad script) and provides a valid ads.txt", async () => {
   const [html, adsTxt] = await Promise.all([
     readOutput("index.html"),
     readFile(new URL("../public/ads.txt", import.meta.url), "utf8"),
@@ -443,8 +470,9 @@ test("includes AdSense script in head and provides a valid ads.txt", async () =>
 
   assert.match(
     html,
-    /<script[^>]*src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5290446197600060"[^>]*><\/script>/,
+    /<meta name="google-adsense-account" content="ca-pub-5290446197600060"\/?>/,
   );
+  assert.doesNotMatch(html, /adsbygoogle\.js/);
   assert.equal(
     adsTxt.trim(),
     "google.com, pub-5290446197600060, DIRECT, f08c47fec0942fa0",

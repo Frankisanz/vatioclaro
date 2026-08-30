@@ -1,7 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
-
 type AffiliateLinkProps = {
   context: string;
   href: string;
@@ -18,13 +16,9 @@ export function AffiliateLink({
   return (
     <a
       className="affiliate-link"
+      data-affiliate-context={context}
+      data-affiliate-product={product}
       href={href}
-      onClick={() =>
-        track("affiliate_click", {
-          context,
-          product,
-        })
-      }
       rel="sponsored nofollow noopener noreferrer"
       target="_blank"
     >

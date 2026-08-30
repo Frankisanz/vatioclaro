@@ -4,6 +4,7 @@ import { LEGAL_OWNER } from "@/lib/legal";
 import {
   absoluteUrl,
   EDITORIAL_PERSON_ID,
+  OPEN_GRAPH_DEFAULTS,
   SITE_NAME,
 } from "@/lib/site";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
     "Conoce el propósito de VatioClaro, cómo se elaboran las calculadoras y qué límites tienen las estimaciones de consumo eléctrico.",
   alternates: { canonical: "/sobre-vatioclaro" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/sobre-vatioclaro",
     title: `Sobre ${SITE_NAME} y su criterio editorial`,

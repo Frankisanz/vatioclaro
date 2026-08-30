@@ -1,6 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -22,8 +21,8 @@ export function TrackedGuideLink({
   return (
     <Link
       className={className}
+      data-guide-context={context}
       href={href}
-      onClick={() => track("guide_click", { context, destination: href })}
       prefetch={prefetch}
     >
       {children}

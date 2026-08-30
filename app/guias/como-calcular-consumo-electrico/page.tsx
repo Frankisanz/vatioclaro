@@ -14,6 +14,7 @@ import {
   CONTENT_PUBLISHED_AT,
   CONTENT_UPDATED_AT,
   EDITORIAL_PERSON_ID,
+  OPEN_GRAPH_DEFAULTS,
   SITE_NAME,
 } from "@/lib/site";
 
@@ -97,6 +98,7 @@ export const metadata: Metadata = {
     "Aprende a calcular el consumo eléctrico de un aparato en kWh y euros. Te explicamos la fórmula, un ejemplo y los errores más frecuentes.",
   alternates: { canonical: "/guias/como-calcular-consumo-electrico" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "article",
     url: "/guias/como-calcular-consumo-electrico",
     title: `Cómo calcular el consumo eléctrico | ${SITE_NAME}`,

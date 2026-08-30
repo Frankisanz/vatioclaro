@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { editorialGuides } from "@/lib/editorial-guides";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const comparisonSlugs = [
   "horno-vs-freidora-aire-consumo",
@@ -21,11 +21,12 @@ const comparisons = comparisonSlugs.map((slug) => {
 }).filter((guide) => guide.indexable);
 
 export const metadata: Metadata = {
-  title: "Comparativas de consumo eléctrico para la misma tarea",
+  title: "Comparativas de consumo eléctrico por tarea",
   description:
     "Compara el consumo de dos alternativas con la misma tarea, supuestos visibles y una calculadora A/B reutilizable.",
   alternates: { canonical: "/comparativas" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/comparativas",
     title: `Comparativas de consumo eléctrico | ${SITE_NAME}`,

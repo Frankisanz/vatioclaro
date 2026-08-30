@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StandbyCalculator } from "../../components/StandbyCalculator";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const description =
   "Estima los kWh y euros al año de varios aparatos en standby con vatios, horas y precio editables, sin cifras alarmistas.";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/calculadora/standby" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/calculadora/standby",
     title: "Calculadora de standby | " + SITE_NAME,
@@ -63,6 +64,7 @@ export default function StandbyCalculatorPage() {
       </section>
       <section className="article-body calculator-workspace">
         <div className="simple-body__inner">
+          <h2 className="visually-hidden">Calculadora de standby</h2>
           <StandbyCalculator />
           <h2>Qué dato conviene introducir</h2>
           <p>

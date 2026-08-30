@@ -4,61 +4,109 @@ import { buyingGuides } from "@/lib/buying-guides";
 import { editorialGuides } from "@/lib/editorial-guides";
 import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/site";
 
+export const dynamic = "force-static";
+
+// Cada página estática mantiene su propia fecha de última revisión de
+// contenido: al editar una página, actualiza solo su `updatedAt`.
 const staticPages = [
-  { path: "/", priority: 1, frequency: "weekly" as const },
-  { path: "/calculadora", priority: 0.9, frequency: "monthly" as const },
+  {
+    path: "/",
+    priority: 1,
+    frequency: "weekly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
+  {
+    path: "/calculadora",
+    priority: 0.9,
+    frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
   {
     path: "/calculadora/comparar",
     priority: 0.8,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
   {
     path: "/calculadora/standby",
     priority: 0.8,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
   {
     path: "/calculadora/etiqueta-energetica",
     priority: 0.8,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
   {
     path: "/calculadora/amortizacion",
     priority: 0.8,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
-  { path: "/comparativas", priority: 0.85, frequency: "monthly" as const },
-  { path: "/consumo", priority: 0.9, frequency: "weekly" as const },
+  {
+    path: "/comparativas",
+    priority: 0.85,
+    frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
+  {
+    path: "/consumo",
+    priority: 0.9,
+    frequency: "weekly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
   {
     path: "/consumo/electrodomesticos-que-mas-consumen",
     priority: 0.85,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
-  { path: "/guias", priority: 0.8, frequency: "monthly" as const },
+  {
+    path: "/guias",
+    priority: 0.8,
+    frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
   {
     path: "/recomendaciones",
     priority: 0.85,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
   {
     path: "/guias/como-calcular-consumo-electrico",
     priority: 0.85,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
   {
     path: "/guias/consumo-fantasma",
     priority: 0.8,
     frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
   },
-  { path: "/metodologia", priority: 0.6, frequency: "monthly" as const },
-  { path: "/sobre-vatioclaro", priority: 0.5, frequency: "monthly" as const },
+  {
+    path: "/metodologia",
+    priority: 0.6,
+    frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
+  {
+    path: "/sobre-vatioclaro",
+    priority: 0.5,
+    frequency: "monthly" as const,
+    updatedAt: CONTENT_UPDATED_AT,
+  },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticPages.map((page) => ({
-      url: `${SITE_URL}${page.path}`,
-      lastModified: new Date(CONTENT_UPDATED_AT),
+      // La portada se emite sin barra final para coincidir con su canonical.
+      url: page.path === "/" ? SITE_URL : `${SITE_URL}${page.path}`,
+      lastModified: new Date(page.updatedAt),
       changeFrequency: page.frequency,
       priority: page.priority,
     })),

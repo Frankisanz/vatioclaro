@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
@@ -21,6 +19,12 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  other: {
+    // Verificación del dominio ante AdSense sin cargar adsbygoogle.js:
+    // mientras ADVERTISING_ENABLED sea false no se emite ningún script
+    // publicitario (ni tecnología que requiera consentimiento).
+    "google-adsense-account": "ca-pub-5290446197600060",
+  },
   authors: [{ name: LEGAL_OWNER.name, url: "/sobre-vatioclaro" }],
   creator: LEGAL_OWNER.name,
   publisher: SITE_NAME,
@@ -79,8 +83,6 @@ const siteJsonLd = {
   ],
 };
 
-const isVercelDeployment = process.env.VERCEL === "1";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -88,13 +90,6 @@ export default function RootLayout({
 }>) {
   return (
     <html data-scroll-behavior="smooth" lang="es">
-      <head>
-        <script
-          async
-          crossOrigin="anonymous"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5290446197600060"
-        />
-      </head>
       <body>
         <script
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
@@ -106,12 +101,6 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <SiteFooter />
-        {isVercelDeployment ? (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        ) : null}
       </body>
     </html>
   );

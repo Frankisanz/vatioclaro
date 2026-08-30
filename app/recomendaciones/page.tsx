@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AMAZON_ASSOCIATE_DISCLOSURE } from "@/lib/affiliate";
 import { indexableBuyingGuides } from "@/lib/buying-guides";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Productos para medir y reducir el consumo con criterio",
+  title: "Productos para medir y reducir el consumo",
   description:
     "Guías de compra sobre medidores, enchufes inteligentes, regletas y termómetros. Criterios verificables, límites y enlaces de afiliado transparentes.",
   alternates: { canonical: "/recomendaciones" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/recomendaciones",
     title: `Productos útiles para medir y ahorrar | ${SITE_NAME}`,

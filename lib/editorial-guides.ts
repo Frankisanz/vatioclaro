@@ -69,7 +69,7 @@ export const editorialGuides: EditorialGuide[] = [
     indexable: true,
     eyebrow: "Diagnóstico de factura",
     title: "¿Por qué ha subido mi factura de la luz?",
-    seoTitle: "Por qué ha subido tu factura de la luz: qué revisar",
+    seoTitle: "Por qué ha subido tu factura de la luz",
     description:
       "Compara consumo, precio, periodo, potencia, lecturas y servicios para localizar por qué ha subido tu factura eléctrica y saber a quién reclamar.",
     publishedAt: "2026-07-29",
@@ -865,7 +865,7 @@ export const editorialGuides: EditorialGuide[] = [
     indexable: true,
     eyebrow: "Comparativa de cocina",
     title: "Inducción vs vitrocerámica: consumo y coste",
-    seoTitle: "Inducción vs vitrocerámica: consumo, coste y diferencias",
+    seoTitle: "Inducción vs vitrocerámica: consumo y coste",
     description:
       "Compara inducción y vitrocerámica sin porcentajes mágicos: tiempo de cocción, recipiente, potencia, calor residual y método para calcular tus kWh.",
     publishedAt: "2026-08-02",
@@ -1006,7 +1006,7 @@ export const editorialGuides: EditorialGuide[] = [
     indexable: true,
     eyebrow: "Comparativa por ración",
     title: "Horno vs freidora de aire: consumo y coste",
-    seoTitle: "Horno vs freidora de aire: consumo, coste y cálculo",
+    seoTitle: "Horno vs freidora de aire: consumo y coste",
     description:
       "Aprende a comparar horno y freidora de aire por ración, tiempo, precalentamiento y kWh medidos, sin dar por universal un ahorro publicitario.",
     publishedAt: "2026-08-02",
@@ -1147,7 +1147,7 @@ export const editorialGuides: EditorialGuide[] = [
     indexable: true,
     eyebrow: "Comparativa de refrigeración",
     title: "Aire acondicionado split vs portátil: consumo",
-    seoTitle: "Aire acondicionado split vs portátil: consumo y coste",
+    seoTitle: "Aire split vs portátil: consumo y coste",
     description:
       "Compara aire acondicionado split y portátil por eficiencia declarada, conductos, ruido, kWh y capacidad útil, con un método aplicable a tu habitación.",
     publishedAt: "2026-08-02",
@@ -1295,9 +1295,9 @@ export const editorialGuides: EditorialGuide[] = [
     indexable: true,
     eyebrow: "Comparativa de calefacción",
     title: "Radiador eléctrico vs bomba de calor: consumo",
-    seoTitle: "Radiador eléctrico vs bomba de calor: consumo y coste",
+    seoTitle: "Radiador vs bomba de calor: consumo y coste",
     description:
-      "Compara calefacción por resistencia y bomba de calor con energía térmica, COP, rendimiento estacional, clima y un ejemplo calculado sin promesas universales.",
+      "Compara calefacción por resistencia y bomba de calor con energía térmica, COP, clima y un ejemplo calculado sin promesas universales.",
     publishedAt: "2026-08-02",
     updatedAt: "2026-08-17",
     intro:

@@ -1,76 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { UniversalCalculator } from "../components/UniversalCalculator";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
-
-type SearchParams = Record<string, string | string[] | undefined>;
-type CalculatorPageProps = { searchParams: Promise<SearchParams> };
+import { CalculatorFromUrl } from "./CalculatorFromUrl";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const description =
   "Calcula consumo y coste con vatios y tiempo, kWh por ciclo, kWh al año o consumo diario. Edita todos los supuestos y compara escenarios.";
 
-function hasSearchParams(searchParams: SearchParams) {
-  return Object.values(searchParams).some((value) => value !== undefined);
-}
-
-function firstSafeValue(value: string | string[] | undefined, maxLength = 32) {
-  const candidate = Array.isArray(value) ? value[0] : value;
-  return candidate?.slice(0, maxLength);
-}
-
-export async function generateMetadata({
-  searchParams,
-}: CalculatorPageProps): Promise<Metadata> {
-  const values = await searchParams;
-  const isSharedCalculation = hasSearchParams(values);
-
-  return {
-    title: "Calculadora de consumo eléctrico en euros",
+export const metadata: Metadata = {
+  title: "Calculadora de consumo eléctrico en euros",
+  description,
+  alternates: { canonical: "/calculadora" },
+  openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
+    type: "website",
+    url: "/calculadora",
+    title: "Calculadora de consumo eléctrico | " + SITE_NAME,
     description,
-    alternates: { canonical: "/calculadora" },
-    ...(isSharedCalculation
-      ? { robots: { index: false, follow: true } }
-      : undefined),
-    openGraph: {
-      type: "website",
-      url: "/calculadora",
-      title: "Calculadora de consumo eléctrico | " + SITE_NAME,
-      description,
-      images: [
-        {
-          url: "/images/vatioclaro-hogar-energia-og.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Calculadora de consumo eléctrico de VatioClaro",
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Calculadora de consumo eléctrico | " + SITE_NAME,
-      description,
-      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
-    },
-  };
-}
+    images: [
+      {
+        url: "/images/vatioclaro-hogar-energia-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Calculadora de consumo eléctrico de VatioClaro",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Calculadora de consumo eléctrico | " + SITE_NAME,
+    description,
+    images: ["/images/vatioclaro-hogar-energia-og.jpg"],
+  },
+};
 
-export default async function CalculatorPage({
-  searchParams,
-}: CalculatorPageProps) {
-  const query = await searchParams;
-  const initialValues = {
-    method: firstSafeValue(query.metodo),
-    watts: firstSafeValue(query.watts),
-    hours: firstSafeValue(query.horas),
-    days: firstSafeValue(query.dias),
-    price: firstSafeValue(query.precio),
-    kwhPerCycle: firstSafeValue(query.kwh_ciclo),
-    cycles: firstSafeValue(query.ciclos),
-    cyclePeriod: firstSafeValue(query.periodo),
-    kwhPerYear: firstSafeValue(query.kwh_anio),
-    kwhPerDay: firstSafeValue(query.kwh_dia),
-    applianceName: firstSafeValue(query.aparato, 80),
-  };
+export default function CalculatorPage() {
   const pageUrl = absoluteUrl("/calculadora");
   const jsonLd = {
     "@context": "https://schema.org",
@@ -108,7 +73,10 @@ export default async function CalculatorPage({
       </section>
       <section className="article-body calculator-workspace">
         <div className="simple-body__inner">
-          <UniversalCalculator initialValues={initialValues} />
+          <h2 className="visually-hidden">Calculadora universal</h2>
+          <Suspense fallback={<UniversalCalculator />}>
+            <CalculatorFromUrl />
+          </Suspense>
 
           <nav aria-label="Otras calculadoras" className="calculator-tools-grid">
             <Link href="/calculadora/comparar" prefetch={false}>

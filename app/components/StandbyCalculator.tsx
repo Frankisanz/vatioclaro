@@ -5,14 +5,13 @@ import {
   EXAMPLE_ELECTRICITY_PRICE,
   type CalculationResult,
 } from "@/lib/electricity";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   CalculationResultPanel,
   DecimalField,
   EmptyResult,
   issuesToFieldErrors,
   parseFields,
-  useCalculatorTracking,
   useFieldPrefix,
   type FieldErrors,
 } from "./CalculatorPrimitives";
@@ -58,18 +57,11 @@ export function StandbyCalculator() {
   });
   const [interacted, setInteracted] = useState(false);
   const prefix = useFieldPrefix("standby-calculator");
-  const { complete: trackComplete, start: trackStart } =
-    useCalculatorTracking("calculator", "standby");
   const outcome = useMemo(() => calculate(raw), [raw]);
-
-  useEffect(() => {
-    if (interacted && outcome.result) trackComplete();
-  }, [interacted, outcome.result, trackComplete]);
 
   function change(field: keyof RawStandby, value: string) {
     setRaw((current) => ({ ...current, [field]: value }));
     setInteracted(true);
-    trackStart();
   }
 
   const errors = interacted ? outcome.errors : {};

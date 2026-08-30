@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EnergyLabelCalculator } from "../../components/EnergyLabelCalculator";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const description =
   "Convierte los kWh/100 ciclos o kWh/año de una etiqueta energética en coste mensual, anual, a 5 años y a 10 años.";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/calculadora/etiqueta-energetica" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/calculadora/etiqueta-energetica",
     title: "Calculadora de etiqueta energética | " + SITE_NAME,

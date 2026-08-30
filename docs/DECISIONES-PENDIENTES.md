@@ -1,6 +1,6 @@
 # Decisiones pendientes de VatioClaro
 
-Última revisión documental: 17 de agosto de 2026.
+Última revisión documental: 27 de agosto de 2026.
 
 Este registro separa hechos observables en el repositorio de decisiones que requieren validación del titular o asesoramiento externo. No sustituye asesoramiento jurídico, fiscal o técnico.
 
@@ -22,21 +22,22 @@ Se ha señalado la existencia de `VatioClaro.com` con una denominación coincide
 - Mantener una identidad claramente informativa e independiente, sin imitar signos, textos o presentación de terceros.
 - No interpretar este documento como una conclusión jurídica sobre VatioClaro.com.
 
-## 2. Plataforma de despliegue: Vercel o restos de Sites
+## 2. Plataforma de despliegue: Cloudflare Workers Static Assets
 
-**Estado:** abierta; debe elegirse un único flujo de producción y mantenimiento.
+**Estado:** resuelta el 27 de agosto de 2026; pendiente únicamente el corte operativo del dominio.
 
-La aplicación activa es Next.js y el repositorio contiene integración de Analytics y Speed Insights de Vercel, configuración local de proyecto en `.vercel` y un redirect desde el subdominio antiguo de Vercel al dominio canónico. También quedan directorios generados asociados a una compilación anterior de Sites/Cloudflare (`.vinext` y `.wrangler`) y un directorio `.openai` sin configuración de hosting activa.
+VatioClaro se publica como una exportación estática de Next.js en Cloudflare Workers Static Assets. El repositorio contiene la configuración reproducible en `wrangler.jsonc`, genera `out/`, conserva cabeceras en `public/_headers` y valida el artefacto con Wrangler y Playwright antes de desplegar. No usa vinext, OpenNext, Pages Functions ni código Worker porque no existe una necesidad de ejecución en servidor.
 
-**Decisión necesaria**
+**Criterio adoptado**
 
-- Confirmar si Vercel seguirá siendo el proveedor de producción o si existe una migración deliberada a Sites.
-- Tras decidirlo, documentar una única orden de build, variables, dominio canónico, analítica y procedimiento de rollback.
-- Eliminar del control de versiones o ignorar únicamente los artefactos del flujo descartado después de verificar que no contienen trabajo necesario.
+- Mantener una única salida desplegable: `npm run build` produce `out/` y `npm run deploy` publica esa carpeta.
+- Usar Cloudflare Web Analytics para visitas y Core Web Vitals, sin eventos personalizados.
+- Conservar los directorios locales antiguos `.vinext`, `.wrangler` y `dist` fuera del control de versiones; no son una fuente de despliegue.
+- Ejecutar el cambio de dominio y la retirada gradual de Vercel mediante el procedimiento de `docs/MIGRACION-CLOUDFLARE.md`.
 
-**Conducta provisional segura**
+**Transición segura**
 
-Vercel parece ser el flujo vigente por las señales del código, pero no se deben borrar los restos de Sites ni modificar DNS hasta que el titular confirme la decisión.
+No modificar DNS hasta validar la versión de Cloudflare y registrar la configuración anterior. La URL histórica `vatioclaro-theta.vercel.app` solo puede seguir redirigiendo mientras se conserve su último despliegue en Vercel; Cloudflare no controla ese hostname.
 
 ## 3. Datos legales y canal de contacto
 
@@ -110,7 +111,7 @@ No afirmar que el identificador está validado solo porque aparece en el código
 
 - Aportar el identificador de editor y las unidades reales solo cuando exista una cuenta aprobada.
 - Revisar consentimiento, privacidad y cookies antes de cargar scripts publicitarios o nuevas herramientas de medición.
-- Fijar objetivos de producto para los eventos ya preparados y una política de retención que evite datos personales o valores introducidos en las calculadoras.
+- Decidir si en el futuro hacen falta eventos personalizados. Cloudflare Web Analytics no los admite y la migración los ha retirado para no añadir otro sistema de recogida sin una finalidad y revisión previas.
 
 **Conducta provisional segura**
 

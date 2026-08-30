@@ -7,6 +7,7 @@ import {
   CONTENT_PUBLISHED_AT,
   CONTENT_UPDATED_AT,
   EDITORIAL_PERSON_ID,
+  OPEN_GRAPH_DEFAULTS,
   SITE_NAME,
 } from "@/lib/site";
 
@@ -54,11 +55,12 @@ function describeExample(item: Appliance) {
 }
 
 export const metadata: Metadata = {
-  title: "Qué electrodomésticos consumen más y cómo calcularlo",
+  title: "Qué electrodomésticos consumen más en casa",
   description:
     "Descubre qué aparatos pueden tener mayor impacto en tu factura según sus horas de uso, aprende a comparar ejemplos y calcula tu caso real.",
   alternates: { canonical: "/consumo/electrodomesticos-que-mas-consumen" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "article",
     url: "/consumo/electrodomesticos-que-mas-consumen",
     title: `Qué electrodomésticos consumen más | ${SITE_NAME}`,

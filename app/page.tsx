@@ -9,14 +9,17 @@ import { appliances, getApplianceMonthlyKwh } from "@/lib/appliances";
 import { buyingGuides } from "@/lib/buying-guides";
 import { formatElectricityPrice } from "@/lib/electricity";
 import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
-import { SITE_NAME } from "@/lib/site";
+import { OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Consumo eléctrico en casa: calcula cuánto gastas",
+  title: {
+    absolute: `Consumo eléctrico en casa: calcula cuánto gastas | ${SITE_NAME}`,
+  },
   description:
     "Descubre qué consume más en casa, calcula costes en kWh y euros y encuentra respuestas claras para revisar tu factura eléctrica.",
   alternates: { canonical: "/" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/",
     title: `${SITE_NAME} — Calcula y entiende tu consumo eléctrico`,

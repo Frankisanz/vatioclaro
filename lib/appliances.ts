@@ -524,6 +524,7 @@ const applianceSeeds: ApplianceSeed[] = [
     indexable: true,
     name: "Router wifi",
     articleName: "un router wifi",
+    seoTitle: "Cuánto consume un router wifi: coste y cálculo",
     category: "Tecnología",
     calculation: {
       method: "power",
@@ -569,6 +570,7 @@ const applianceSeeds: ApplianceSeed[] = [
     indexable: true,
     name: "Frigorífico",
     articleName: "un frigorífico",
+    seoTitle: "Cuánto consume un frigorífico: coste y cálculo",
     category: "Frío",
     calculation: {
       method: "annual",
@@ -658,6 +660,7 @@ const applianceSeeds: ApplianceSeed[] = [
     indexable: true,
     name: "Lavavajillas",
     articleName: "un lavavajillas",
+    seoTitle: "Cuánto consume un lavavajillas: coste y cálculo",
     category: "Cocina",
     calculation: {
       method: "cycle",

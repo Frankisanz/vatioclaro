@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  deployments: write
 
 concurrency:
   group: quality-${{ github.ref }}
@@ -44,8 +45,20 @@ jobs:
       - name: Compilar y comprobar salida
         run: npm test
 
+      - name: Validar paquete de Cloudflare
+        run: npm run check:cloudflare
+
       - name: Probar navegación y accesibilidad
         run: npm run test:e2e
+
+      - name: Publicar en Cloudflare
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.CLOUDFLARE_DEPLOY_ENABLED == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.jsonc
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Guardar diagnóstico si falla
         if: failure()

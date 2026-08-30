@@ -70,7 +70,7 @@ export const buyingGuides: BuyingGuide[] = [
     indexable: true,
     eyebrow: "Medición doméstica",
     title: "Medidores de consumo eléctrico de enchufe: cómo elegir",
-    seoTitle: "Medidores de consumo eléctrico de enchufe: guía 2026",
+    seoTitle: "Medidores de consumo eléctrico de enchufe: guía",
     description:
       "Compara un vatímetro con pantalla, un enchufe con historial y un medidor avanzado. Aprende qué carga, precisión y datos debes comprobar antes de comprar.",
     publishedAt: "2026-08-02",
@@ -240,7 +240,7 @@ export const buyingGuides: BuyingGuide[] = [
     indexable: true,
     eyebrow: "Control y automatización",
     title: "Enchufes inteligentes con medidor de consumo: qué comparar",
-    seoTitle: "Enchufes inteligentes con medidor de consumo: guía",
+    seoTitle: "Enchufes inteligentes con medidor de consumo",
     description:
       "Tapo P110, P110M y Shelly Plug S Gen3 comparados por medición, Matter, carga, funcionamiento local y límites. Elige sin pagar por funciones que no usarás.",
     publishedAt: "2026-07-29",
@@ -407,7 +407,7 @@ export const buyingGuides: BuyingGuide[] = [
     indexable: true,
     eyebrow: "Consumo en espera",
     title: "Temporizador o regleta con interruptor: qué conviene",
-    seoTitle: "Temporizador o regleta para reducir consumo fantasma",
+    seoTitle: "Temporizador o regleta contra el consumo fantasma",
     description:
       "Elige entre temporizador mecánico, regleta desconectable y regleta inteligente según horario, carga, número de tomas y consumo fantasma medido.",
     publishedAt: "2026-08-02",
@@ -738,7 +738,7 @@ export const buyingGuides: BuyingGuide[] = [
     indexable: true,
     eyebrow: "Conservación y diagnóstico",
     title: "Termómetros para frigorífico y congelador: tipos y alarmas",
-    seoTitle: "Termómetro para frigorífico y congelador: cómo elegir",
+    seoTitle: "Termómetro para frigorífico y congelador: guía",
     description:
       "Compara termómetros colgantes, digitales y con sonda para frigorífico o congelador. Revisa rango, alarma, memoria y colocación antes de comprar.",
     publishedAt: "2026-08-02",

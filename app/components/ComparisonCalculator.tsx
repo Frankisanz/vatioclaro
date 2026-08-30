@@ -7,13 +7,12 @@ import {
   formatKwh,
   type CalculationComparison,
 } from "@/lib/electricity";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DecimalField,
   EmptyResult,
   issuesToFieldErrors,
   parseFields,
-  useCalculatorTracking,
   useFieldPrefix,
   type FieldErrors,
 } from "./CalculatorPrimitives";
@@ -83,18 +82,11 @@ export function ComparisonCalculator() {
   });
   const [interacted, setInteracted] = useState(false);
   const prefix = useFieldPrefix("comparison-calculator");
-  const { complete: trackComplete, start: trackStart } =
-    useCalculatorTracking("comparison", "power-ab");
   const outcome = useMemo(() => calculate(raw), [raw]);
-
-  useEffect(() => {
-    if (interacted && outcome.comparison) trackComplete();
-  }, [interacted, outcome.comparison, trackComplete]);
 
   function change(field: keyof RawComparison, value: string) {
     setRaw((current) => ({ ...current, [field]: value }));
     setInteracted(true);
-    trackStart();
   }
 
   const errors = interacted ? outcome.errors : {};

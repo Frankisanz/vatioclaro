@@ -1,6 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
 import type { ReactNode } from "react";
 
 type SourceLinkProps = {
@@ -18,8 +17,9 @@ export function SourceLink({
 }: SourceLinkProps) {
   return (
     <a
+      data-source-context={context}
+      data-source-id={sourceId}
       href={href}
-      onClick={() => track("source_click", { context, source: sourceId })}
       rel="noopener noreferrer"
       target="_blank"
     >

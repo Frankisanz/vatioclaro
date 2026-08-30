@@ -25,10 +25,10 @@ export default function CookiesPage() {
         <div className="simple-body__inner">
           <div className="callout">
             Última revisión: {LEGAL_OWNER.updatedAt}. La web utiliza medición
-            anónima de Vercel sin cookies. El script de Google AdSense se carga
-            únicamente para la verificación técnica del dominio ante Google,
-            sin mostrar anuncios ni instalar cookies publicitarias activas en
-            esta fase.
+            agregada de Cloudflare sin cookies ni almacenamiento local. La
+            verificación del dominio ante Google AdSense se realiza con una
+            etiqueta meta y el fichero ads.txt, sin cargar scripts
+            publicitarios, mostrar anuncios ni instalar cookies en esta fase.
           </div>
 
           <h2>1. Qué son las cookies</h2>
@@ -41,16 +41,19 @@ export default function CookiesPage() {
 
           <h2>2. Tecnologías utilizadas actualmente</h2>
           <p>
-            VatioClaro utiliza Vercel Web Analytics para obtener estadísticas
-            agregadas de visitas y Speed Insights para medir Core Web Vitals.
-            Según Vercel, ambas herramientas funcionan sin instalar cookies ni
-            utilizar almacenamiento local. El script de Google AdSense está
-            presente en la cabecera exclusivamente para la verificación y
-            revisión técnica del sitio por parte de Google; en esta fase no se
-            muestran bloques de anuncios ni formatos publicitarios automáticos
-            (Auto Ads). No cargamos Google Analytics, etiquetas publicitarias de
-            terceros ni widgets de redes sociales. Las calculadoras funcionan en
-            el navegador y sus valores no se envían a estas herramientas.
+            VatioClaro utiliza Cloudflare Web Analytics para obtener
+            estadísticas agregadas de visitas y medir Core Web Vitals. Según
+            Cloudflare, esta herramienta no utiliza cookies, almacenamiento
+            local ni técnicas de huella digital. Tampoco registra las cadenas
+            de consulta de las URL. La verificación del sitio ante Google
+            AdSense se limita a una etiqueta meta en la cabecera y al fichero
+            ads.txt: no se carga el script publicitario de AdSense y en esta
+            fase no se muestran bloques de anuncios ni formatos publicitarios
+            automáticos (Auto Ads). No
+            cargamos Google Analytics, eventos analíticos personalizados,
+            etiquetas publicitarias de terceros ni widgets de redes sociales.
+            Las calculadoras funcionan en el navegador y sus valores no se
+            envían a estas herramientas.
           </p>
           <p>
             Algunas guías contienen enlaces de afiliado identificados hacia
@@ -65,16 +68,15 @@ export default function CookiesPage() {
               <dd>No se utilizan</dd>
             </div>
             <div>
-              <dt>Vercel Web Analytics</dt>
-              <dd>Medición agregada sin cookies</dd>
-            </div>
-            <div>
-              <dt>Vercel Speed Insights</dt>
-              <dd>Rendimiento real sin cookies</dd>
+              <dt>Cloudflare Web Analytics</dt>
+              <dd>Visitas y rendimiento real sin cookies</dd>
             </div>
             <div>
               <dt>Google AdSense</dt>
-              <dd>Script de verificación técnica (sin anuncios en esta fase)</dd>
+              <dd>
+                Etiqueta de verificación del dominio (sin scripts ni anuncios
+                en esta fase)
+              </dd>
             </div>
             <div>
               <dt>Cookies publicitarias</dt>
@@ -94,10 +96,10 @@ export default function CookiesPage() {
             </div>
           </dl>
           <p>
-            El proveedor de alojamiento puede tratar información técnica para
-            servir, proteger y medir el sitio, pero esta web no instala
-            actualmente cookies opcionales desde su código. La medición puede
-            incluir URL visitada, página de procedencia, país, dispositivo,
+            Cloudflare puede tratar información técnica para servir y proteger
+            el sitio, pero esta web no instala actualmente cookies opcionales
+            desde su código. La medición puede incluir la ruta visitada sin sus
+            parámetros de consulta, página de procedencia, país, dispositivo,
             navegador, sistema operativo y métricas de rendimiento, sin los
             valores introducidos en las calculadoras. Puedes consultar más
             detalles sobre el tratamiento de datos en la{" "}
@@ -107,9 +109,9 @@ export default function CookiesPage() {
           <h2>3. Por qué no aparece un banner de consentimiento</h2>
           <p>
             Las herramientas de medición configuradas funcionan sin cookies ni
-            identificadores persistentes en tu dispositivo, y el script de Google
-            AdSense se encuentra limitado a la validación técnica del dominio
-            sin emitir anuncios ni perfiles. Por ello no se requiere
+            identificadores persistentes en tu dispositivo, y la verificación
+            de Google AdSense se limita a una etiqueta meta que no carga
+            scripts ni emite anuncios o perfiles. Por ello no se requiere
             consentimiento para acceder a los contenidos. Antes de activar la
             publicación de anuncios, publicidad personalizada o cualquier
             tecnología que requiera consentimiento según la normativa, se

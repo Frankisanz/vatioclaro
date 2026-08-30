@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { indexableEditorialGuides } from "@/lib/editorial-guides";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const foundationalGuides = [
   {
@@ -35,11 +35,12 @@ const guides = [
 ];
 
 export const metadata: Metadata = {
-  title: "Guías para entender y reducir el consumo eléctrico",
+  title: "Guías para reducir el consumo eléctrico",
   description:
     "Guías prácticas sobre consumo eléctrico, coste por kWh y ahorro doméstico. Explicaciones claras, fuentes y calculadoras editables.",
   alternates: { canonical: "/guias" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/guias",
     title: `Guías de ahorro y consumo eléctrico | ${SITE_NAME}`,

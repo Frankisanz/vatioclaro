@@ -1,6 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
 import {
   formatCurrency,
   formatKwh,
@@ -9,13 +8,7 @@ import {
   type DomainIssue,
   type UsageScenarios,
 } from "@/lib/electricity";
-import {
-  useCallback,
-  useId,
-  useRef,
-  type ChangeEvent,
-  type ReactNode,
-} from "react";
+import { useId, type ChangeEvent, type ReactNode } from "react";
 
 export type FieldErrors = Record<string, string>;
 
@@ -118,48 +111,6 @@ export function issuesToFieldErrors(
     errors[field] ??= issue.message;
     return errors;
   }, {});
-}
-
-export function useCalculatorTracking(
-  scope: "calculator" | "comparison",
-  tool: string,
-) {
-  const started = useRef(false);
-  const completed = useRef(false);
-  const activeMethod = useRef<string | null>(null);
-
-  const start = useCallback((methodName?: string) => {
-    if (methodName) activeMethod.current = methodName;
-    if (started.current) return;
-    started.current = true;
-    track(scope === "comparison" ? "comparison_start" : "calculator_start", {
-      tool,
-      ...(methodName ? { method: methodName } : {}),
-    });
-  }, [scope, tool]);
-
-  const complete = useCallback(() => {
-    if (!started.current || completed.current) return;
-    completed.current = true;
-    track(
-      scope === "comparison" ? "comparison_complete" : "calculator_complete",
-      {
-        tool,
-        ...(activeMethod.current ? { method: activeMethod.current } : {}),
-      },
-    );
-  }, [scope, tool]);
-
-  const method = useCallback(
-    (nextMethod: string) => {
-      start(nextMethod);
-      completed.current = false;
-      track("calculator_method", { method: nextMethod });
-    },
-    [start],
-  );
-
-  return { complete, method, start };
 }
 
 function Metric({

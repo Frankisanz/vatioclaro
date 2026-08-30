@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ComparisonCalculator } from "../../components/ComparisonCalculator";
-import { absoluteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 const description =
   "Compara el consumo y coste de dos escenarios con potencia, horas y días de uso editables. La misma tarea y todos los supuestos a la vista.";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/calculadora/comparar" },
   openGraph: {
+    ...OPEN_GRAPH_DEFAULTS,
     type: "website",
     url: "/calculadora/comparar",
     title: "Calculadora comparativa de consumo | " + SITE_NAME,

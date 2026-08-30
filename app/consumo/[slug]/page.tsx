@@ -25,6 +25,7 @@ import {
   absoluteUrl,
   CONTENT_PUBLISHED_AT,
   EDITORIAL_PERSON_ID,
+  OPEN_GRAPH_DEFAULTS,
   SITE_NAME,
 } from "@/lib/site";
 
@@ -58,7 +59,7 @@ export async function generateMetadata({
   const path = `/consumo/${item.slug}`;
   const title =
     item.seoTitle ?? `Cuánto consume ${item.articleName}: coste y calculadora`;
-  const description = `Calcula cuánto consume ${item.articleName} con el dato adecuado de su etiqueta, tus hábitos y un precio editable. Fórmula, supuestos y fuentes visibles.`;
+  const description = `Calcula cuánto consume ${item.articleName} con el dato de su etiqueta, tus hábitos y un precio editable. Fórmula y fuentes visibles.`;
 
   return {
     title,
@@ -68,6 +69,7 @@ export async function generateMetadata({
       ? { index: true, follow: true }
       : { index: false, follow: true },
     openGraph: {
+      ...OPEN_GRAPH_DEFAULTS,
       type: "article",
       url: path,
       title: `${title} | ${SITE_NAME}`,

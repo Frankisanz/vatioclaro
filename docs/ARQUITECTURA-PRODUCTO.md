@@ -1,6 +1,6 @@
 # Arquitectura de producto de VatioClaro
 
-Última revisión: 17 de agosto de 2026.
+Última revisión: 27 de agosto de 2026.
 
 ## Núcleo de cálculo
 
@@ -71,5 +71,8 @@ un proveedor exigirá revisión legal y de consentimiento, dimensiones reservada
 y pruebas de CLS. Afiliación, anuncios o leads no pueden modificar fuentes,
 conclusiones ni el orden de publicación.
 
-El flujo de producción observado es Vercel, pero la decisión se mantiene abierta
-en `docs/DECISIONES-PENDIENTES.md`; este trabajo no publica ni modifica DNS.
+La aplicación se compila como exportación estática de Next.js y se sirve con
+Cloudflare Workers Static Assets. No hay un proceso Node, función Worker, API,
+base de datos ni estado de servidor por petición. `wrangler.jsonc` es la fuente
+versionada de la configuración y `docs/MIGRACION-CLOUDFLARE.md` conserva el
+procedimiento de despliegue, corte y rollback.

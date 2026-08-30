@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  CLOUDFLARE_PRIVACY_POLICY,
   LEGAL_ADDRESS,
   LEGAL_OWNER,
-  VERCEL_PRIVACY_NOTICE,
 } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -78,22 +78,22 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Medición de audiencia y rendimiento.</strong> Utilizamos
-              Vercel Web Analytics y Speed Insights para conocer, de forma
-              agregada, qué páginas reciben visitas y cómo funciona la web en
-              dispositivos reales. Estas herramientas pueden tratar la URL
-              visitada, la página de procedencia, fecha y hora aproximadas, país,
-              tipo de dispositivo, navegador, sistema operativo y métricas de
-              rendimiento. No usamos esta información para identificarte,
-              seguirte entre sitios ni crear perfiles publicitarios. La base
-              jurídica es nuestro interés legítimo en medir y mejorar un servicio
-              gratuito, limitado mediante una configuración sin cookies.
+              Cloudflare Web Analytics para conocer, de forma agregada, qué
+              páginas reciben visitas y cómo funciona la web en dispositivos
+              reales. Puede tratar la ruta visitada, la página de procedencia,
+              fecha y hora aproximadas, país, tipo de dispositivo, navegador,
+              sistema operativo y métricas de rendimiento. No registra la
+              cadena de consulta, utiliza cookies o almacenamiento local ni
+              genera una huella para identificar a una persona. La base jurídica
+              es nuestro interés legítimo en medir y mejorar un servicio
+              gratuito con una herramienta limitada a estadísticas agregadas.
             </li>
             <li>
               <strong>Clics en enlaces de afiliado.</strong> Podemos medir de
-              forma agregada qué tipo de recomendación se abre para evaluar la
-              utilidad del contenido. El evento identifica la guía y el perfil
-              de producto, no incluye los valores de las calculadoras ni nos
-              permite conocer la identidad de quien compra en Amazon.
+              forma agregada las visitas a las páginas que contienen
+              recomendaciones, pero VatioClaro no envía eventos personalizados
+              cuando pulsas un enlace de afiliado. Al abrirlo, Amazon puede
+              aplicar su propia política en el sitio de destino.
             </li>
             <li>
               <strong>Obligaciones legales.</strong> Podremos conservar los datos
@@ -112,25 +112,29 @@ export default function PrivacyPage() {
 
           <h2>4. Destinatarios y transferencias</h2>
           <p>
-            VatioClaro se aloja en Vercel. Este proveedor puede procesar datos
-            técnicos necesarios para la prestación y seguridad de su servicio.
-            Sus propios tratamientos, subencargados y posibles transferencias
-            internacionales se rigen por su{" "}
-            <a href={VERCEL_PRIVACY_NOTICE} rel="noreferrer" target="_blank">
-              aviso de privacidad
+            VatioClaro se distribuye mediante la red de Cloudflare. Este
+            proveedor puede procesar datos técnicos necesarios para servir,
+            mantener y proteger el sitio. Sus propios tratamientos,
+            subencargados y posibles transferencias internacionales se rigen por
+            su{" "}
+            <a
+              href={CLOUDFLARE_PRIVACY_POLICY}
+              rel="noreferrer"
+              target="_blank"
+            >
+              política de privacidad
             </a>
-            . Vercel informa de que sus instalaciones principales de tratamiento
-            están en Estados Unidos y de que puede recurrir a mecanismos de
-            transferencia previstos por la normativa aplicable.
+            y por los mecanismos de transferencia previstos en ella.
           </p>
           <p>
             No vendemos datos personales ni enviamos los valores introducidos en
-            las calculadoras a Vercel Analytics, redes publicitarias o
-            plataformas sociales. No utilizamos Google Analytics. El script de
-            Google AdSense se encuentra integrado exclusivamente para la
-            verificación y revisión técnica del sitio ante Google, sin que
-            actualmente se muestren anuncios ni se elaboren perfiles
-            publicitarios.
+            las calculadoras a Cloudflare Web Analytics, redes publicitarias o
+            plataformas sociales. La analítica no registra parámetros de
+            consulta ni eventos personalizados. No utilizamos Google Analytics.
+            La verificación del sitio ante Google AdSense se realiza mediante
+            una etiqueta meta y el fichero ads.txt, sin cargar scripts
+            publicitarios y sin que actualmente se muestren anuncios ni se
+            elaboren perfiles publicitarios.
           </p>
 
           <h2>5. Derechos</h2>
@@ -146,18 +150,18 @@ export default function PrivacyPage() {
 
           <h2>6. Analítica, publicidad y cookies</h2>
           <p>
-            Vercel Web Analytics y Speed Insights están activos para medir
-            páginas vistas y métricas web esenciales. Según la documentación de
-            Vercel, funcionan sin cookies ni almacenamiento local y generan
-            estadísticas agregadas; por eso no se muestra un banner para estas
-            mediciones. Puedes consultar el detalle técnico y las formas de
-            contacto en la <Link href="/cookies">Política de cookies</Link>.
+            Cloudflare Web Analytics está activo para medir páginas vistas y
+            métricas web esenciales. Según su documentación, funciona sin
+            cookies ni almacenamiento local y no identifica a visitantes
+            individuales mediante huellas digitales. Puedes consultar el detalle
+            técnico y las formas de contacto en la{" "}
+            <Link href="/cookies">Política de cookies</Link>.
           </p>
           <p>
-            El script de Google AdSense está incorporado en la cabecera del
-            sitio únicamente para la verificación técnica del dominio por parte
-            de Google; en esta fase no se muestran bloques de anuncios ni
-            formatos publicitarios automáticos (Auto Ads). Sí existen enlaces de
+            La verificación del dominio ante Google AdSense se realiza con una
+            etiqueta meta en la cabecera y el fichero ads.txt, sin cargar el
+            script publicitario de AdSense; en esta fase no se muestran bloques
+            de anuncios ni formatos publicitarios automáticos (Auto Ads). Sí existen enlaces de
             afiliado identificados que llevan a Amazon.es. Estos son enlaces
             externos normales: no cargamos en VatioClaro píxeles, anuncios ni
             scripts de Amazon. Al pulsarlos abandonas este sitio y se aplican la

@@ -1,0 +1,30 @@
+/*
+  Content-Security-Policy: base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), geolocation=(), microphone=()
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon
+  Content-Type: image/png
+
+/apple-icon
+  Content-Type: image/png
+
+https://:version.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+# Los payloads RSC de la exportación estática (index.txt, consumo/*.txt,
+# __next.*.txt...) duplican el contenido en texto plano: no deben indexarse.
+# robots.txt y ads.txt quedan excluidos de la regla mediante el detach (!).
+/*.txt
+  X-Robots-Tag: noindex
+
+/robots.txt
+  ! X-Robots-Tag
+
+/ads.txt
+  ! X-Robots-Tag

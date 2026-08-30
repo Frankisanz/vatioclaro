@@ -8,14 +8,13 @@ import {
   type CalculationMethod,
   type UsageScenarios,
 } from "@/lib/electricity";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   CalculationResultPanel,
   DecimalField,
   EmptyResult,
   issuesToFieldErrors,
   parseFields,
-  useCalculatorTracking,
   useFieldPrefix,
   type FieldErrors,
 } from "./CalculatorPrimitives";
@@ -262,22 +261,12 @@ export function UniversalCalculator({
   );
   const [shareStatus, setShareStatus] = useState("");
   const prefix = useFieldPrefix("universal-calculator");
-  const {
-    complete: trackComplete,
-    method: trackMethod,
-    start: trackStart,
-  } = useCalculatorTracking("calculator", "universal");
   const outcome = useMemo(() => calculate(method, raw), [method, raw]);
-
-  useEffect(() => {
-    if (interacted && outcome.scenarios) trackComplete();
-  }, [interacted, outcome.scenarios, trackComplete]);
 
   function changeField(field: keyof RawState, value: string) {
     setRaw((current) => ({ ...current, [field]: value }));
     setInteracted(true);
     setShareStatus("");
-    trackStart(method);
   }
 
   function selectMethod(nextMethod: UniversalMethod) {
@@ -285,7 +274,6 @@ export function UniversalCalculator({
     setMethod(nextMethod);
     setInteracted(true);
     setShareStatus("");
-    trackMethod(nextMethod);
   }
 
   async function shareCalculation() {

@@ -478,3 +478,44 @@ test("verifies AdSense with a meta tag (no ad script) and provides a valid ads.t
     "google.com, pub-5290446197600060, DIRECT, f08c47fec0942fa0",
   );
 });
+
+test("gives every appliance page its own questions beyond the shared template", async () => {
+  const faqPattern = /"@type":"Question","name":"([^"]+)"/g;
+  const lavadora = await readOutput("consumo/lavadora.html");
+  const termo = await readOutput("consumo/termo-electrico.html");
+  const lavadoraQuestions = [...lavadora.matchAll(faqPattern)].map((m) => m[1]);
+  const termoQuestions = [...termo.matchAll(faqPattern)].map((m) => m[1]);
+
+  assert.ok(lavadoraQuestions.length >= 5);
+  assert.ok(termoQuestions.length >= 5);
+  assert.match(lavadora, /¿Qué es el programa Eco 40-60 de la etiqueta\?/);
+  assert.match(termo, /50 × 25 ÷ 860/);
+  assert.ok(
+    lavadoraQuestions.some((question) => !termoQuestions.includes(question)),
+  );
+});
+
+test("explains each specialized calculator with a worked example", async () => {
+  for (const [path, marker] of [
+    ["calculadora/standby.html", /58,4 kWh\/año/],
+    ["calculadora/comparar.html", /Diferencia: 18 kWh\/mes/],
+    ["calculadora/etiqueta-energetica.html", /0,55 kWh\/ciclo/],
+    ["calculadora/amortizacion.html", /150 € ÷ 25 €\/año = 6 años/],
+  ]) {
+    const html = await readOutput(path);
+    assert.match(html, /Ejemplo resuelto|Dos ejemplos resueltos/);
+    assert.match(html, marker);
+  }
+});
+
+test("publishes an indexable contact page linked from every footer", async () => {
+  const contact = await readOutput("contacto.html");
+  const sitemap = await readOutput("sitemap.xml");
+  const home = await readOutput("index.html");
+
+  assert.doesNotMatch(contact, /<meta name="robots" content="noindex/);
+  assert.match(contact, /<link rel="canonical" href="https:\/\/vatioclaro\.es\/contacto"/);
+  assert.match(contact, /mailto:/);
+  assert.ok(sitemap.includes("https://vatioclaro.es/contacto</loc>"));
+  assert.match(home, /href="\/contacto"/);
+});

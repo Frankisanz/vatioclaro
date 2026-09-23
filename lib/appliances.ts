@@ -1,3 +1,4 @@
+import { getApplianceFaqs } from "./appliance-faqs";
 import { CONTENT_UPDATED_AT } from "./site";
 import {
   calculateElectricity,
@@ -249,6 +250,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "aire-acondicionado",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Aire acondicionado",
     articleName: "un aire acondicionado",
     seoTitle: "Cuánto consume un aire acondicionado: coste",
@@ -294,6 +296,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "ventilador",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Ventilador",
     articleName: "un ventilador",
     category: "Climatización",
@@ -338,6 +341,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "horno",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Horno eléctrico",
     articleName: "un horno eléctrico",
     seoTitle: "Cuánto consume un horno eléctrico: coste",
@@ -383,6 +387,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "termo-electrico",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Termo eléctrico",
     articleName: "un termo eléctrico",
     seoTitle: "Cuánto consume un termo eléctrico: coste",
@@ -429,6 +434,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "ordenador",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Ordenador de sobremesa",
     articleName: "un ordenador de sobremesa",
     seoTitle: "Cuánto consume un ordenador: coste y cálculo",
@@ -475,6 +481,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "secadora",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Secadora",
     articleName: "una secadora",
     category: "Lavado",
@@ -522,6 +529,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "router-wifi",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Router wifi",
     articleName: "un router wifi",
     seoTitle: "Cuánto consume un router wifi: coste y cálculo",
@@ -568,6 +576,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "frigorifico",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Frigorífico",
     articleName: "un frigorífico",
     seoTitle: "Cuánto consume un frigorífico: coste y cálculo",
@@ -612,6 +621,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "lavadora",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Lavadora",
     articleName: "una lavadora",
     category: "Lavado",
@@ -658,6 +668,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "lavavajillas",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Lavavajillas",
     articleName: "un lavavajillas",
     seoTitle: "Cuánto consume un lavavajillas: coste y cálculo",
@@ -705,6 +716,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "vitroceramica",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Vitrocerámica o inducción",
     articleName: "una vitrocerámica o placa de inducción",
     seoTitle: "Cuánto consume una vitrocerámica: coste y cálculo",
@@ -751,6 +763,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "microondas",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Microondas",
     articleName: "un microondas",
     category: "Cocina",
@@ -796,6 +809,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "televisor",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Televisor",
     articleName: "un televisor",
     category: "Tecnología",
@@ -840,6 +854,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "calefactor-electrico",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Calefactor eléctrico",
     articleName: "un calefactor eléctrico",
     seoTitle: "Cuánto consume un calefactor eléctrico: coste",
@@ -885,6 +900,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "deshumidificador",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Deshumidificador",
     articleName: "un deshumidificador",
     seoTitle: "Cuánto consume un deshumidificador: coste",
@@ -931,6 +947,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "aire-acondicionado-portatil",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Aire acondicionado portátil",
     articleName: "un aire acondicionado portátil",
     seoTitle: "Consumo de aire acondicionado portátil: coste",
@@ -976,6 +993,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "congelador",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Congelador",
     articleName: "un congelador",
     category: "Frío",
@@ -1019,6 +1037,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "freidora-de-aire",
     indexable: true,
+    updatedAt: "2026-09-23",
     name: "Freidora de aire",
     articleName: "una freidora de aire",
     seoTitle: "Cuánto consume una freidora de aire: coste",
@@ -1158,6 +1177,12 @@ function validateAppliances(items: Appliance[]) {
 
     if (item.sources.length === 0) {
       throw new Error(`El aparato ${item.slug} no tiene fuentes`);
+    }
+
+    if (item.indexable && getApplianceFaqs(item.slug).length < 3) {
+      throw new Error(
+        `El aparato indexable ${item.slug} necesita al menos tres preguntas propias`,
+      );
     }
 
     for (const source of item.sources) {

@@ -79,6 +79,49 @@ export default function EnergyLabelCalculatorPage() {
             y hábitos. Consulta la{" "}
             <Link href="/metodologia">metodología de los cálculos</Link>.
           </p>
+
+          <h2>Dos ejemplos resueltos</h2>
+          <p>
+            Los valores siguientes son ejemplos para mostrar la fórmula; usa los
+            de la etiqueta de tu modelo.
+          </p>
+          <div className="formula-box">
+            Etiqueta anual: 200 kWh/año × 0,25 €/kWh = 50 € al año
+            <br />
+            A 5 años: 250 € · A 10 años: 500 € (precio constante)
+          </div>
+          <div className="formula-box">
+            Etiqueta por ciclos: 55 kWh/100 ciclos ÷ 100 = 0,55 kWh/ciclo
+            <br />
+            0,55 kWh × 20 ciclos/mes × 12 meses = 132 kWh/año → 33 € al año
+          </div>
+
+          <h2>Preguntas frecuentes sobre la etiqueta energética</h2>
+          <h3>¿Dónde encuentro los datos si ya no tengo la etiqueta?</h3>
+          <p>
+            Las etiquetas europeas actuales incluyen un código QR que enlaza con
+            la base de datos EPREL, donde puedes consultar la ficha del modelo.
+            También puedes buscar la marca y el modelo exacto, que aparecen en
+            la placa de características del aparato, en la propia base de datos
+            EPREL o en el manual.
+          </p>
+          <h3>¿Por qué ya no hay clases A+++?</h3>
+          <p>
+            La Unión Europea reescaló las etiquetas a una escala de A a G. En
+            frigoríficos, lavadoras, lavavajillas y pantallas, el cambio llegó
+            en marzo de 2021, y en secadoras en julio de 2025. Un aparato A+++
+            antiguo puede aparecer ahora en una clase inferior sin haber
+            cambiado su consumo, por lo que conviene comparar los kWh y no solo
+            la letra.
+          </p>
+          <h3>¿Basta con la clase energética para comparar dos modelos?</h3>
+          <p>
+            No. La clase depende del consumo relativo al tamaño o la capacidad
+            del aparato. Un frigorífico grande con buena clase puede consumir
+            más kWh al año que uno pequeño con una clase peor. Si lo que quieres
+            saber es cuánto pagarás, compara los kWh que declara cada etiqueta
+            con esta calculadora.
+          </p>
         </div>
       </section>
     </main>

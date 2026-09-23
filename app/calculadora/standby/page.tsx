@@ -81,6 +81,49 @@ export default function StandbyCalculatorPage() {
             </Link>
             .
           </p>
+
+          <h2>Ejemplo resuelto</h2>
+          <p>
+            Los valores iniciales de la calculadora representan ocho aparatos
+            que consumen 1 W cada uno en espera durante 20 horas al día, todo el
+            año. Son un ejemplo editable, no una medición de ningún hogar:
+          </p>
+          <div className="formula-box">
+            8 aparatos × 1 W × 20 h/día × 365 días = 58.400 Wh = 58,4 kWh/año
+            <br />
+            58,4 kWh/año × 0,25 €/kWh = 14,60 € al año
+          </div>
+          <p>
+            El resultado muestra por qué el standby merece una revisión aunque
+            cada aparato consuma poco: el coste procede de las horas acumuladas,
+            no de la potencia. Con 3 W por aparato, la misma cuenta triplica el
+            resultado.
+          </p>
+
+          <h2>Preguntas frecuentes sobre el consumo en espera</h2>
+          <h3>¿Qué aparatos suelen quedarse en espera?</h3>
+          <p>
+            Televisores, decodificadores, consolas, barras de sonido, equipos de
+            música, microondas y hornos con reloj, impresoras, cargadores
+            enchufados y altavoces inteligentes. El router y los equipos de
+            alarma o domótica también consumen de forma continua, pero no
+            conviene apagarlos si dan servicio.
+          </p>
+          <h3>¿Cómo mido un consumo tan pequeño?</h3>
+          <p>
+            Con un medidor de enchufe. Muchos medidores domésticos pierden
+            precisión por debajo de unos pocos vatios, así que es útil medir
+            juntos todos los aparatos de una regleta durante un día completo y
+            dividir los kWh registrados entre las horas. Así obtienes la
+            potencia media del grupo.
+          </p>
+          <h3>¿Compensa comprar una regleta con interruptor?</h3>
+          <p>
+            Compara su precio con el ahorro anual que calcule esta herramienta
+            para los aparatos que realmente puedes apagar. Si el ahorro es de
+            pocos euros al año, la regleta tardará en compensar; si agrupa
+            equipos con un consumo en espera alto, puede recuperarse antes.
+          </p>
         </div>
       </section>
     </main>

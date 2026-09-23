@@ -13,6 +13,7 @@ import {
   getRelatedGuideLinks,
   type Appliance,
 } from "@/lib/appliances";
+import { getApplianceFaqs } from "@/lib/appliance-faqs";
 import { getBuyingGuideForAppliance } from "@/lib/buying-guides";
 import { isIndexableEditorialGuideHref } from "@/lib/editorial-guides";
 import {
@@ -234,6 +235,7 @@ export default async function AppliancePage({
       question: `¿Por qué el consumo real de ${item.articleName} puede ser distinto?`,
       answer: item.caveat,
     },
+    ...getApplianceFaqs(item.slug),
   ];
 
   const jsonLd = {

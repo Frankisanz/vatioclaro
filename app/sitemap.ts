@@ -8,6 +8,8 @@ export const dynamic = "force-static";
 
 // Cada página estática mantiene su propia fecha de última revisión de
 // contenido: al editar una página, actualiza solo su `updatedAt`.
+const CALCULATOR_EXAMPLES_UPDATED_AT = "2026-09-23";
+
 const staticPages = [
   {
     path: "/",
@@ -25,25 +27,25 @@ const staticPages = [
     path: "/calculadora/comparar",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: CALCULATOR_EXAMPLES_UPDATED_AT,
   },
   {
     path: "/calculadora/standby",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: CALCULATOR_EXAMPLES_UPDATED_AT,
   },
   {
     path: "/calculadora/etiqueta-energetica",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: CALCULATOR_EXAMPLES_UPDATED_AT,
   },
   {
     path: "/calculadora/amortizacion",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: CALCULATOR_EXAMPLES_UPDATED_AT,
   },
   {
     path: "/comparativas",
@@ -98,6 +100,12 @@ const staticPages = [
     priority: 0.5,
     frequency: "monthly" as const,
     updatedAt: CONTENT_UPDATED_AT,
+  },
+  {
+    path: "/contacto",
+    priority: 0.4,
+    frequency: "yearly" as const,
+    updatedAt: "2026-09-23",
   },
 ];
 

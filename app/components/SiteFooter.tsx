@@ -35,6 +35,9 @@ export function SiteFooter() {
           <Link href="/sobre-vatioclaro" prefetch={false}>
             Sobre VatioClaro
           </Link>
+          <Link href="/contacto" prefetch={false}>
+            Contacto
+          </Link>
           <Link href="/privacidad" prefetch={false}>
             Privacidad
           </Link>

@@ -175,6 +175,31 @@ export default function PrivacyPage() {
             Gestión del Consentimiento (CMP) correspondiente para recabar y
             gestionar las preferencias de las personas usuarias.
           </p>
+          <p>
+            Si se activan los anuncios de Google AdSense, Google, como
+            proveedor externo, utilizará cookies para mostrar anuncios en este
+            sitio. Las cookies publicitarias permiten a Google y a sus socios
+            mostrar anuncios basados en las visitas a este y a otros sitios
+            web. Podrás desactivar la publicidad personalizada en la{" "}
+            <a
+              href="https://adssettings.google.com"
+              rel="noreferrer"
+              target="_blank"
+            >
+              configuración de anuncios de Google
+            </a>{" "}
+            y consultar{" "}
+            <a
+              href="https://policies.google.com/technologies/partner-sites"
+              rel="noreferrer"
+              target="_blank"
+            >
+              cómo utiliza Google la información de los sitios que usan sus
+              servicios
+            </a>
+            . Antes de esa activación, la política de cookies detallará los
+            proveedores concretos y la forma de gestionar el consentimiento.
+          </p>
 
           <h2>7. Actualizaciones</h2>
           <p>

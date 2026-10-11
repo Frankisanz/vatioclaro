@@ -1,3 +1,4 @@
+import { getAppliance, getApplianceMonthlyKwh } from "./appliances";
 import {
   EXAMPLE_ELECTRICITY_PRICE,
   formatCurrency,
@@ -62,6 +63,46 @@ export type EditorialGuide = {
   sources: EditorialSource[];
   related: EditorialRelatedLink[];
 };
+
+/**
+ * Hogar de ejemplo de la guía de consumo mensual. Suma los escenarios
+ * educativos visibles de cada ficha para mostrar qué usos mueven la cifra;
+ * no es una media estadística de los hogares españoles.
+ */
+function exampleMonthlyKwh(slug: string, units = 1) {
+  const item = getAppliance(slug);
+  if (!item) {
+    throw new Error(`Ficha inexistente en el hogar de ejemplo: ${slug}`);
+  }
+  return getApplianceMonthlyKwh(item) * units;
+}
+
+const householdBaseItems = [
+  { label: "Frigorífico combi", kwh: exampleMonthlyKwh("frigorifico") },
+  { label: "Lavadora", kwh: exampleMonthlyKwh("lavadora") },
+  { label: "Lavavajillas", kwh: exampleMonthlyKwh("lavavajillas") },
+  { label: "Placa de inducción", kwh: exampleMonthlyKwh("placa-de-induccion") },
+  { label: "Horno", kwh: exampleMonthlyKwh("horno") },
+  { label: "Microondas", kwh: exampleMonthlyKwh("microondas") },
+  { label: "Televisor", kwh: exampleMonthlyKwh("televisor") },
+  { label: "Router wifi", kwh: exampleMonthlyKwh("router-wifi") },
+  { label: "Diez bombillas LED", kwh: exampleMonthlyKwh("bombilla-led", 10) },
+];
+const householdBaseKwh = householdBaseItems.reduce(
+  (total, entry) => total + entry.kwh,
+  0,
+);
+const householdWaterKwh = exampleMonthlyKwh("termo-electrico");
+const householdHeatingKwh = exampleMonthlyKwh("radiador-de-aceite");
+const householdCarKwh = exampleMonthlyKwh("coche-electrico");
+
+function kwhText(value: number) {
+  return formatKwh(Math.round(value), 0);
+}
+
+function costText(value: number) {
+  return formatCurrency(value * EXAMPLE_ELECTRICITY_PRICE);
+}
 
 export const editorialGuides: EditorialGuide[] = [
   {
@@ -1440,6 +1481,127 @@ export const editorialGuides: EditorialGuide[] = [
       { href: "/consumo/calefactor-electrico", title: "Calcular el consumo de un calefactor" },
       { href: "/consumo/aire-acondicionado", title: "Calcular una bomba de calor aire-aire" },
       { href: "/guias/potencia-contratada", title: "Revisar potencia y simultaneidad" },
+    ],
+  },
+  {
+    slug: "consumo-luz-casa-al-mes",
+    indexable: true,
+    eyebrow: "Guía de consumo del hogar",
+    title: "¿Cuántos kWh consume una casa al mes?",
+    seoTitle: "Cuántos kWh consume una casa al mes y cómo saberlo",
+    description:
+      "Averigua cuántos kWh gasta tu casa al mes con la factura o los datos de tu distribuidora y descubre qué aparatos mueven la cifra en un hogar de ejemplo.",
+    publishedAt: "2026-10-11",
+    updatedAt: "2026-10-11",
+    intro:
+      "No existe una cifra válida para todas las casas: el consumo mensual depende sobre todo de si la calefacción, el agua caliente, la cocina o el coche funcionan con electricidad. Lo más fiable es leer tu propio dato en la factura o en los datos horarios de tu distribuidora. Para entender qué lo mueve, esta guía suma los ejemplos editables de las fichas de VatioClaro en un hogar de ejemplo.",
+    directAnswer: `Tu consumo mensual aparece en la factura como kWh consumidos en el periodo de facturación; divídelo entre los días facturados y multiplícalo por 30 para compararlo con otros meses. En el hogar de ejemplo de esta guía, los aparatos básicos suman unos ${kwhText(householdBaseKwh)} al mes; un termo eléctrico añade unos ${kwhText(householdWaterKwh)} y un radiador de 2.000 W usado tres horas al día, otros ${kwhText(householdHeatingKwh)}.`,
+    quickFacts: [
+      { label: "Dato real", value: "kWh de la factura o de la distribuidora" },
+      { label: "Hogar de ejemplo", value: `${kwhText(householdBaseKwh)}/mes sin agua caliente ni calefacción` },
+      { label: "Lo que más mueve", value: "Calefacción, agua caliente y coche" },
+      { label: "Precio del ejemplo", value: formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE) },
+    ],
+    sections: [
+      {
+        title: "Dónde ver cuántos kWh consume tu casa",
+        paragraphs: [
+          "La factura indica los kWh consumidos durante el periodo facturado y, si tienes discriminación horaria, los separa por periodos. Fíjate en si la lectura es real o estimada: una estimación puede compensarse en la factura siguiente y distorsionar la comparación entre meses.",
+          "Tu distribuidora registra el consumo horario de los contadores digitales. Puedes consultarlo en su área de clientes o en Datadis, la plataforma conjunta de las distribuidoras, con tu identificación. Con los datos horarios verás qué días y horas concentran el consumo, algo que la factura no muestra.",
+        ],
+        bullets: [
+          "kWh del periodo y número de días facturados.",
+          "Reparto por periodos horarios, si tu contrato los tiene.",
+          "Si la lectura es real o estimada.",
+          "El mismo mes del año anterior, para comparar estaciones equivalentes.",
+        ],
+      },
+      {
+        title: "Cómo convertir la factura en un consumo mensual comparable",
+        paragraphs: [
+          "Las facturas no siempre cubren el mismo número de días. Divide los kWh entre los días facturados para obtener el consumo diario y multiplícalo por 30. Así puedes comparar una factura de 28 días con otra de 33 sin confundir más días con más consumo.",
+          "Compara siempre estaciones parecidas. Un hogar con calefacción eléctrica puede multiplicar su consumo en enero respecto a mayo sin que haya ningún problema; lo útil es comparar enero con enero o semanas con temperaturas parecidas.",
+        ],
+        callout:
+          "Consumo mensual comparable = kWh facturados ÷ días facturados × 30.",
+      },
+      {
+        title: "Un hogar de ejemplo: qué aporta cada aparato",
+        paragraphs: [
+          `Sumando los escenarios educativos de cada ficha, un hogar con frigorífico, lavadora, lavavajillas, placa de inducción, horno, microondas, televisor, router y diez bombillas LED consume unos ${kwhText(householdBaseKwh)} al mes, alrededor de ${costText(householdBaseKwh)} de energía a ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}. No es una media de los hogares españoles: es una suma transparente que puedes rehacer con tus propios datos en cada ficha.`,
+          "La cocina y el frío son los usos básicos con más peso en este ejemplo; el router y las bombillas LED, aunque estén muchas horas encendidos, aportan poco porque su potencia es baja.",
+        ],
+        bullets: householdBaseItems.map(
+          (entry) => `${entry.label}: ${kwhText(entry.kwh)} al mes.`,
+        ),
+      },
+      {
+        title: "Qué usos disparan el consumo de una casa",
+        paragraphs: [
+          `El salto grande llega cuando un uso térmico pasa a ser eléctrico. En los ejemplos de las fichas, un termo eléctrico de 1.500 W calentando dos horas al día suma unos ${kwhText(householdWaterKwh)} al mes, y un radiador de aceite de 2.000 W usado tres horas diarias, unos ${kwhText(householdHeatingKwh)}. Cargar en casa un coche eléctrico con seis recargas de 30 kWh añade ${kwhText(householdCarKwh)}.`,
+          `Con agua caliente y un radiador eléctricos, el hogar de ejemplo pasaría de ${kwhText(householdBaseKwh)} a unos ${kwhText(householdBaseKwh + householdWaterKwh + householdHeatingKwh)} al mes. Por eso dos viviendas del mismo tamaño pueden tener consumos muy distintos: no depende tanto del número de electrodomésticos como de cómo se producen el calor y el agua caliente.`,
+        ],
+        bullets: [
+          "Calefacción eléctrica por resistencia: radiadores, emisores, calefactores.",
+          "Agua caliente con termo eléctrico.",
+          "Recarga de un coche eléctrico en casa.",
+          "Aire acondicionado en verano, según clima y aislamiento.",
+        ],
+      },
+      {
+        title: "Cómo saber si tu casa consume mucho",
+        paragraphs: [
+          "Compárate primero contigo: el mismo mes de años anteriores, tras descontar cambios de ocupación, aparatos o teletrabajo. Si el consumo sube sin explicación, revisa el consumo nocturno en los datos horarios: lo que gasta la casa mientras duerme es la suma de frío, router, esperas y aparatos que se quedan encendidos.",
+          "Un medidor de enchufe te dice cuánto gasta cada aparato de hasta 16 A. Para circuitos fijos como el termo o la placa, los datos horarios antes y después de usarlos permiten estimar su aportación sin tocar la instalación.",
+        ],
+      },
+      {
+        title: "Qué no incluye esta cifra",
+        paragraphs: [
+          "Los kWh solo explican el término de energía. La factura añade la potencia contratada, impuestos, el alquiler del contador y otros conceptos que se pagan aunque consumas poco. Por eso el coste de la factura no es proporcional a los kWh.",
+          "Si tienes placas solares, la red solo registra la energía que importas. El consumo real de la casa es la importada más la autoconsumida, y la compensación de excedentes aparece aparte.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Cuántos kWh consume al mes una casa con calefacción eléctrica?",
+        answer: `Depende de la potencia, las horas y el aislamiento. En el ejemplo de esta guía, un único radiador de 2.000 W usado tres horas al día añade ${kwhText(householdHeatingKwh)} al mes a los ${kwhText(householdBaseKwh)} de los aparatos básicos. Varios emisores o más horas multiplican esa cifra; tus datos horarios de invierno te darán el valor real.`,
+      },
+      {
+        question: "¿Cómo calculo el consumo diario de mi casa?",
+        answer:
+          "Divide los kWh de la factura entre los días facturados. Si quieres más detalle, descarga los datos horarios de tu distribuidora o de Datadis y suma las 24 horas de un día concreto.",
+      },
+      {
+        question: "¿Por qué mi factura sube aunque consuma los mismos kWh?",
+        answer:
+          "Porque el precio de la energía, los impuestos, los días facturados o la potencia contratada pueden cambiar aunque el consumo sea igual. La guía sobre por qué ha subido la factura de la luz explica cómo separar consumo y precio.",
+      },
+      {
+        question: "¿Cuánto consume una casa por la noche?",
+        answer:
+          "Lo que consume la casa sin actividad es la suma de frigorífico, congelador, router, aparatos en espera y cualquier equipo que se quede encendido. Mira en tus datos horarios las horas de madrugada: si el valor es alto y estable, busca el aparato responsable con un medidor de enchufe.",
+      },
+    ],
+    sources: [
+      {
+        title: "CNMC — Entiende tu factura",
+        url: "https://www.cnmc.es/prensa/entiende-tu-factura-20231002",
+      },
+      {
+        title: "Datadis — Plataforma de datos de consumo de las distribuidoras",
+        url: "https://datadis.es",
+      },
+      {
+        title: "IDAE — SPAHOUSEC III (2026), consumo residencial en España",
+        url: "https://informesweb.idae.es/spahousec-iii/index.php",
+      },
+    ],
+    related: [
+      { href: "/guias/como-entender-factura-luz", title: "Entender cada línea de la factura" },
+      { href: "/guias/por-que-ha-subido-factura-luz", title: "Saber por qué ha subido la factura" },
+      { href: "/guias/consumo-fantasma", title: "Medir el consumo nocturno y en espera" },
     ],
   },
 ];

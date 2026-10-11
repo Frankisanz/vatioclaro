@@ -557,3 +557,22 @@ test("publishes the winter heating, mobility and small appliance guides", async 
   assert.match(car, /boe\.es\/eli\/es\/rd\/2014\/12\/12\/1053/);
   assert.doesNotMatch(car, /MODELO \/ MODEL/);
 });
+
+test("publishes the household monthly consumption guide from the example sheets", async () => {
+  const [guide, home, sitemap] = await Promise.all([
+    readOutput("guias/consumo-luz-casa-al-mes.html"),
+    readOutput("index.html"),
+    readOutput("sitemap.xml"),
+  ]);
+
+  assert.match(guide, /¿Cuántos kWh consume una casa al mes\?/);
+  assert.match(guide, /136 kWh/);
+  assert.match(guide, /No es una media de los hogares españoles/);
+  assert.match(guide, /"@type":"FAQPage"/);
+  assert.match(home, /\/guias\/consumo-luz-casa-al-mes/);
+  assert.match(home, /\/consumo\/radiador-de-aceite/);
+  assert.match(
+    sitemap,
+    /https:\/\/vatioclaro\.es\/guias\/consumo-luz-casa-al-mes<\/loc>/,
+  );
+});

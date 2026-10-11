@@ -43,7 +43,21 @@ export const metadata: Metadata = {
   },
 };
 
-const featured = appliances.filter((item) => item.indexable).slice(0, 6);
+// Selección de temporada: en otoño e invierno priorizamos calefacción y
+// agua caliente. Cambia la lista cuando cambie la estación.
+const featuredSlugs = [
+  "radiador-de-aceite",
+  "termo-electrico",
+  "coche-electrico",
+  "placa-de-induccion",
+  "aire-acondicionado",
+  "secadora",
+];
+const featured = featuredSlugs
+  .map((slug) => appliances.find((candidate) => candidate.slug === slug))
+  .filter((item): item is (typeof appliances)[number] =>
+    Boolean(item?.indexable),
+  );
 const featuredBuyingGuideSlugs = [
   "medidores-consumo-electrico-enchufe",
   "temporizadores-regletas-consumo-fantasma",
@@ -96,10 +110,10 @@ const nextGuides = ([
     text: "Compara potencia contratada y máxima demandada en punta y valle con una herramienta prudente.",
   },
   {
-    href: "/guias/etiqueta-energetica-a-euros",
+    href: "/guias/consumo-luz-casa-al-mes",
     number: "03",
-    title: "Convierte la etiqueta en euros",
-    text: "Pasa de kWh al año o por 100 ciclos a un coste mensual y anual comparable.",
+    title: "¿Cuántos kWh consume tu casa?",
+    text: "Lee tu consumo mensual en la factura o en los datos horarios y descubre qué usos lo disparan.",
   },
   {
     href: "/guias/como-entender-factura-luz",

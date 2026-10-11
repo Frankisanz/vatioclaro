@@ -15,7 +15,7 @@ const staticPages = [
     path: "/",
     priority: 1,
     frequency: "weekly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: "2026-10-11",
   },
   {
     path: "/calculadora",
@@ -69,7 +69,7 @@ const staticPages = [
     path: "/guias",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: "2026-10-11",
   },
   {
     path: "/recomendaciones",

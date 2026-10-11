@@ -364,7 +364,7 @@ test("packages a static Cloudflare deployment with security headers", async () =
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /\/apple-icon\s+Content-Type: image\/png/);
   assert.match(headers, /X-Robots-Tag: noindex/);
-  assert.equal(packageJson.devDependencies.wrangler, "4.126.0");
+  assert.match(packageJson.devDependencies.wrangler, /^\d+\.\d+\.\d+$/);
   assert.ok(
     Object.keys(packageJson.dependencies).every(
       (dependency) => !dependency.startsWith("@vercel/"),

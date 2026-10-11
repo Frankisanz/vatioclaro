@@ -940,6 +940,42 @@ const applianceGuideMap: Record<string, BuyingGuideLink> = {
     href: "/recomendaciones/medidores-consumo-electrico-enchufe",
     title: "Medir el consumo real del ventilador durante varios días",
   },
+  "radiador-de-aceite": {
+    href: "/recomendaciones/termohigrometros-casa",
+    title: "Comprobar la temperatura real antes de subir el radiador",
+  },
+  "emisor-termico": {
+    href: "/recomendaciones/termohigrometros-casa",
+    title: "Medir la temperatura de cada estancia antes de programar",
+  },
+  "brasero-electrico": {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir cuánto gasta cada nivel del brasero",
+  },
+  "manta-electrica": {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir el consumo de la manta en el nivel que usas",
+  },
+  cafetera: {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir cuánto gasta cada café y la espera",
+  },
+  "hervidor-de-agua": {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir los kWh de cada hervido",
+  },
+  plancha: {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir el consumo real de una sesión de plancha",
+  },
+  "consola-videojuegos": {
+    href: "/recomendaciones/temporizadores-regletas-consumo-fantasma",
+    title: "Cortar el reposo de la consola y sus periféricos",
+  },
+  aspiradora: {
+    href: "/recomendaciones/medidores-consumo-electrico-enchufe",
+    title: "Medir la base del robot aspirador en espera",
+  },
 };
 
 export function getBuyingGuideForAppliance(slug: string) {

@@ -122,6 +122,36 @@ export const SOURCE_CATALOG = {
     publishedAt: "2026-01-23",
     accessedAt: ACCESSED_AT,
   },
+  euHobs: {
+    id: "eu-hobs",
+    title: "Comisión Europea — Placas de cocción",
+    url: "https://energy-efficient-products.ec.europa.eu/product-list/hobs_en",
+    kind: "official-guidance",
+    scope:
+      "Requisitos de ecodiseño de las placas de cocción eléctricas; no tienen etiqueta energética.",
+    accessedAt: "2026-10-11",
+  },
+  euLightSources: {
+    id: "eu-light-sources",
+    title: "Comisión Europea — Fuentes de luz",
+    url: "https://energy-efficient-products.ec.europa.eu/product-list/light-sources_en",
+    kind: "official-guidance",
+    scope:
+      "Etiqueta A–G reescalada desde el 1 de septiembre de 2021, consumo en kWh/1000 h y enlace a EPREL.",
+    effectiveFrom: "2021-09-01",
+    accessedAt: "2026-10-11",
+  },
+  boeEvCharging: {
+    id: "boe-rd-1053-2014-itc-bt-52",
+    title:
+      "BOE — Real Decreto 1053/2014, ITC-BT-52 de infraestructura para la recarga de vehículos eléctricos",
+    url: "https://www.boe.es/eli/es/rd/2014/12/12/1053",
+    kind: "regulation",
+    scope:
+      "Requisitos de las instalaciones de recarga de vehículos eléctricos; no fija consumos ni precios.",
+    publishedAt: "2014-12-31",
+    accessedAt: "2026-10-11",
+  },
 } as const satisfies Record<string, SourceReference>;
 
 function validateSourceCatalog() {

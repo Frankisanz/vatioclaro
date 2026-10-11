@@ -32,6 +32,10 @@ export type ApplianceSeed = {
   sourceUrl: string;
   updatedAt?: string;
   measurement?: string;
+  /** Explicación propia del cálculo por ciclo cuando el ciclo no es un programa de etiqueta. */
+  cycleNote?: string;
+  /** false oculta la ayuda para leer la etiqueta energética cuando el aparato no la tiene. */
+  showLabelGuide?: boolean;
 };
 
 export type Appliance = ApplianceSeed & {
@@ -99,6 +103,35 @@ const relatedApplianceSlugs: Record<string, string[]> = {
   ordenador: ["router-wifi", "televisor", "frigorifico"],
   televisor: ["ordenador", "router-wifi", "frigorifico"],
   "router-wifi": ["ordenador", "televisor", "frigorifico"],
+  "radiador-de-aceite": [
+    "emisor-termico",
+    "calefactor-electrico",
+    "manta-electrica",
+  ],
+  "emisor-termico": [
+    "radiador-de-aceite",
+    "calefactor-electrico",
+    "aire-acondicionado",
+  ],
+  "manta-electrica": [
+    "brasero-electrico",
+    "calefactor-electrico",
+    "radiador-de-aceite",
+  ],
+  "brasero-electrico": [
+    "manta-electrica",
+    "calefactor-electrico",
+    "radiador-de-aceite",
+  ],
+  "coche-electrico": ["termo-electrico", "aire-acondicionado", "secadora"],
+  "placa-de-induccion": ["vitroceramica", "horno", "hervidor-de-agua"],
+  cafetera: ["hervidor-de-agua", "microondas", "freidora-de-aire"],
+  "hervidor-de-agua": ["cafetera", "placa-de-induccion", "microondas"],
+  plancha: ["secadora", "lavadora", "secador-de-pelo"],
+  "secador-de-pelo": ["plancha", "aspiradora", "termo-electrico"],
+  aspiradora: ["plancha", "secador-de-pelo", "router-wifi"],
+  "bombilla-led": ["televisor", "router-wifi", "ordenador"],
+  "consola-videojuegos": ["televisor", "ordenador", "router-wifi"],
 };
 
 export function getRelatedAppliances(item: Appliance, limit = 3) {
@@ -154,6 +187,8 @@ const labelGuideSlugs = new Set([
 ]);
 const continuousGuideSlugs = new Set([
   "router-wifi",
+  "consola-videojuegos",
+  "cafetera",
   "televisor",
   "ordenador",
   "frigorifico",
@@ -161,6 +196,10 @@ const continuousGuideSlugs = new Set([
 ]);
 const highPowerGuideSlugs = new Set([
   "aire-acondicionado",
+  "radiador-de-aceite",
+  "emisor-termico",
+  "coche-electrico",
+  "placa-de-induccion",
   "aire-acondicionado-portatil",
   "calefactor-electrico",
   "horno",
@@ -210,6 +249,30 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
       title: "Comparar resistencia eléctrica y bomba de calor",
     },
   ],
+  "radiador-de-aceite": [
+    {
+      href: "/guias/radiador-electrico-vs-bomba-calor",
+      title: "Comparar radiador eléctrico y bomba de calor",
+    },
+  ],
+  "emisor-termico": [
+    {
+      href: "/guias/radiador-electrico-vs-bomba-calor",
+      title: "Comparar emisores de resistencia y bomba de calor",
+    },
+  ],
+  "placa-de-induccion": [
+    {
+      href: "/guias/induccion-vs-vitroceramica-consumo",
+      title: "Comparar inducción y vitrocerámica para la misma receta",
+    },
+  ],
+  "coche-electrico": [
+    {
+      href: "/guias/como-entender-factura-luz",
+      title: "Entender los periodos y conceptos de la factura",
+    },
+  ],
 };
 
 export function getRelatedGuideLinks(item: Appliance): RelatedGuideLink[] {
@@ -250,7 +313,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "aire-acondicionado",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Aire acondicionado",
     articleName: "un aire acondicionado",
     seoTitle: "Cuánto consume un aire acondicionado: coste",
@@ -296,7 +359,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "ventilador",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Ventilador",
     articleName: "un ventilador",
     category: "Climatización",
@@ -341,7 +404,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "horno",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Horno eléctrico",
     articleName: "un horno eléctrico",
     seoTitle: "Cuánto consume un horno eléctrico: coste",
@@ -387,7 +450,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "termo-electrico",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Termo eléctrico",
     articleName: "un termo eléctrico",
     seoTitle: "Cuánto consume un termo eléctrico: coste",
@@ -434,7 +497,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "ordenador",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Ordenador de sobremesa",
     articleName: "un ordenador de sobremesa",
     seoTitle: "Cuánto consume un ordenador: coste y cálculo",
@@ -481,7 +544,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "secadora",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Secadora",
     articleName: "una secadora",
     category: "Lavado",
@@ -529,7 +592,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "router-wifi",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Router wifi",
     articleName: "un router wifi",
     seoTitle: "Cuánto consume un router wifi: coste y cálculo",
@@ -576,7 +639,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "frigorifico",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Frigorífico",
     articleName: "un frigorífico",
     seoTitle: "Cuánto consume un frigorífico: coste y cálculo",
@@ -621,7 +684,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "lavadora",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Lavadora",
     articleName: "una lavadora",
     category: "Lavado",
@@ -668,7 +731,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "lavavajillas",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Lavavajillas",
     articleName: "un lavavajillas",
     seoTitle: "Cuánto consume un lavavajillas: coste y cálculo",
@@ -716,7 +779,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "vitroceramica",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Vitrocerámica o inducción",
     articleName: "una vitrocerámica o placa de inducción",
     seoTitle: "Cuánto consume una vitrocerámica: coste y cálculo",
@@ -763,7 +826,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "microondas",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Microondas",
     articleName: "un microondas",
     category: "Cocina",
@@ -809,7 +872,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "televisor",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Televisor",
     articleName: "un televisor",
     category: "Tecnología",
@@ -854,7 +917,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "calefactor-electrico",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Calefactor eléctrico",
     articleName: "un calefactor eléctrico",
     seoTitle: "Cuánto consume un calefactor eléctrico: coste",
@@ -900,7 +963,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "deshumidificador",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Deshumidificador",
     articleName: "un deshumidificador",
     seoTitle: "Cuánto consume un deshumidificador: coste",
@@ -947,7 +1010,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "aire-acondicionado-portatil",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Aire acondicionado portátil",
     articleName: "un aire acondicionado portátil",
     seoTitle: "Consumo de aire acondicionado portátil: coste",
@@ -993,7 +1056,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "congelador",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Congelador",
     articleName: "un congelador",
     category: "Frío",
@@ -1037,7 +1100,7 @@ const applianceSeeds: ApplianceSeed[] = [
   {
     slug: "freidora-de-aire",
     indexable: true,
-    updatedAt: "2026-09-23",
+    updatedAt: "2026-10-11",
     name: "Freidora de aire",
     articleName: "una freidora de aire",
     seoTitle: "Cuánto consume una freidora de aire: coste",
@@ -1081,6 +1144,612 @@ const applianceSeeds: ApplianceSeed[] = [
     sourceUrl:
       "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
+  {
+    slug: "radiador-de-aceite",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Radiador de aceite",
+    articleName: "un radiador de aceite",
+    seoTitle: "Cuánto consume un radiador de aceite: coste",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 2000,
+      hoursPerDay: 3,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste por hora y por noche sin creer que el aceite multiplica el calor que pagas.",
+    intro:
+      "Un radiador de aceite es un calefactor de resistencia: la electricidad calienta un aceite sellado que reparte el calor y lo conserva un rato después de apagarse. Esa inercia mejora el confort, pero no crea energía: cada kWh que entra sale como un kWh de calor, igual que en cualquier otro aparato de resistencia.",
+    range:
+      "Consulta la potencia máxima y los niveles intermedios en la placa de características o el manual; muchos modelos permiten elegir entre dos o tres potencias.",
+    caveat:
+      "El ejemplo educativo editable supone 2.000 W durante tres horas al día con la resistencia siempre encendida. Si el termostato corta al alcanzar la temperatura o usas un nivel inferior, el consumo real será menor.",
+    tips: [
+      "Usa el termostato en lugar de dejarlo siempre a máxima potencia: cuando corta, deja de consumir.",
+      "Calienta solo la estancia ocupada y cierra la puerta para no pagar el calor que se va a otras habitaciones.",
+      "No lo cubras con ropa ni lo conectes a regletas o alargadores no preparados para su potencia.",
+    ],
+    factors: [
+      {
+        title: "Nivel de potencia",
+        text: "Pasar de 1.000 a 2.000 W duplica la energía de cada hora con la resistencia encendida. El nivel bajo tarda más en calentar, pero consume la mitad mientras funciona.",
+      },
+      {
+        title: "Termostato",
+        text: "El consumo real depende de cuánto tiempo permanece encendida la resistencia, no de las horas que el radiador está enchufado.",
+      },
+      {
+        title: "Pérdidas de la estancia",
+        text: "Ventanas sin estanqueidad, paredes frías o techos altos obligan a mantener la resistencia encendida durante más tiempo.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "emisor-termico",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Emisor térmico",
+    articleName: "un emisor térmico",
+    seoTitle: "Cuánto consume un emisor térmico: coste real",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 1000,
+      hoursPerDay: 5,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Convierte la potencia de tus emisores en euros y separa lo que ahorra la programación de lo que promete el marketing.",
+    intro:
+      "Los emisores térmicos, secos o de fluido, calientan mediante resistencias eléctricas. Su diferencia con otros calefactores está en la inercia, el reparto del calor y la electrónica de control, no en la conversión de energía: un kWh eléctrico produce como máximo un kWh de calor. Lo que sí cambia la factura es cuántas horas funciona la resistencia.",
+    range:
+      "Consulta la potencia de cada emisor en su placa o ficha técnica; si tienes varios, calcula cada uno y suma el resultado.",
+    caveat:
+      "El ejemplo educativo editable supone un emisor de 1.000 W con la resistencia encendida cinco horas al día. Con termostato y programación, la resistencia alterna periodos encendida y apagada, por lo que las horas reales pueden ser menos que las horas de uso.",
+    tips: [
+      "Programa los horarios para no calentar habitaciones vacías y usa una consigna moderada.",
+      "Si tienes discriminación horaria, concentra parte del uso en las horas más baratas cuando sea compatible con tu confort.",
+      "Mide un emisor durante varios días con un medidor o con los datos horarios de tu distribuidora para conocer sus horas reales.",
+    ],
+    factors: [
+      {
+        title: "Número de emisores",
+        text: "Tres emisores de 1.000 W encendidos a la vez demandan 3 kW: multiplica el coste de uno por el número de aparatos que funcionan simultáneamente.",
+      },
+      {
+        title: "Programación y consigna",
+        text: "Cada grado y cada hora que reduces en una habitación desocupada disminuye el tiempo de resistencia encendida.",
+      },
+      {
+        title: "Inercia",
+        text: "El fluido o el material acumulador suaviza la temperatura y prolonga la sensación de calor, pero ese calor se pagó antes como electricidad.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "manta-electrica",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Manta eléctrica",
+    articleName: "una manta eléctrica",
+    seoTitle: "Cuánto consume una manta eléctrica: coste",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 100,
+      hoursPerDay: 2,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta calentar la cama o el sofá y compáralo con calentar toda la habitación.",
+    intro:
+      "Una manta o un calientacamas eléctrico aporta calor directamente a la persona, no al aire de la estancia. Por eso su potencia suele ser mucho menor que la de un calefactor. Es una de las formas más baratas de ganar confort cuando el objetivo es estar caliente en un punto concreto.",
+    range:
+      "Consulta la potencia en la etiqueta cosida o en el manual; suele indicarse la máxima, y los niveles intermedios consumen menos.",
+    caveat:
+      "El ejemplo educativo editable usa 100 W durante dos horas diarias a máxima potencia. Muchos modelos tienen varios niveles y apagado automático, así que el consumo real puede ser inferior.",
+    tips: [
+      "Úsala para precalentar la cama y bájala o apágala al acostarte si el manual lo recomienda.",
+      "No la dobles mientras funciona, no la uses mojada y revisa el cable y el mando antes de cada temporada.",
+      "Combínala con una consigna de calefacción más baja en lugar de usar ambas a la vez a plena potencia.",
+    ],
+    factors: [
+      {
+        title: "Nivel seleccionado",
+        text: "Los niveles bajos regulan la potencia media; el máximo solo es necesario para el calentamiento inicial.",
+      },
+      {
+        title: "Aislamiento de la cama o el sofá",
+        text: "Un edredón o una manta encima retienen el calor y reducen el tiempo que necesita estar encendida.",
+      },
+      {
+        title: "Apagado automático",
+        text: "El temporizador evita que funcione toda la noche si te duermes con ella encendida.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "brasero-electrico",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Brasero eléctrico",
+    articleName: "un brasero eléctrico",
+    seoTitle: "Cuánto consume un brasero eléctrico: coste",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 800,
+      hoursPerDay: 3,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de la mesa camilla según el nivel de potencia y las horas que la usas.",
+    intro:
+      "El brasero eléctrico calienta un espacio pequeño y cerrado bajo la mesa camilla. Si las faldas retienen el calor, puede dar confort a varias personas sin calentar toda la habitación. Su consumo depende sobre todo del nivel elegido y de cuánto tiempo permanece encendida la resistencia.",
+    range:
+      "Consulta la potencia de cada posición en la base o el manual; muchos modelos tienen dos niveles.",
+    caveat:
+      "El ejemplo educativo editable supone 800 W durante tres horas al día. Si usas el nivel bajo o el termostato corta, el consumo real será menor.",
+    tips: [
+      "Usa faldas gruesas y que lleguen al suelo para no perder el calor acumulado bajo la mesa.",
+      "Empieza en el nivel alto unos minutos y baja al nivel inferior cuando el espacio esté caliente.",
+      "Mantén las telas separadas de la resistencia y apágalo siempre al levantarte de la mesa.",
+    ],
+    factors: [
+      {
+        title: "Nivel de potencia",
+        text: "En un brasero de dos posiciones, el nivel bajo consume una fracción de la potencia del alto. Comprueba los vatios de cada posición en tu modelo e introdúcelos por separado.",
+      },
+      {
+        title: "Faldas y estancia",
+        text: "Cuanto mejor cerrada está la mesa, menos tiempo necesita la resistencia para mantener la temperatura.",
+      },
+      {
+        title: "Tipo de resistencia",
+        text: "Las resistencias halógenas, de cuarzo o de carbono cambian cómo se percibe el calor, pero todas convierten la electricidad en calor en la misma proporción.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "coche-electrico",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Coche eléctrico",
+    articleName: "un coche eléctrico",
+    seoTitle: "Cuánto cuesta cargar un coche eléctrico en casa",
+    category: "Movilidad",
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 30,
+      cycles: 6,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste por recarga, por mes y por 100 km con los kWh que mide tu enchufe y tu precio real.",
+    intro:
+      "Para saber cuánto cuesta cargar un coche eléctrico en casa importa la energía que sale de la red, no solo la que entra en la batería: parte se pierde en el cargador y el cableado. Aquí cada «ciclo» es una recarga, medida en kWh en el contador o en el punto de recarga.",
+    range:
+      "Consulta los kWh de cada sesión en tu punto de recarga, en la aplicación del coche o en los datos horarios de tu distribuidora. El consumo homologado del vehículo aparece en su ficha técnica en kWh/100 km.",
+    caveat:
+      "El ejemplo educativo editable supone seis recargas al mes de 30 kWh medidos en la toma, unos 180 kWh mensuales. La velocidad, la temperatura, la calefacción del habitáculo y la potencia de carga cambian el consumo real.",
+    tips: [
+      "Programa la carga en las horas más baratas de tu tarifa si tienes discriminación horaria.",
+      "Compara los kWh que indica el coche con los del contador o el punto de recarga para conocer tus pérdidas reales.",
+      "Precalienta o climatiza el coche mientras está enchufado para no gastar batería al arrancar en días fríos.",
+    ],
+    factors: [
+      {
+        title: "Kilómetros y consumo del vehículo",
+        text: "La energía mensual es aproximadamente kilómetros × kWh/100 km ÷ 100, más las pérdidas de carga. Un uso en autopista o con frío consume más que en ciudad con temperaturas suaves.",
+      },
+      {
+        title: "Potencia de carga",
+        text: "Un enchufe doméstico a 10 A entrega unos 2,3 kW y un punto de 32 A monofásico unos 7,4 kW. La potencia cambia el tiempo de carga y la potencia contratada que necesitas, no tanto los kWh totales.",
+      },
+      {
+        title: "Precio y horario",
+        text: "El mismo kWh puede costar distinto según el periodo horario de tu contrato. Introduce el precio del periodo en el que cargas realmente.",
+      },
+    ],
+    sourceTitle:
+      "BOE — Real Decreto 1053/2014, ITC-BT-52 de infraestructura para la recarga de vehículos eléctricos",
+    sourceUrl: "https://www.boe.es/eli/es/rd/2014/12/12/1053",
+    measurement:
+      "Anota los kWh de varias recargas completas en el punto de recarga o en el contador y usa su media como kWh por ciclo.",
+    cycleNote:
+      "Aquí un ciclo es una recarga: multiplicamos los kWh medidos en la toma en cada recarga por las recargas del mes. Si conoces tus kilómetros, también puedes estimar los kWh mensuales como kilómetros × kWh/100 km ÷ 100 y sumar las pérdidas de carga.",
+    showLabelGuide: false,
+  },
+  {
+    slug: "placa-de-induccion",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Placa de inducción",
+    articleName: "una placa de inducción",
+    seoTitle: "Cuánto consume una placa de inducción: coste",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 1500,
+      hoursPerDay: 1,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de cocinar a diario sin confundir la potencia máxima de la placa con su consumo real.",
+    intro:
+      "La placa de inducción calienta directamente el recipiente mediante un campo magnético, por lo que pierde menos calor en la propia superficie. Su potencia total puede superar los 7 kW, pero rara vez se usan todas las zonas al máximo: el gasto real depende del nivel medio y del tiempo de cocción.",
+    range:
+      "La potencia máxima de cada zona y de la placa completa aparece en la placa de características y en el manual. El consumo medio de cada receta solo se conoce midiendo.",
+    caveat:
+      "El ejemplo educativo editable supone una potencia media de 1.500 W durante una hora diaria. Hervir a máxima potencia y luego mantener a fuego bajo puede consumir más o menos que ese promedio.",
+    tips: [
+      "Tapa las ollas: alcanzan antes la ebullición y necesitan menos potencia para mantenerla.",
+      "Usa recipientes con base plana y del tamaño de la zona para no desaprovechar potencia.",
+      "Baja el nivel en cuanto hierva y aprovecha el calor residual del recipiente en los últimos minutos.",
+    ],
+    factors: [
+      {
+        title: "Nivel y modulación",
+        text: "La placa regula la potencia entregada según el nivel elegido; mantener un guiso a fuego bajo consume mucho menos por hora que hervir agua.",
+      },
+      {
+        title: "Recipientes",
+        text: "Un fondo deformado o pequeño respecto a la zona reduce el acoplamiento y alarga el tiempo de cocción.",
+      },
+      {
+        title: "Potencia contratada",
+        text: "Varias zonas a máxima potencia junto al horno o el termo pueden superar la potencia contratada; muchas placas permiten limitar su potencia total.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Placas de cocción",
+    sourceUrl: "https://energy-efficient-products.ec.europa.eu/product-list/hobs_en",
+  },
+  {
+    slug: "cafetera",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Cafetera eléctrica",
+    articleName: "una cafetera eléctrica",
+    seoTitle: "Cuánto consume una cafetera: coste por café",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 1400,
+      hoursPerDay: 0.1,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta cada café y cuánto se va en mantenerla caliente o en espera.",
+    intro:
+      "Una cafetera de cápsulas o espresso necesita mucha potencia durante poco tiempo para calentar el agua. Lo que puede encarecer su consumo no es el café en sí, sino el tiempo que permanece caliente, la placa calefactora de una cafetera de goteo o una espera prolongada.",
+    range:
+      "Consulta la potencia en la base o el manual. El tiempo de calentamiento y de apagado automático suele venir descrito en las instrucciones.",
+    caveat:
+      "El ejemplo educativo editable supone 1.400 W durante seis minutos de resistencia encendida al día. Una cafetera que se mantiene caliente durante horas o una de goteo con placa calefactora pueden consumir bastante más.",
+    tips: [
+      "Activa el apagado automático más corto que permita tu modelo.",
+      "En cafeteras de goteo, pasa el café a un termo en lugar de dejarlo sobre la placa calefactora.",
+      "Descalcifica según el manual: la cal en la resistencia alarga el calentamiento.",
+    ],
+    factors: [
+      {
+        title: "Tipo de cafetera",
+        text: "Las de cápsulas y espresso calientan agua a demanda; las de goteo pueden mantener una placa encendida, y las superautomáticas pueden incluir ciclos de enjuague.",
+      },
+      {
+        title: "Tiempo encendida",
+        text: "Si la dejas encendida entre café y café, la resistencia vuelve a encenderse periódicamente para mantener la temperatura.",
+      },
+      {
+        title: "Espera y apagado",
+        text: "Los modos de espera consumen poco por hora, pero se acumulan durante todo el año si la cafetera no se apaga del todo.",
+      },
+    ],
+    sourceTitle: "EUR-Lex — Reglamento (UE) 2023/826 sobre modos de bajo consumo",
+    sourceUrl:
+      "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
+  },
+  {
+    slug: "hervidor-de-agua",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Hervidor de agua",
+    articleName: "un hervidor de agua",
+    seoTitle: "Cuánto consume un hervidor de agua: coste",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 2000,
+      hoursPerDay: 0.1,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta hervir un litro y por qué la cantidad de agua importa más que la potencia.",
+    intro:
+      "Un hervidor tiene mucha potencia, pero funciona pocos minutos y se apaga solo al hervir. La energía que necesita depende sobre todo de cuánta agua calientas y de su temperatura inicial: calentar el doble de agua requiere aproximadamente el doble de energía, sea cual sea la potencia del aparato.",
+    range:
+      "Consulta la potencia en la base o el manual. Un hervidor más potente tarda menos, pero la energía para calentar la misma agua es muy parecida.",
+    caveat:
+      "El ejemplo educativo editable supone 2.000 W durante seis minutos al día. Hervir solo la cantidad necesaria puede reducir mucho ese tiempo.",
+    tips: [
+      "Calienta solo el agua que vas a usar: el indicador de nivel ayuda a no llenar de más.",
+      "Descalcifica el hervidor cuando aparezca cal en la resistencia o la base.",
+      "Si necesitas agua a 70-80 °C para infusiones, usa un modelo con temperatura regulable en lugar de hervir y esperar.",
+    ],
+    factors: [
+      {
+        title: "Cantidad de agua",
+        text: "Es el factor principal: un litro necesita aproximadamente el doble de energía que medio litro para el mismo salto de temperatura.",
+      },
+      {
+        title: "Temperatura inicial y final",
+        text: "En invierno el agua del grifo sale más fría y necesita más energía para llegar a ebullición.",
+      },
+      {
+        title: "Cal y pérdidas",
+        text: "La cal y un cuerpo poco aislado alargan el calentamiento y aumentan la energía perdida hacia el ambiente.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "plancha",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Plancha de ropa",
+    articleName: "una plancha",
+    seoTitle: "Cuánto consume una plancha de ropa: coste",
+    category: "Hogar",
+    calculation: {
+      method: "power",
+      watts: 2200,
+      hoursPerDay: 1,
+      daysPerMonth: 8,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta cada sesión de plancha y cómo reducirla sin renunciar al resultado.",
+    intro:
+      "La plancha tiene una resistencia potente que se enciende y se apaga para mantener la temperatura elegida. Por eso consume menos que su potencia máxima durante toda la sesión, pero las sesiones largas y frecuentes se notan. Los centros de planchado añaden una caldera que también necesita calentarse.",
+    range:
+      "Consulta la potencia en la plancha o el manual; en un centro de planchado, revisa también la potencia de la caldera.",
+    caveat:
+      "El ejemplo educativo editable supone 2.200 W durante una hora, ocho días al mes, con la resistencia siempre encendida. Como el termostato corta a ratos, el consumo real suele ser menor.",
+    tips: [
+      "Plancha en una sola sesión semanal para calentar la plancha menos veces.",
+      "Empieza por los tejidos que necesitan más temperatura y termina con los delicados usando el calor residual al apagarla.",
+      "Centrifuga bien y tiende la ropa estirada para reducir arrugas y tiempo de plancha.",
+    ],
+    factors: [
+      {
+        title: "Temperatura elegida",
+        text: "Los tejidos que requieren más temperatura obligan a mantener la resistencia encendida durante más tiempo.",
+      },
+      {
+        title: "Vapor y caldera",
+        text: "Generar vapor exige calentar agua; un centro de planchado puede consumir más por sesión aunque planche más rápido.",
+      },
+      {
+        title: "Duración de la sesión",
+        text: "Los minutos de calentamiento inicial se repiten cada vez que enciendes la plancha; agrupar la ropa los reduce.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "secador-de-pelo",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Secador de pelo",
+    articleName: "un secador de pelo",
+    seoTitle: "Cuánto consume un secador de pelo: coste",
+    category: "Hogar",
+    calculation: {
+      method: "power",
+      watts: 2000,
+      hoursPerDay: 0.15,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de cada secado y cuánto cambia entre aire caliente, templado y frío.",
+    intro:
+      "Casi toda la potencia de un secador se va en la resistencia que calienta el aire; el motor consume una parte pequeña. Por eso el nivel de calor y los minutos de uso determinan el gasto. El secado en frío consume mucho menos, aunque suele tardar más.",
+    range:
+      "Consulta la potencia máxima en el mango o el manual; corresponde al nivel de calor más alto con la velocidad máxima.",
+    caveat:
+      "El ejemplo educativo editable supone 2.000 W durante nueve minutos al día. Los niveles templado y frío consumen menos que el máximo.",
+    tips: [
+      "Retira el exceso de agua con una toalla antes de usar el secador.",
+      "Usa el calor máximo solo al principio y termina con un nivel templado o frío.",
+      "Limpia la rejilla de entrada de aire: si se obstruye, el secador tarda más y puede sobrecalentarse.",
+    ],
+    factors: [
+      {
+        title: "Nivel de calor",
+        text: "La resistencia es la parte de mayor consumo; bajar un nivel de calor reduce la potencia más que bajar la velocidad.",
+      },
+      {
+        title: "Longitud y humedad del pelo",
+        text: "Más agua que evaporar significa más minutos de secado y, por tanto, más energía.",
+      },
+      {
+        title: "Concentrador y difusor",
+        text: "Dirigir bien el flujo de aire puede acortar el secado sin necesidad de usar más calor.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "aspiradora",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Aspiradora",
+    articleName: "una aspiradora",
+    seoTitle: "Cuánto consume una aspiradora: con cable, escoba y robot",
+    category: "Hogar",
+    calculation: {
+      method: "power",
+      watts: 700,
+      hoursPerDay: 0.5,
+      daysPerMonth: 8,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el gasto de una aspiradora de trineo, una escoba sin cable o un robot con su base.",
+    intro:
+      "Una aspiradora con cable consume mientras funciona; una escoba sin cable o un robot consumen al cargar la batería y, en el caso del robot, también la base mientras espera. En casi todos los hogares es un gasto pequeño, pero conviene calcularlo con el dato adecuado para cada tipo.",
+    range:
+      "En aspiradoras con cable, consulta la potencia nominal. En modelos con batería, multiplica la tensión (V) por la capacidad (Ah) para obtener los Wh por carga.",
+    caveat:
+      "El ejemplo educativo editable supone una aspiradora con cable de 700 W durante media hora, ocho días al mes. Para modelos con batería, introduce los Wh de una carga como consumo por ciclo.",
+    tips: [
+      "Vacía el depósito o cambia la bolsa a tiempo: un filtro saturado reduce la aspiración y alarga la limpieza.",
+      "Usa la potencia máxima solo en alfombras; en suelos duros suele bastar un nivel inferior.",
+      "Si tienes robot, mide también el consumo de la base en espera durante un día completo.",
+    ],
+    factors: [
+      {
+        title: "Tipo de aspiradora",
+        text: "Con cable, el gasto depende de la potencia y el tiempo. Con batería, de los Wh de cada carga y de las pérdidas del cargador.",
+      },
+      {
+        title: "Potencia frente a aspiración",
+        text: "Más vatios no garantizan más capacidad de limpieza: el diseño del cepillo, los filtros y el flujo de aire influyen en el resultado.",
+      },
+      {
+        title: "Espera de la base",
+        text: "Una base de carga o de vaciado automático enchufada todo el día suma horas de consumo en espera.",
+      },
+    ],
+    sourceTitle: "EUR-Lex — Reglamento (UE) 2023/826 sobre modos de bajo consumo",
+    sourceUrl:
+      "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
+  },
+  {
+    slug: "bombilla-led",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Bombilla LED",
+    articleName: "una bombilla LED",
+    seoTitle: "Cuánto consume una bombilla LED: coste y ahorro",
+    category: "Iluminación",
+    calculation: {
+      method: "power",
+      watts: 8,
+      hoursPerDay: 5,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de cada punto de luz y el ahorro real al sustituir una bombilla antigua comparando lúmenes.",
+    intro:
+      "La etiqueta energética de las fuentes de luz indica el consumo en kWh por cada 1.000 horas de uso, que en la práctica coincide con los vatios de la bombilla. Para comparar dos bombillas hay que fijarse en los lúmenes, que miden la luz emitida, y no en los vatios.",
+    range:
+      "Consulta los vatios y los lúmenes en el envase o en la etiqueta energética; la etiqueta enlaza con la base de datos europea EPREL mediante un código QR.",
+    caveat:
+      "El ejemplo educativo editable supone una bombilla de 8 W encendida cinco horas al día. Para toda la vivienda, suma los vatios de las bombillas que se encienden a la vez o calcula cada estancia por separado.",
+    tips: [
+      "Compara bombillas por lúmenes y elige la temperatura de color que necesites antes de fijarte en el precio.",
+      "Sustituye primero las bombillas que más horas pasan encendidas: es donde el ahorro se nota antes.",
+      "Apaga la luz al salir de una habitación: en las LED no hay un pico de arranque que lo desaconseje.",
+    ],
+    factors: [
+      {
+        title: "Horas de uso",
+        text: "Una bombilla del salón encendida cinco horas al día gasta muchas veces más al año que la del trastero, aunque tengan la misma potencia.",
+      },
+      {
+        title: "Lúmenes por vatio",
+        text: "La eficacia luminosa indica cuánta luz da cada vatio; a igualdad de lúmenes, menos vatios significa menos consumo.",
+      },
+      {
+        title: "Reguladores y equipos",
+        text: "Las bombillas regulables, los transformadores o las tiras LED con fuente de alimentación pueden tener consumo adicional en espera.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Fuentes de luz",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/light-sources_en",
+  },
+  {
+    slug: "consola-videojuegos",
+    indexable: true,
+    updatedAt: "2026-10-11",
+    name: "Consola de videojuegos",
+    articleName: "una consola de videojuegos",
+    seoTitle: "Cuánto consume una consola: jugando y en reposo",
+    category: "Tecnología",
+    calculation: {
+      method: "power",
+      watts: 150,
+      hoursPerDay: 2,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta jugar y cuánto se va en el modo reposo con descargas activadas.",
+    intro:
+      "Una consola consume según lo que hace: un juego exigente, un menú, una película en streaming o el modo reposo con descargas y carga de mandos. Por eso conviene medirla en cada situación. El modo reposo consume poco por hora, pero puede estar activo casi todo el día.",
+    range:
+      "Consulta la potencia máxima en la fuente de alimentación o el manual; el consumo real jugando suele ser menor y varía según el juego.",
+    caveat:
+      "El ejemplo educativo editable supone 150 W durante dos horas diarias de juego. No incluye el televisor ni el consumo en reposo, que puedes calcular aparte con la calculadora de consumo fantasma.",
+    tips: [
+      "Revisa en los ajustes de energía si el modo reposo mantiene descargas, conexión o carga de mandos y desactiva lo que no necesites.",
+      "Apaga la consola del todo si no vas a usarla en varios días.",
+      "Mide con un medidor de enchufe jugando, en menús y en reposo para saber dónde está el gasto.",
+    ],
+    factors: [
+      {
+        title: "Tipo de juego y modo gráfico",
+        text: "Los juegos exigentes y los modos de rendimiento suben la potencia frente a menús, juegos sencillos o reproducción de vídeo.",
+      },
+      {
+        title: "Modo reposo",
+        text: "Unos pocos vatios durante veinte horas al día pueden sumar una cantidad comparable a la de las horas de juego.",
+      },
+      {
+        title: "Televisor y periféricos",
+        text: "La pantalla, la barra de sonido o los mandos cargando forman parte del gasto real de una sesión de juego.",
+      },
+    ],
+    sourceTitle: "EUR-Lex — Reglamento (UE) 2023/826 sobre modos de bajo consumo",
+    sourceUrl:
+      "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
+  },
 ];
 
 function buildAssumptionRationale(item: ApplianceSeed) {
@@ -1090,6 +1759,10 @@ function buildAssumptionRationale(item: ApplianceSeed) {
 
   if (item.slug === "congelador") {
     return "200 kWh/año es un escenario educativo redondo para mostrar la fórmula. No es un promedio oficial ni describe todos los congeladores; sustitúyelo por la etiqueta del modelo.";
+  }
+
+  if (item.slug === "coche-electrico") {
+    return "30 kWh por recarga y seis recargas al mes forman un escenario educativo editable de unos 180 kWh mensuales medidos en la toma. No es un dato de fabricante: sustitúyelo por los kWh que registre tu punto de recarga o tu contador.";
   }
 
   if (item.labelKwhPer100Cycles !== undefined) {

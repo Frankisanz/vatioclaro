@@ -321,6 +321,227 @@ export const APPLIANCE_FAQS: Record<string, ApplianceFaq[]> = {
         "Algunas recetas lo piden para dorar mejor, pero en la mayoría de platos puedes añadir un par de minutos al tiempo de cocción en lugar de precalentar. Cada minuto de precalentado es energía que no llega a la comida; revisa el manual de tu modelo.",
     },
   ],
+  "radiador-de-aceite": [
+    {
+      question: "¿Cuánto cuesta una hora de radiador de aceite?",
+      answer:
+        "Con el ejemplo de 2.000 W y la resistencia encendida toda la hora, son 2 kWh y 0,50 € a 0,25 €/kWh. Si el termostato corta la mitad del tiempo, el consumo baja a 1 kWh y 0,25 €. Para conocer tu caso, multiplica los vatios del nivel que usas por las horas reales de resistencia encendida.",
+    },
+    {
+      question: "¿Gasta menos un radiador de aceite que un calefactor?",
+      answer:
+        "Para entregar la misma cantidad de calor, no. Ambos son aparatos de resistencia y convierten cada kWh eléctrico en un kWh de calor. El aceite acumula calor y lo cede poco a poco, lo que da una temperatura más estable y un calor menos seco, pero no reduce la energía necesaria. La diferencia en la factura procede de la potencia elegida, el termostato y las horas de uso.",
+    },
+    {
+      question: "¿Cuánto cuesta dejarlo encendido toda la noche?",
+      answer:
+        "Ocho horas en un nivel de 1.000 W con la resistencia siempre encendida son 8 kWh y 2 € a 0,25 €/kWh. Con el termostato cortando, el gasto real será menor. Si duermes con la puerta cerrada y el dormitorio está bien aislado, programarlo solo para las primeras horas o usar una manta eléctrica puede reducir mucho esa cifra.",
+    },
+  ],
+  "emisor-termico": [
+    {
+      question: "¿Los emisores térmicos de «bajo consumo» gastan menos?",
+      answer:
+        "No pueden producir más calor por cada kWh que otro aparato de resistencia: toda la electricidad se convierte en calor en la vivienda. Lo que sí puede ayudar es una buena electrónica de control, con termostato preciso, programación y detección de ventanas abiertas, porque reduce las horas en que la resistencia está encendida. Para multiplicar el calor por kWh hace falta una bomba de calor.",
+    },
+    {
+      question: "¿Cómo calculo el gasto de toda la casa con emisores?",
+      answer:
+        "Calcula cada emisor con su potencia y sus horas reales de resistencia encendida y suma los resultados. Con el ejemplo de 1.000 W durante cinco horas diarias, cada emisor gasta 150 kWh y 37,50 € al mes a 0,25 €/kWh; tres emisores con el mismo uso serían 112,50 €. Los datos horarios de tu distribuidora te dirán si esas horas se parecen a las reales.",
+    },
+    {
+      question: "¿Es mejor un emisor seco o uno de fluido?",
+      answer:
+        "En consumo, la diferencia es la inercia. El de fluido tarda más en calentarse y en enfriarse; el seco responde antes. Ninguno convierte la electricidad en más calor que el otro. Elige según el uso: para estancias ocupadas muchas horas seguidas importa la estabilidad; para usos cortos, la rapidez.",
+    },
+  ],
+  "manta-electrica": [
+    {
+      question: "¿Cuánto cuesta dejar la manta eléctrica toda la noche?",
+      answer:
+        "Con el ejemplo de 100 W a máxima potencia, ocho horas son 0,8 kWh y 0,20 € a 0,25 €/kWh. En un nivel bajo o con apagado automático gastará menos. Consulta en el manual si el fabricante permite usarla durante toda la noche y en qué nivel.",
+    },
+    {
+      question: "¿Es más barata una manta eléctrica que un calefactor?",
+      answer:
+        "Para calentar a una persona, normalmente sí, porque aporta el calor justo donde lo necesitas. Con los ejemplos de VatioClaro, una hora de calefactor a 1.500 W consume 1,5 kWh, lo mismo que quince horas de manta a 100 W. La manta no calienta la habitación, así que es una alternativa cuando el confort que buscas es estar caliente en la cama o el sofá.",
+    },
+    {
+      question: "¿Qué potencia tiene una manta eléctrica?",
+      answer:
+        "Depende del tamaño y del tipo: manta para el sofá, calientacamas bajo la sábana o almohadilla. El dato está en la etiqueta cosida o en el manual y suele ser la potencia máxima. Si quieres saber cuánto gasta en el nivel que usas, mídela con un medidor de enchufe durante una hora.",
+    },
+  ],
+  "brasero-electrico": [
+    {
+      question: "¿Cuánto cuesta una hora de brasero eléctrico?",
+      answer:
+        "Con el ejemplo de 800 W y la resistencia siempre encendida, una hora consume 0,8 kWh y cuesta 0,20 € a 0,25 €/kWh. Si tu brasero tiene un nivel de 400 W y lo usas así, serían 0,4 kWh y 0,10 € por hora.",
+    },
+    {
+      question: "¿Gasta menos un brasero que un calefactor?",
+      answer:
+        "Por cada hora con la misma potencia, consumen lo mismo. La diferencia es que el brasero solo calienta el espacio cerrado bajo la mesa camilla y suele tener menos potencia, por lo que puede dar confort con menos energía si las personas están sentadas a la mesa. Para calentar toda la estancia no es la herramienta adecuada.",
+    },
+    {
+      question: "¿Qué brasero eléctrico consume menos: halógeno, de cuarzo o de carbono?",
+      answer:
+        "Con la misma potencia en vatios, consumen la misma electricidad por hora. Cambian la rapidez con la que se nota el calor, la luz que emiten y la duración de los tubos. Compara la potencia de cada nivel y si incluye termostato, porque eso determina el consumo.",
+    },
+  ],
+  "coche-electrico": [
+    {
+      question: "¿Cuánto cuesta cargar un coche eléctrico en casa por cada 100 km?",
+      answer:
+        "Multiplica los kWh que consume tu coche cada 100 km, medidos en la toma, por tu precio. Si el coche indica 16 kWh/100 km y las pérdidas de carga añaden un 10 %, necesitas unos 17,6 kWh de la red, que a 0,25 €/kWh son 4,40 €. Con un precio de 0,10 €/kWh en el periodo en que cargas, serían 1,76 €. Usa el precio real del periodo horario de tu contrato.",
+    },
+    {
+      question: "¿Por qué el contador marca más kWh que el coche?",
+      answer:
+        "Porque una parte de la energía se pierde en el cargador del coche, en el cableado y en la gestión térmica de la batería. Por eso el consumo que muestra el ordenador de a bordo suele ser menor que la energía facturada. Compara varias recargas completas en el contador o en el punto de recarga con los kWh que indica el coche para conocer tus pérdidas reales.",
+    },
+    {
+      question: "¿Necesito subir la potencia contratada para cargar en casa?",
+      answer:
+        "Depende de la potencia de carga y de lo que funcione a la vez. Un enchufe doméstico a 10 A entrega unos 2,3 kW y tardaría unas 13 horas en cargar 30 kWh; un punto de 7,4 kW lo haría en unas cuatro horas, pero sumado al horno o al termo puede superar tu potencia contratada. Muchos puntos de recarga permiten limitar la potencia o ajustarla al consumo de la casa. La instalación está regulada por la ITC-BT-52 y debe realizarla un instalador habilitado.",
+    },
+  ],
+  "placa-de-induccion": [
+    {
+      question: "¿Cuánto cuesta cocinar con placa de inducción al mes?",
+      answer:
+        "Con el ejemplo de una potencia media de 1.500 W durante una hora diaria, son 45 kWh y 11,25 € al mes a 0,25 €/kWh. La cifra cambia mucho con lo que cocinas: hervir pasta a máxima potencia consume más por minuto que mantener un guiso a fuego bajo. Un medidor en la línea de la cocina o los datos horarios de la distribuidora te darán tu consumo real.",
+    },
+    {
+      question: "¿Cuánta energía hace falta para hervir un litro de agua?",
+      answer:
+        "Calentar un litro de agua de 15 a 100 °C requiere unos 0,1 kWh en teoría, porque el agua necesita 4,186 kJ por kilo y grado. En la práctica hay que añadir las pérdidas del recipiente y del ambiente. Tapar la olla y usar una zona del tamaño del recipiente acerca el consumo real a esa cifra teórica.",
+    },
+    {
+      question: "¿La inducción gasta más que la vitrocerámica?",
+      answer:
+        "Para la misma receta, la inducción suele necesitar menos energía porque calienta directamente el recipiente y pierde menos calor en la superficie. La potencia máxima de las placas puede ser parecida; lo que cambia es la energía que llega a la comida. La comparativa de inducción y vitrocerámica explica el cálculo paso a paso.",
+    },
+  ],
+  cafetera: [
+    {
+      question: "¿Cuánto cuesta cada café hecho en casa?",
+      answer:
+        "Si tu cafetera de 1.400 W tiene la resistencia encendida dos minutos entre calentamiento y preparación, consume unos 0,047 kWh, que son algo más de 0,01 € a 0,25 €/kWh. El tiempo exacto depende del modelo y de si ya estaba caliente; un medidor de enchufe te dará la cifra de tu cafetera.",
+    },
+    {
+      question: "¿Gasta mucho dejar la cafetera encendida?",
+      answer:
+        "Mientras está encendida, la resistencia vuelve a calentarse cada cierto tiempo para mantener la temperatura, y eso consume más que la espera. Una vez apagada o en espera, el consumo es pequeño: 1 W durante todo el año son 8,76 kWh y unos 2,19 € a 0,25 €/kWh. Ajusta el apagado automático al tiempo más corto que te resulte cómodo.",
+    },
+    {
+      question: "¿Qué consume más, una cafetera de cápsulas o una de goteo?",
+      answer:
+        "Depende de cómo se use. La de cápsulas calienta una pequeña cantidad de agua a demanda. La de goteo prepara varias tazas a la vez, pero si deja la jarra sobre la placa calefactora durante una hora, esa placa sigue consumiendo. Pasar el café a un termo elimina ese gasto.",
+    },
+  ],
+  "hervidor-de-agua": [
+    {
+      question: "¿Cuánto cuesta hervir un litro de agua en un hervidor?",
+      answer:
+        "En teoría, calentar un litro de 15 a 100 °C requiere unos 0,1 kWh, que son unos 0,025 € a 0,25 €/kWh. Un hervidor de 2.000 W tardaría unos tres minutos sin pérdidas; en la práctica tarda algo más por el calor que se escapa y la cal. Hervir medio litro necesita aproximadamente la mitad.",
+    },
+    {
+      question: "¿Consume menos un hervidor de más potencia?",
+      answer:
+        "No necesariamente. Más vatios significa que termina antes, pero la energía para calentar la misma cantidad de agua es muy parecida. Un hervidor más rápido puede perder algo menos de calor por estar menos tiempo encendido, pero la cantidad de agua que calientas importa mucho más que su potencia.",
+    },
+    {
+      question: "¿Es mejor calentar el agua en hervidor, microondas o vitrocerámica?",
+      answer:
+        "El hervidor calienta el agua con una resistencia en contacto directo y se apaga solo al hervir, lo que suele limitar las pérdidas. En la vitrocerámica parte del calor se queda en la placa y el recipiente; en el microondas depende del recipiente y del tiempo programado. Si quieres comparar, mide los kWh de cada método con un medidor para la misma cantidad de agua.",
+    },
+  ],
+  plancha: [
+    {
+      question: "¿Cuánto cuesta una hora de plancha?",
+      answer:
+        "Con el ejemplo de 2.200 W y la resistencia encendida toda la hora, serían 2,2 kWh y 0,55 € a 0,25 €/kWh. Como el termostato apaga la resistencia cuando alcanza la temperatura, el consumo real suele ser menor. Un medidor de enchufe durante una sesión completa te dará la cifra exacta.",
+    },
+    {
+      question: "¿Consume más un centro de planchado que una plancha normal?",
+      answer:
+        "Suele tener más potencia total porque añade una caldera para producir vapor a presión. A cambio, puede reducir el tiempo de planchado. Para compararlos, mide la energía de una sesión con la misma cantidad de ropa en lugar de fijarte solo en los vatios.",
+    },
+    {
+      question: "¿Ahorra planchar todo de una vez?",
+      answer:
+        "Sí. Cada vez que enciendes la plancha, la resistencia trabaja a plena potencia durante el calentamiento inicial. Agrupar la ropa en una sola sesión evita repetir ese calentamiento y permite aprovechar el calor residual al final para las prendas delicadas.",
+    },
+  ],
+  "secador-de-pelo": [
+    {
+      question: "¿Cuánto cuesta usar el secador diez minutos?",
+      answer:
+        "Con el ejemplo de 2.000 W al máximo, diez minutos son 2.000 × 10 ÷ 60 = 333 Wh, es decir, 0,33 kWh y unos 0,08 € a 0,25 €/kWh. En un nivel templado o frío, el gasto es menor.",
+    },
+    {
+      question: "¿Gasta menos el secador con aire frío?",
+      answer:
+        "Sí. En aire frío solo funciona el motor y la resistencia permanece apagada, por lo que la potencia es una pequeña parte de la máxima. A cambio, el secado suele tardar más. Combinar calor al principio y aire frío al final reduce el gasto sin alargar demasiado el secado.",
+    },
+    {
+      question: "¿Un secador de más vatios consume más?",
+      answer:
+        "Consume más por minuto, pero puede secar antes. Lo que cuenta en la factura son los vatios realmente usados por los minutos de uso. Si un secador más potente te permite usar un nivel de calor más bajo o terminar antes, la diferencia puede ser pequeña.",
+    },
+  ],
+  aspiradora: [
+    {
+      question: "¿Cuánto cuesta pasar la aspiradora?",
+      answer:
+        "Con el ejemplo de 700 W durante media hora, cada sesión consume 0,35 kWh y unos 0,09 € a 0,25 €/kWh. Ocho sesiones al mes suman 2,8 kWh y 0,70 €. Es uno de los gastos más pequeños del hogar.",
+    },
+    {
+      question: "¿Cuánto gasta cargar una aspiradora escoba sin cable?",
+      answer:
+        "Multiplica la tensión de la batería por su capacidad. Una batería de 25,2 V y 2,5 Ah almacena unos 63 Wh, que son 0,063 kWh y menos de 0,02 € por carga completa a 0,25 €/kWh, más algo de pérdidas en el cargador. Consulta la tensión y los Ah en la batería o el manual de tu modelo.",
+    },
+    {
+      question: "¿Cuánto consume un robot aspirador en su base?",
+      answer:
+        "Al gasto de cada carga hay que sumar el consumo de la base mientras espera, que funciona las 24 horas. Si la base consumiera 2 W de forma continua, serían 17,5 kWh al año y unos 4,38 € a 0,25 €/kWh. Mide la base con un medidor de enchufe durante un día completo para conocer la cifra de tu modelo.",
+    },
+  ],
+  "bombilla-led": [
+    {
+      question: "¿Cuánto se ahorra al cambiar una bombilla antigua por una LED?",
+      answer:
+        "Compara dos bombillas que den los mismos lúmenes. Si una incandescente de 60 W y una LED de 8 W indican la misma luz en sus envases, la LED consume 52 W menos. Encendida cinco horas al día, ahorra 7,8 kWh al mes, unos 1,95 € a 0,25 €/kWh y unos 23,40 € al año.",
+    },
+    {
+      question: "¿Qué significa kWh/1000 h en la etiqueta de una bombilla?",
+      answer:
+        "Es la energía que consume la bombilla durante 1.000 horas encendida. Una bombilla de 8 W consume 8 kWh en 1.000 horas, por lo que la cifra coincide prácticamente con su potencia en vatios. Para calcular el coste, multiplica esos kWh por tu precio y ajusta por las horas de uso reales.",
+    },
+    {
+      question: "¿Gasta más encender y apagar una LED que dejarla encendida?",
+      answer:
+        "No. Las bombillas LED no tienen un pico de consumo al encender que justifique dejarlas encendidas en una habitación vacía. Cada minuto apagada es energía que no se consume. Lo que puede reducir su vida útil son el calor excesivo y una mala calidad de fabricación, no el uso normal del interruptor.",
+    },
+  ],
+  "consola-videojuegos": [
+    {
+      question: "¿Cuánto cuesta jugar a la consola dos horas al día?",
+      answer:
+        "Con el ejemplo de 150 W, dos horas diarias son 0,3 kWh al día, 9 kWh al mes y unos 2,25 € a 0,25 €/kWh. A esa cifra hay que sumar el televisor o el monitor. Si mides la potencia real con un medidor de enchufe durante tus juegos habituales, obtendrás un dato más preciso que el máximo de la fuente.",
+    },
+    {
+      question: "¿Cuánto gasta una consola en modo reposo?",
+      answer:
+        "Depende de las funciones activas: descargas, actualizaciones, encendido remoto o carga de mandos. Como ejemplo, 10 W durante las 22 horas restantes del día suman 6,6 kWh al mes y unos 1,65 € a 0,25 €/kWh, una cantidad comparable a la de dos horas de juego. Revisa los ajustes de energía y mide el consumo en reposo para conocer el de tu consola.",
+    },
+    {
+      question: "¿Consume más una consola que un ordenador para jugar?",
+      answer:
+        "Depende de los componentes y del juego. Un ordenador con una tarjeta gráfica potente puede superar con claridad a una consola, mientras que uno modesto o un portátil pueden consumir menos. La forma fiable de compararlos es medir los dos con el mismo juego y la misma duración.",
+    },
+  ],
 };
 
 export function getApplianceFaqs(slug: string): ApplianceFaq[] {

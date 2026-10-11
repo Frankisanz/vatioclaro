@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplianceCard } from "@/app/components/ApplianceCard";
+import { PriceSensitivityTable } from "@/app/components/PriceSensitivityTable";
 import { SourceLink } from "@/app/components/SourceLink";
 import { UniversalCalculator } from "@/app/components/UniversalCalculator";
 import { UseYourLabel } from "@/app/components/UseYourLabel";
@@ -149,9 +150,8 @@ function CalculationFormula({ item }: { item: Appliance }) {
       return (
         <>
           <p>
-            Para un programa completo usamos energía por ciclo. Cuando la
-            etiqueta muestra kWh/100 ciclos, dividimos ese dato entre 100 antes
-            de multiplicar por los ciclos del hogar.
+            {item.cycleNote ??
+              "Para un programa completo usamos energía por ciclo. Cuando la etiqueta muestra kWh/100 ciclos, dividimos ese dato entre 100 antes de multiplicar por los ciclos del hogar."}
           </p>
           <div className="formula-box">
             {item.labelKwhPer100Cycles
@@ -372,7 +372,9 @@ export default async function AppliancePage({
               />
             </div>
 
-            <UseYourLabel metric={labelMetric} />
+            {item.showLabelGuide === false ? null : (
+              <UseYourLabel metric={labelMetric} />
+            )}
 
             <h2>El cálculo, paso a paso</h2>
             <CalculationFormula item={item} />
@@ -380,6 +382,20 @@ export default async function AppliancePage({
               Esta cuenta explica el orden de magnitud y sus límites.{" "}
               {item.caveat}
             </p>
+
+            <h2>Cuánto cuesta según el precio de tu tarifa</h2>
+            <p>
+              El consumo del ejemplo no cambia; solo el precio por kWh. Busca en
+              tu factura el precio de la energía del periodo en que usas{" "}
+              {item.articleName} y lee la fila más cercana. Estos precios son
+              referencias para comparar, no tarifas concretas, y no incluyen
+              potencia, alquiler del contador ni otros conceptos fijos.
+            </p>
+            <PriceSensitivityTable
+              calculation={item.calculation}
+              label={item.articleName}
+              useLabel={item.slug === "coche-electrico" ? "Por recarga" : "Por ciclo"}
+            />
 
             <h2>Qué hace variar el consumo</h2>
             {item.factors.map((factor) => (

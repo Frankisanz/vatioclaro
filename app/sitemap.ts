@@ -57,7 +57,7 @@ const staticPages = [
     path: "/consumo",
     priority: 0.9,
     frequency: "weekly" as const,
-    updatedAt: CONTENT_UPDATED_AT,
+    updatedAt: "2026-10-11",
   },
   {
     path: "/consumo/electrodomesticos-que-mas-consumen",

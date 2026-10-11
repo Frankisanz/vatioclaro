@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   applyReduction,
+  buildPriceSensitivity,
   calculateContractedPowerReview,
   calculateElectricity,
   calculateEnergyLabel,
@@ -500,4 +501,37 @@ test("los máximos documentados siguen siendo finitos y los excesos fallan", () 
     "too_large",
     "productB.annualKwh",
   );
+});
+
+test("la tabla de precios recalcula el mismo consumo con cada precio", () => {
+  const rows = buildPriceSensitivity(
+    {
+      method: "power",
+      watts: 2000,
+      hoursPerDay: 3,
+      daysPerMonth: 30,
+      pricePerKwh: 0.25,
+    },
+    [0.1, 0.25],
+  );
+
+  assert.equal(rows.length, 2);
+  closeTo(rows[0].hour ?? Number.NaN, 0.2);
+  closeTo(rows[0].month, 18);
+  closeTo(rows[1].month, 45);
+  closeTo(rows[1].year, 540);
+  assert.equal(rows[1].pricePerKwh, 0.25);
+
+  const cycleRows = buildPriceSensitivity({
+    method: "cycle",
+    kwhPerCycle: 30,
+    cycles: 6,
+    cyclePeriod: "month",
+    pricePerKwh: 0.25,
+  });
+
+  assert.equal(cycleRows.length, 5);
+  assert.equal(cycleRows[0].hour, null);
+  closeTo(cycleRows[0].use ?? Number.NaN, 3);
+  closeTo(cycleRows[3].month, 45);
 });

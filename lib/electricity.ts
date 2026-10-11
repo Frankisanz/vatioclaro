@@ -759,3 +759,38 @@ export function formatCurrency(value: number) {
 export function formatElectricityPrice(value: number) {
   return `${formatNumber(value, { maximumFractionDigits: 4, minimumFractionDigits: 2 })} €/kWh`;
 }
+
+/**
+ * Precios de referencia para mostrar cómo cambia un mismo consumo con
+ * distintos precios por kWh. No representan tarifas concretas: sirven para
+ * que cada persona localice la fila más parecida a su factura.
+ */
+export const PRICE_SENSITIVITY_PRICES = [0.1, 0.15, 0.2, 0.25, 0.3] as const;
+
+export type PriceSensitivityRow = {
+  pricePerKwh: number;
+  hour: number | null;
+  use: number | null;
+  day: number;
+  month: number;
+  year: number;
+};
+
+export function buildPriceSensitivity(
+  input: CalculationInput,
+  prices: readonly number[] = PRICE_SENSITIVITY_PRICES,
+): PriceSensitivityRow[] {
+  return prices.map((pricePerKwh) => {
+    const result = calculateElectricity({ ...input, pricePerKwh });
+
+    if (!result.ok) {
+      throw new Error(
+        `Escenario inválido para la tabla de precios: ${result.errors
+          .map((entry) => `${entry.field}: ${entry.message}`)
+          .join(", ")}`,
+      );
+    }
+
+    return { pricePerKwh, ...result.value.cost };
+  });
+}

@@ -519,3 +519,41 @@ test("publishes an indexable contact page linked from every footer", async () =>
   assert.ok(sitemap.includes("https://vatioclaro.es/contacto</loc>"));
   assert.match(home, /href="\/contacto"/);
 });
+
+test("publishes the winter heating, mobility and small appliance guides", async () => {
+  const [sitemap, library, radiator, car] = await Promise.all([
+    readOutput("sitemap.xml"),
+    readOutput("consumo.html"),
+    readOutput("consumo/radiador-de-aceite.html"),
+    readOutput("consumo/coche-electrico.html"),
+  ]);
+
+  for (const slug of [
+    "radiador-de-aceite",
+    "emisor-termico",
+    "manta-electrica",
+    "brasero-electrico",
+    "coche-electrico",
+    "placa-de-induccion",
+    "cafetera",
+    "hervidor-de-agua",
+    "plancha",
+    "secador-de-pelo",
+    "aspiradora",
+    "bombilla-led",
+    "consola-videojuegos",
+  ]) {
+    assert.match(
+      sitemap,
+      new RegExp(`https://vatioclaro\\.es/consumo/${slug}</loc>`),
+    );
+    assert.match(library, new RegExp(`/consumo/${slug}`));
+  }
+
+  assert.match(radiator, /Cuánto cuesta según el precio de tu tarifa/);
+  assert.match(radiator, /Por hora/);
+  assert.match(radiator, /"@type":"FAQPage"/);
+  assert.match(car, /Por recarga/);
+  assert.match(car, /boe\.es\/eli\/es\/rd\/2014\/12\/12\/1053/);
+  assert.doesNotMatch(car, /MODELO \/ MODEL/);
+});

@@ -1618,7 +1618,7 @@ const applianceSeeds: ApplianceSeed[] = [
     updatedAt: "2026-10-11",
     name: "Aspiradora",
     articleName: "una aspiradora",
-    seoTitle: "Cuánto consume una aspiradora: con cable, escoba y robot",
+    seoTitle: "Cuánto consume una aspiradora: escoba y robot",
     category: "Hogar",
     calculation: {
       method: "power",

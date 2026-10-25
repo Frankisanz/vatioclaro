@@ -24,14 +24,14 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern out --ignore-pattern .wrangler --ignore-pattern .vinext"
   },
   "dependencies": {
-    "lucide-react": "1.49.0",
+    "lucide-react": "1.61.0",
     "next": "16.4.3",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.13.0",
-    "@playwright/test": "1.63.0",
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.5",
     "@types/react": "19.3.0",
@@ -40,7 +40,7 @@
     "eslint-config-next": "16.4.3",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
-    "wrangler": "4.146.0"
+    "wrangler": "4.151.3"
   },
   "overrides": {
     "brace-expansion": "5.0.9",

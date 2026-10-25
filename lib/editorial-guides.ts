@@ -729,6 +729,10 @@ export const editorialGuides: EditorialGuide[] = [
     ],
     related: [
       {
+        href: "/guias/horarios-luz-punta-llano-valle",
+        title: "Consultar los horarios punta, llano y valle",
+      },
+      {
         href: "/guias/por-que-ha-subido-factura-luz",
         title: "Por qué puede subir una factura",
       },
@@ -1480,6 +1484,7 @@ export const editorialGuides: EditorialGuide[] = [
     related: [
       { href: "/consumo/calefactor-electrico", title: "Calcular el consumo de un calefactor" },
       { href: "/consumo/aire-acondicionado", title: "Calcular una bomba de calor aire-aire" },
+      { href: "/consumo/aerotermia", title: "Calcular el consumo anual de la aerotermia" },
       { href: "/guias/potencia-contratada", title: "Revisar potencia y simultaneidad" },
     ],
   },
@@ -1602,6 +1607,165 @@ export const editorialGuides: EditorialGuide[] = [
       { href: "/guias/como-entender-factura-luz", title: "Entender cada línea de la factura" },
       { href: "/guias/por-que-ha-subido-factura-luz", title: "Saber por qué ha subido la factura" },
       { href: "/guias/consumo-fantasma", title: "Medir el consumo nocturno y en espera" },
+    ],
+  },
+  {
+    slug: "horarios-luz-punta-llano-valle",
+    indexable: true,
+    eyebrow: "Tarifa 2.0TD",
+    title: "Horarios de la luz: punta, llano y valle",
+    seoTitle: "Horarios de la luz: tramos punta, llano y valle (2.0TD)",
+    description:
+      "Consulta las horas punta, llano y valle de la tarifa 2.0TD, qué pasa los fines de semana y festivos y cuándo te conviene mover la lavadora o la recarga.",
+    publishedAt: "2026-10-25",
+    updatedAt: "2026-10-25",
+    intro:
+      "Desde el 1 de junio de 2021, todos los suministros domésticos de hasta 15 kW tienen el peaje 2.0TD, que divide el día en tres periodos de energía: punta, llano y valle. Los horarios los fija la Circular 3/2020 de la CNMC y son iguales en la península, Baleares y Canarias. Lo que cambia de un contrato a otro es cuánto se paga en cada periodo.",
+    directAnswer:
+      "De lunes a viernes laborables, la hora punta va de 10:00 a 14:00 y de 18:00 a 22:00; el llano, de 8:00 a 10:00, de 14:00 a 18:00 y de 22:00 a 24:00; y el valle, de 0:00 a 8:00. Los sábados, domingos y festivos nacionales de fecha fija son valle las 24 horas. En Ceuta y Melilla, punta y llano empiezan una hora más tarde.",
+    quickFacts: [
+      { label: "Punta", value: "10-14 h y 18-22 h, laborables" },
+      { label: "Llano", value: "8-10 h, 14-18 h y 22-24 h, laborables" },
+      { label: "Valle", value: "0-8 h y fines de semana completos" },
+      { label: "Potencia", value: "Dos periodos: punta (8-24 h) y valle" },
+    ],
+    comparison: {
+      title: "Periodos de energía de la tarifa 2.0TD",
+      description:
+        "Horario peninsular, de Baleares y de Canarias, cada territorio en su hora local. Los festivos que cuentan como valle son los nacionales de fecha fija que no pueden sustituir las comunidades autónomas.",
+      firstLabel: "Lunes a viernes laborables",
+      secondLabel: "Sábados, domingos y festivos nacionales",
+      rows: [
+        {
+          criterion: "Punta (P1)",
+          first: "De 10:00 a 14:00 y de 18:00 a 22:00",
+          second: "No hay horas punta",
+        },
+        {
+          criterion: "Llano (P2)",
+          first: "De 8:00 a 10:00, de 14:00 a 18:00 y de 22:00 a 24:00",
+          second: "No hay horas llano",
+        },
+        {
+          criterion: "Valle (P3)",
+          first: "De 0:00 a 8:00",
+          second: "Las 24 horas del día",
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "Por qué la luz tiene tres tramos horarios",
+        paragraphs: [
+          "Los peajes y cargos que pagan todos los consumidores por usar la red cuestan más cuando la red está más cargada. La CNMC fijó tres periodos para que esa parte regulada de la factura refleje el momento en que se consume: punta en las horas de más demanda, llano en las intermedias y valle por la noche y los fines de semana.",
+          "Si tienes PVPC, el precio de la energía varía además cada hora según el mercado, así que dos horas del mismo periodo pueden costar distinto. En el mercado libre, la comercializadora puede ofrecer un precio único todo el día o precios distintos por periodo; en los dos casos los peajes regulados siguen los mismos horarios.",
+        ],
+        callout:
+          "Los horarios son los mismos para todos los contratos domésticos. Lo que decide si te conviene cambiar de hora es el precio que te cobra tu contrato en cada periodo.",
+      },
+      {
+        title: "Fines de semana y festivos: todo el día es valle",
+        paragraphs: [
+          "Los sábados y domingos completos son periodo valle. También lo son los festivos nacionales de fecha fija que no pueden trasladar las comunidades autónomas, como el 1 de enero, el 1 de mayo, el 12 de octubre o el 25 de diciembre.",
+          "Los festivos autonómicos o locales y los de fecha variable, como el Viernes Santo, no cuentan: si caen entre semana se facturan con el horario de un día laborable. Si dudas de un día concreto, el calendario aplicable lo publica tu distribuidora y suele aparecer también en la aplicación de tu comercializadora.",
+        ],
+      },
+      {
+        title: "Ceuta y Melilla tienen su propio horario",
+        paragraphs: [
+          "En Ceuta y Melilla los periodos punta y llano empiezan y terminan una hora más tarde que en la península: la punta va de 11:00 a 15:00 y de 19:00 a 23:00, y el llano, de 8:00 a 11:00, de 15:00 a 19:00 y de 23:00 a 24:00. El valle sigue siendo de 0:00 a 8:00 y los fines de semana completos.",
+          "Baleares y Canarias aplican el horario peninsular, cada una en su hora local. En Canarias, las 10:00 son las 10:00 de las islas, no las de Madrid.",
+        ],
+      },
+      {
+        title: "La potencia contratada solo tiene dos periodos",
+        paragraphs: [
+          "Para la potencia, la 2.0TD distingue dos periodos: punta, de 8:00 a 24:00 en días laborables, y valle, de 0:00 a 8:00 y los fines de semana y festivos completos. Puedes contratar una potencia distinta para cada uno, por ejemplo más potencia de noche si recargas un coche eléctrico.",
+          "Ten en cuenta que el llano de energía forma parte del periodo punta de potencia. Si en tu vivienda coinciden horno, placa y lavadora a las 21:00, necesitas esa potencia en el periodo punta aunque intentes mover el resto del consumo a otras horas.",
+        ],
+        bullets: [
+          "Potencia punta (P1): de 8:00 a 24:00, de lunes a viernes laborables.",
+          "Potencia valle (P2): de 0:00 a 8:00 y sábados, domingos y festivos nacionales.",
+        ],
+      },
+      {
+        title: "Qué aparatos merece la pena mover de horario",
+        paragraphs: [
+          "Solo compensa mover lo que consume mucho y admite espera: la recarga del coche eléctrico, el termo eléctrico, la lavadora, el lavavajillas, la secadora o la carga de un acumulador. El frigorífico, el router o la iluminación funcionan cuando los necesitas y apenas cambian de periodo.",
+          "El ahorro se calcula con una resta: kWh que mueves × diferencia de precio entre los dos periodos de tu contrato. Un ciclo de lavadora de 0,5 kWh movido de punta a valle ahorra 0,5 × esa diferencia; si tu contrato tiene precio único para todo el día, el ahorro en energía es cero.",
+        ],
+        callout:
+          "Ahorro por cambiar de hora = kWh desplazados × (precio en punta − precio en valle de tu contrato).",
+      },
+      {
+        title: "Cómo comprobar en qué periodo consumes",
+        paragraphs: [
+          "La factura separa los kWh consumidos en punta, llano y valle. Si más de la mitad de tu consumo cae en punta y tu contrato cobra más en esas horas, revisa qué aparatos de los anteriores podrías programar.",
+          "Para más detalle, descarga la curva horaria de tu distribuidora o de Datadis: verás cuánto consumes cada hora de cada día. Combínala con las fichas de VatioClaro para identificar qué aparato explica cada pico antes de cambiar de hábitos o de contrato.",
+        ],
+        bullets: [
+          "kWh de cada periodo en la última factura.",
+          "Precio de cada periodo en tus condiciones del contrato.",
+          "Aparatos programables que funcionan en punta.",
+        ],
+      },
+      {
+        title: "Errores habituales con los horarios",
+        paragraphs: [
+          "El horario de verano no cambia los tramos: siempre se aplican en hora oficial local, de modo que la punta empieza a las 10:00 tanto en enero como en julio. Tampoco hay periodos distintos en verano e invierno para los contratos domésticos.",
+          "Que una hora sea valle no garantiza que sea barata en todos los contratos. Con PVPC, algunas horas de mediodía con mucha producción solar pueden tener un precio de energía bajo aunque estén en punta o llano. Compara siempre los precios de tu modalidad.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿A qué hora es más barata la luz?",
+        answer:
+          "Los peajes regulados son más bajos en el periodo valle: de 0:00 a 8:00 de lunes a viernes y todo el día los fines de semana y festivos nacionales. Con PVPC, el precio total también depende del mercado de cada hora; con un precio fijo único, todas las horas cuestan lo mismo en energía.",
+      },
+      {
+        question: "¿Los sábados son hora valle todo el día?",
+        answer:
+          "Sí. Los sábados, los domingos y los festivos nacionales de fecha fija son periodo valle durante las 24 horas, tanto para la energía como para la potencia.",
+      },
+      {
+        question: "¿Cambian los horarios en verano?",
+        answer:
+          "No. Los periodos se aplican en hora oficial local durante todo el año. El cambio de hora no desplaza la punta ni el valle.",
+      },
+      {
+        question: "¿Los festivos autonómicos cuentan como valle?",
+        answer:
+          "No. Solo cuentan los festivos nacionales de fecha fija que no pueden sustituirse. Un festivo autonómico o local que cae entre semana se factura con el horario de un día laborable.",
+      },
+      {
+        question: "¿Cuánto ahorro si pongo la lavadora por la noche?",
+        answer:
+          "Multiplica los kWh del ciclo por la diferencia entre el precio de punta y el de valle de tu contrato. Con un ciclo de 0,5 kWh y una diferencia de 0,10 €/kWh, son 0,05 € por lavado, unos 0,60 € al mes con tres lavados semanales. Si tu contrato tiene un precio único, no ahorras en energía.",
+      },
+    ],
+    sources: [
+      {
+        title: "BOE — Circular 3/2020 de la CNMC, metodología de los peajes de transporte y distribución",
+        url: "https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066",
+      },
+      {
+        title: "CNMC — La nueva factura de la luz: horarios de los periodos",
+        url: "https://blog.cnmc.es/2020/01/24/nueva-factura-luz-horarios/",
+      },
+      {
+        title: "CNMC — Nota de prensa sobre la Circular de peajes de electricidad",
+        url: "https://cnmc.es/prensa/circular-3-2020-peajes-electricidad-transporte-distribucion-20200124",
+      },
+      {
+        title: "Red Eléctrica — Precio voluntario para el pequeño consumidor",
+        url: "https://www.ree.es/es/operacion/sistema-electrico/pvpc",
+      },
+    ],
+    related: [
+      { href: "/guias/potencia-contratada", title: "Elegir la potencia de punta y de valle" },
+      { href: "/guias/como-entender-factura-luz", title: "Leer los periodos en la factura" },
+      { href: "/consumo/coche-electrico", title: "Calcular la recarga del coche eléctrico" },
     ],
   },
 ];

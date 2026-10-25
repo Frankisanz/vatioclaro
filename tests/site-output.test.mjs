@@ -576,3 +576,36 @@ test("publishes the household monthly consumption guide from the example sheets"
     /https:\/\/vatioclaro\.es\/guias\/consumo-luz-casa-al-mes<\/loc>/,
   );
 });
+
+test("answers first, feeds AI assistants and gives every page its own image", async () => {
+  const [llms, robots, sitemap, heatPump, schedule, washer] = await Promise.all([
+    readOutput("llms.txt"),
+    readOutput("robots.txt"),
+    readOutput("sitemap.xml"),
+    readOutput("consumo/aerotermia.html"),
+    readOutput("guias/horarios-luz-punta-llano-valle.html"),
+    readOutput("consumo/lavadora.html"),
+  ]);
+  const image = await readFile(
+    new URL("imagenes/consumo/aerotermia.png", appRoot),
+  );
+
+  assert.match(llms, /^# VatioClaro/);
+  assert.match(llms, /https:\/\/vatioclaro\.es\/consumo\/aerotermia\): Con 2\.000 kWh al año/);
+  assert.match(llms, /https:\/\/vatioclaro\.es\/guias\/horarios-luz-punta-llano-valle/);
+  assert.match(robots, /User-Agent: OAI-SearchBot/);
+  assert.match(robots, /User-Agent: PerplexityBot/);
+  assert.match(sitemap, /https:\/\/vatioclaro\.es\/consumo\/aerotermia<\/loc>/);
+  assert.match(sitemap, /<image:loc>https:\/\/vatioclaro\.es\/imagenes\/consumo\/aerotermia\.png<\/image:loc>/);
+  assert.match(sitemap, /https:\/\/vatioclaro\.es\/guias\/horarios-luz-punta-llano-valle<\/loc>/);
+
+  assert.match(heatPump, /RESPUESTA RÁPIDA/);
+  assert.match(heatPump, /SCOP de 4/);
+  assert.match(heatPump, /og:image" content="https:\/\/vatioclaro\.es\/imagenes\/consumo\/aerotermia\.png"/);
+  assert.match(heatPump, /"@type":"ImageObject"/);
+  assert.match(washer, /<meta name="description" content="Ejemplo: 9,6 kWh y 2,40.€ al mes/);
+  assert.match(schedule, /De 10:00 a 14:00 y de 18:00 a 22:00/);
+  assert.match(schedule, /boe\.es\/buscar\/act\.php\?id=BOE-A-2020-1066/);
+  assert.match(schedule, /src="\/imagenes\/guias\/horarios-luz-punta-llano-valle\.png"/);
+  assert.equal(image.subarray(1, 4).toString(), "PNG");
+});

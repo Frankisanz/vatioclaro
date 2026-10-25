@@ -9,6 +9,8 @@ import { UseYourLabel } from "@/app/components/UseYourLabel";
 import {
   appliances,
   getAppliance,
+  getApplianceDirectAnswer,
+  getApplianceMetaDescription,
   getApplianceUpdatedAt,
   getRelatedAppliances,
   getRelatedGuideLinks,
@@ -23,6 +25,11 @@ import {
   formatKwh,
 } from "@/lib/electricity";
 import { LEGAL_OWNER } from "@/lib/legal";
+import {
+  getApplianceImageAlt,
+  getApplianceImagePath,
+  SHARE_IMAGE_SIZE,
+} from "@/lib/share-images";
 import {
   absoluteUrl,
   CONTENT_PUBLISHED_AT,
@@ -61,7 +68,7 @@ export async function generateMetadata({
   const path = `/consumo/${item.slug}`;
   const title =
     item.seoTitle ?? `Cuánto consume ${item.articleName}: coste y calculadora`;
-  const description = `Calcula cuánto consume ${item.articleName} con el dato de su etiqueta, tus hábitos y un precio editable. Fórmula y fuentes visibles.`;
+  const description = getApplianceMetaDescription(item);
 
   return {
     title,
@@ -80,10 +87,9 @@ export async function generateMetadata({
       modifiedTime: getApplianceUpdatedAt(item),
       images: [
         {
-          url: "/images/vatioclaro-hogar-energia-og.jpg",
-          width: 1200,
-          height: 630,
-          alt: `${SITE_NAME}: ${title}`,
+          url: getApplianceImagePath(item.slug),
+          ...SHARE_IMAGE_SIZE,
+          alt: getApplianceImageAlt(item),
         },
       ],
     },
@@ -91,7 +97,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${title} | ${SITE_NAME}`,
       description,
-      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
+      images: [getApplianceImagePath(item.slug)],
     },
   };
 }
@@ -220,6 +226,9 @@ export default async function AppliancePage({
   );
   const buyingGuide = getBuyingGuideForAppliance(item.slug);
   const exampleInputs = describeInputs(item);
+  const directAnswer = getApplianceDirectAnswer(item);
+  const imagePath = getApplianceImagePath(item.slug);
+  const imageAlt = getApplianceImageAlt(item);
   const labelMetric =
     item.calculation.method === "annual"
       ? "annual"
@@ -246,12 +255,18 @@ export default async function AppliancePage({
         "@id": `${pageUrl}#article`,
         headline: `Cuánto consume ${item.articleName}`,
         description: item.shortDescription,
+        abstract: directAnswer,
         url: pageUrl,
         mainEntityOfPage: pageUrl,
         inLanguage: "es-ES",
         datePublished: CONTENT_PUBLISHED_AT,
         dateModified: lastUpdated,
-        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        image: {
+          "@type": "ImageObject",
+          url: absoluteUrl(imagePath),
+          ...SHARE_IMAGE_SIZE,
+          caption: imageAlt,
+        },
         author: { "@id": EDITORIAL_PERSON_ID },
         editor: { "@id": EDITORIAL_PERSON_ID },
         publisher: { "@id": `${absoluteUrl("/")}#organization` },
@@ -331,6 +346,11 @@ export default async function AppliancePage({
       <section className="article-body">
         <div className="article-body__inner">
           <article className="article-copy">
+            <div className="guide-answer">
+              <span>RESPUESTA RÁPIDA</span>
+              <p>{directAnswer}</p>
+            </div>
+
             <div
               className="article-key-facts"
               aria-label="Datos rápidos del ejemplo"
@@ -382,6 +402,23 @@ export default async function AppliancePage({
               Esta cuenta explica el orden de magnitud y sus límites.{" "}
               {item.caveat}
             </p>
+
+            <figure className="editorial-illustration">
+              {/* Imagen estática generada en la compilación: next/image no aporta nada aquí. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt={imageAlt}
+                decoding="async"
+                height={SHARE_IMAGE_SIZE.height}
+                loading="lazy"
+                src={imagePath}
+                width={SHARE_IMAGE_SIZE.width}
+              />
+              <figcaption>
+                Resumen visual del ejemplo. Puedes compartir o enlazar esta
+                imagen citando VatioClaro.
+              </figcaption>
+            </figure>
 
             <h2>Cuánto cuesta según el precio de tu tarifa</h2>
             <p>

@@ -14,6 +14,11 @@ import {
   isIndexableEditorialGuideHref,
 } from "@/lib/editorial-guides";
 import { LEGAL_OWNER } from "@/lib/legal";
+import {
+  getGuideImageAlt,
+  getGuideImagePath,
+  SHARE_IMAGE_SIZE,
+} from "@/lib/share-images";
 import { absoluteUrl, EDITORIAL_PERSON_ID, OPEN_GRAPH_DEFAULTS, SITE_NAME } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -57,10 +62,9 @@ export async function generateMetadata({
       modifiedTime: guide.updatedAt,
       images: [
         {
-          url: "/images/vatioclaro-hogar-energia-og.jpg",
-          width: 1200,
-          height: 630,
-          alt: `${SITE_NAME}: ${guide.title}`,
+          url: getGuideImagePath(guide.slug),
+          ...SHARE_IMAGE_SIZE,
+          alt: getGuideImageAlt(guide),
         },
       ],
     },
@@ -68,7 +72,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${guide.seoTitle} | ${SITE_NAME}`,
       description: guide.description,
-      images: ["/images/vatioclaro-hogar-energia-og.jpg"],
+      images: [getGuideImagePath(guide.slug)],
     },
   };
 }
@@ -117,7 +121,12 @@ export default async function EditorialGuidePage({
         inLanguage: "es-ES",
         datePublished: guide.publishedAt,
         dateModified: guide.updatedAt,
-        image: absoluteUrl("/images/vatioclaro-hogar-energia-og.jpg"),
+        image: {
+          "@type": "ImageObject",
+          url: absoluteUrl(getGuideImagePath(guide.slug)),
+          ...SHARE_IMAGE_SIZE,
+          caption: getGuideImageAlt(guide),
+        },
         author: { "@id": EDITORIAL_PERSON_ID },
         editor: { "@id": EDITORIAL_PERSON_ID },
         publisher: {
@@ -275,6 +284,23 @@ export default async function EditorialGuidePage({
               ) : null}
             </section>
           ))}
+
+          <figure className="editorial-illustration">
+            {/* Imagen estática generada en la compilación: next/image no aporta nada aquí. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={getGuideImageAlt(guide)}
+              decoding="async"
+              height={SHARE_IMAGE_SIZE.height}
+              loading="lazy"
+              src={getGuideImagePath(guide.slug)}
+              width={SHARE_IMAGE_SIZE.width}
+            />
+            <figcaption>
+              Resumen visual de la guía. Puedes compartir o enlazar esta imagen
+              citando VatioClaro.
+            </figcaption>
+          </figure>
 
           <section aria-labelledby="guide-faq-title" className="guide-faq">
             <div className="eyebrow">Preguntas habituales</div>

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { appliances, getApplianceUpdatedAt } from "@/lib/appliances";
 import { buyingGuides } from "@/lib/buying-guides";
 import { editorialGuides } from "@/lib/editorial-guides";
+import { getApplianceImagePath, getGuideImagePath } from "@/lib/share-images";
 import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -57,7 +58,7 @@ const staticPages = [
     path: "/consumo",
     priority: 0.9,
     frequency: "weekly" as const,
-    updatedAt: "2026-10-11",
+    updatedAt: "2026-10-25",
   },
   {
     path: "/consumo/electrodomesticos-que-mas-consumen",
@@ -69,7 +70,7 @@ const staticPages = [
     path: "/guias",
     priority: 0.8,
     frequency: "monthly" as const,
-    updatedAt: "2026-10-11",
+    updatedAt: "2026-10-25",
   },
   {
     path: "/recomendaciones",
@@ -123,12 +124,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(getApplianceUpdatedAt(item)),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+      images: [`${SITE_URL}${getApplianceImagePath(item.slug)}`],
     })),
     ...editorialGuides.filter((guide) => guide.indexable).map((guide) => ({
       url: `${SITE_URL}/guias/${guide.slug}`,
       lastModified: new Date(guide.updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.85,
+      images: [`${SITE_URL}${getGuideImagePath(guide.slug)}`],
     })),
     ...buyingGuides.filter((guide) => guide.indexable).map((guide) => ({
       url: `${SITE_URL}/recomendaciones/${guide.slug}`,

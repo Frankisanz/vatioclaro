@@ -3,6 +3,9 @@ import { CONTENT_UPDATED_AT } from "./site";
 import {
   calculateElectricity,
   EXAMPLE_ELECTRICITY_PRICE,
+  formatCurrency,
+  formatElectricityPrice,
+  formatKwh,
   type CalculationInput,
 } from "./electricity";
 import {
@@ -58,6 +61,58 @@ export function getApplianceMonthlyKwh(item: Appliance) {
   }
 
   return result.value.consumption.month;
+}
+
+function formatEs(value: number) {
+  return value.toLocaleString("es-ES", { useGrouping: "always" });
+}
+
+/**
+ * Respuesta directa con las cifras del escenario visible. Se muestra al
+ * principio de cada ficha y alimenta su meta descripción y /llms.txt, de
+ * modo que buscadores y asistentes citen el mismo cálculo que ve la persona.
+ */
+export function getApplianceDirectAnswer(item: Appliance) {
+  const input = item.calculation;
+  const result = calculateElectricity(input);
+  if (!result.ok) {
+    throw new Error(`Configuración de cálculo inválida para ${item.slug}`);
+  }
+
+  const { consumption, cost } = result.value;
+  const monthKwh = formatKwh(consumption.month, 1);
+  const totals = `unos ${formatCurrency(cost.month)} al mes y ${formatCurrency(cost.year)} al año a ${formatElectricityPrice(input.pricePerKwh)}`;
+  const closing =
+    "Es un ejemplo editable: cambia los datos por los de tu aparato y tu tarifa en la calculadora.";
+
+  switch (input.method) {
+    case "power":
+      return `Con ${formatEs(input.watts)} W, ${item.articleName} consume ${formatKwh(input.watts / 1000, 3)} por cada hora a plena potencia. Usado ${formatEs(input.hoursPerDay)} h al día durante ${formatEs(input.daysPerMonth)} días son ${monthKwh} al mes: ${totals}. ${closing}`;
+    case "cycle": {
+      const perCycle = item.labelKwhPer100Cycles
+        ? `${formatEs(item.labelKwhPer100Cycles)} kWh/100 ciclos (${formatKwh(input.kwhPerCycle, 2)} por ciclo)`
+        : `${formatKwh(input.kwhPerCycle, 2)} por ciclo`;
+      const period = input.cyclePeriod === "week" ? "a la semana" : "al mes";
+      return `Con ${perCycle} y ${formatEs(input.cycles)} ciclos ${period}, ${item.articleName} consume ${monthKwh} al mes: ${totals}. ${closing}`;
+    }
+    case "annual":
+      return `Con ${formatEs(input.annualKwh)} kWh al año, ${item.articleName} consume de media ${monthKwh} al mes: ${totals}. ${closing}`;
+    case "daily":
+      return `Con ${formatKwh(input.dailyKwh, 2)} al día, ${item.articleName} consume ${monthKwh} al mes: ${totals}. ${closing}`;
+    case "standby":
+      return `Con ${formatEs(input.deviceCount)} aparatos de ${formatEs(input.watts)} W en espera ${formatEs(input.hoursPerDay)} h al día, el consumo es de ${monthKwh} al mes: ${totals}. ${closing}`;
+  }
+}
+
+/** Meta descripción con las cifras del ejemplo, en menos de 160 caracteres. */
+export function getApplianceMetaDescription(item: Appliance) {
+  const result = calculateElectricity(item.calculation);
+  if (!result.ok) {
+    throw new Error(`Configuración de cálculo inválida para ${item.slug}`);
+  }
+
+  const { consumption, cost } = result.value;
+  return `Ejemplo: ${formatKwh(consumption.month, 1)} y ${formatCurrency(cost.month)} al mes. Calcula cuánto consume ${item.articleName} con tu etiqueta, tu uso y tu precio.`;
 }
 
 export function getApplianceUpdatedAt(item: Appliance) {
@@ -132,6 +187,7 @@ const relatedApplianceSlugs: Record<string, string[]> = {
   aspiradora: ["plancha", "secador-de-pelo", "router-wifi"],
   "bombilla-led": ["televisor", "router-wifi", "ordenador"],
   "consola-videojuegos": ["televisor", "ordenador", "router-wifi"],
+  aerotermia: ["termo-electrico", "aire-acondicionado", "radiador-de-aceite"],
 };
 
 export function getRelatedAppliances(item: Appliance, limit = 3) {
@@ -195,6 +251,7 @@ const continuousGuideSlugs = new Set([
   "congelador",
 ]);
 const highPowerGuideSlugs = new Set([
+  "aerotermia",
   "aire-acondicionado",
   "radiador-de-aceite",
   "emisor-termico",
@@ -255,6 +312,12 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
       title: "Comparar radiador eléctrico y bomba de calor",
     },
   ],
+  aerotermia: [
+    {
+      href: "/guias/radiador-electrico-vs-bomba-calor",
+      title: "Comparar bomba de calor y radiador eléctrico",
+    },
+  ],
   "emisor-termico": [
     {
       href: "/guias/radiador-electrico-vs-bomba-calor",
@@ -269,8 +332,18 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
   ],
   "coche-electrico": [
     {
+      href: "/guias/horarios-luz-punta-llano-valle",
+      title: "Consultar las horas valle para recargar",
+    },
+    {
       href: "/guias/como-entender-factura-luz",
       title: "Entender los periodos y conceptos de la factura",
+    },
+  ],
+  "termo-electrico": [
+    {
+      href: "/guias/horarios-luz-punta-llano-valle",
+      title: "Programar el termo en horas valle",
     },
   ],
 };
@@ -1750,6 +1823,53 @@ const applianceSeeds: ApplianceSeed[] = [
     sourceUrl:
       "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
   },
+  {
+    slug: "aerotermia",
+    indexable: true,
+    updatedAt: "2026-10-25",
+    name: "Aerotermia",
+    articleName: "la aerotermia",
+    seoTitle: "Cuánto consume la aerotermia al año: coste y cálculo",
+    category: "Climatización",
+    calculation: {
+      method: "annual",
+      annualKwh: 2000,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula la electricidad de una bomba de calor aire-agua dividiendo el calor que necesita tu casa entre su rendimiento estacional.",
+    intro:
+      "La aerotermia es una bomba de calor aire-agua: extrae calor del aire exterior y lo lleva al agua de los radiadores, del suelo radiante o del depósito de agua caliente. Por eso no se calcula con la potencia de la placa y unas horas, sino con el calor que necesita la vivienda en un año y el rendimiento estacional del equipo: cada kWh eléctrico entrega varios kWh de calor.",
+    range:
+      "Busca el consumo anual de energía (kWh/año) para tu zona climática en la ficha de producto o en EPREL, o divide la demanda de calor de tu casa entre el SCOP.",
+    caveat:
+      "La media mensual reparte un consumo que se concentra en invierno: en enero puede multiplicar la de mayo. El SCOP real baja con temperaturas de impulsión altas, mala instalación o un equipo sobredimensionado, y el agua caliente sanitaria suele tener un rendimiento menor que la calefacción.",
+    tips: [
+      "Trabaja con la temperatura de impulsión más baja que mantenga el confort: cada grado menos mejora el rendimiento de la bomba de calor.",
+      "Ajusta la curva de calefacción con el instalador en lugar de encender y apagar el equipo a mano según la hora.",
+      "Programa el calentamiento del depósito de agua caliente en las horas más templadas del día o en las de tu periodo más barato.",
+    ],
+    factors: [
+      {
+        title: "Demanda de calor de la vivienda",
+        text: "El aislamiento, las ventanas, la superficie, la orientación y el clima fijan cuántos kWh de calor hay que aportar. La bomba de calor no cambia esa demanda; solo la cubre con menos electricidad.",
+      },
+      {
+        title: "Rendimiento estacional (SCOP)",
+        text: "Es el calor entregado durante una temporada dividido entre la electricidad consumida. Con la misma demanda, un SCOP de 4 necesita un 25 % menos de electricidad que uno de 3, porque 3 ÷ 4 = 0,75.",
+      },
+      {
+        title: "Temperatura de impulsión y emisores",
+        text: "El suelo radiante o los radiadores de baja temperatura permiten trabajar con agua a 35-45 °C. Los radiadores convencionales que necesitan agua más caliente reducen el rendimiento y elevan el consumo.",
+      },
+    ],
+    sourceTitle: "EUR-Lex — Reglamento Delegado (UE) 811/2013, etiquetado de aparatos de calefacción",
+    sourceUrl:
+      "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32013R0811",
+    measurement:
+      "Si tu equipo ya está instalado, su pantalla o su aplicación suele registrar la electricidad consumida y el calor producido. Divide el calor entre la electricidad de toda una temporada para conocer tu rendimiento real.",
+    showLabelGuide: false,
+  },
 ];
 
 function buildAssumptionRationale(item: ApplianceSeed) {
@@ -1759,6 +1879,10 @@ function buildAssumptionRationale(item: ApplianceSeed) {
 
   if (item.slug === "congelador") {
     return "200 kWh/año es un escenario educativo redondo para mostrar la fórmula. No es un promedio oficial ni describe todos los congeladores; sustitúyelo por la etiqueta del modelo.";
+  }
+
+  if (item.slug === "aerotermia") {
+    return "2.000 kWh/año resulta de suponer que la vivienda necesita 8.000 kWh de calor al año entre calefacción y agua caliente y que el equipo rinde con un SCOP de 4 (8.000 ÷ 4). Es un escenario educativo editable, no un dato de fabricante: sustitúyelo por el consumo anual de la ficha de tu equipo o por tu propia demanda dividida entre su SCOP.";
   }
 
   if (item.slug === "coche-electrico") {

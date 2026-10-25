@@ -542,6 +542,28 @@ export const APPLIANCE_FAQS: Record<string, ApplianceFaq[]> = {
         "Depende de los componentes y del juego. Un ordenador con una tarjeta gráfica potente puede superar con claridad a una consola, mientras que uno modesto o un portátil pueden consumir menos. La forma fiable de compararlos es medir los dos con el mismo juego y la misma duración.",
     },
   ],
+  aerotermia: [
+    {
+      question: "¿Cómo calculo cuánto consumirá la aerotermia en mi casa?",
+      answer:
+        "Divide el calor que necesita tu vivienda en un año entre el rendimiento estacional del equipo. Con 8.000 kWh de calor y un SCOP de 4, son 2.000 kWh eléctricos al año; a 0,25 €/kWh, unos 500 €. La demanda de calor puede estimarla el instalador o aparece en el certificado energético; el SCOP para tu zona climática figura en la ficha de producto del equipo.",
+    },
+    {
+      question: "¿Qué diferencia hay entre COP y SCOP?",
+      answer:
+        "El COP es el rendimiento en un punto concreto de funcionamiento, con una temperatura exterior y de agua determinadas. El SCOP es el rendimiento medio de toda una temporada de calefacción para una zona climática. Para estimar el consumo anual usa el SCOP; un COP de catálogo medido con 7 °C en el exterior describe un día templado, no todo el invierno.",
+    },
+    {
+      question: "¿Cuánto ahorra la aerotermia frente a calefacción eléctrica por resistencia?",
+      answer:
+        "Para el mismo calor, una resistencia necesita aproximadamente un kWh eléctrico por cada kWh de calor, y una bomba de calor con SCOP 4, un cuarto. En el ejemplo de 8.000 kWh de calor, la resistencia consumiría unos 8.000 kWh al año y la aerotermia unos 2.000 kWh. El ahorro económico real hay que compararlo con la inversión, el mantenimiento y la vida útil del equipo.",
+    },
+    {
+      question: "¿Necesito subir la potencia contratada para instalar aerotermia?",
+      answer:
+        "Depende de la potencia eléctrica máxima del equipo, de si incorpora resistencia de apoyo y de qué otros aparatos uses a la vez. La potencia eléctrica de entrada es mucho menor que la potencia térmica que anuncia el equipo, pero la resistencia de apoyo puede sumar varios kW en los días más fríos. Revisa la ficha técnica con el instalador antes de cambiar el contrato.",
+    },
+  ],
 };
 
 export function getApplianceFaqs(slug: string): ApplianceFaq[] {

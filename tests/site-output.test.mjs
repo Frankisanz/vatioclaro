@@ -303,6 +303,10 @@ test("publishes an honest responsible-editor profile and keeps publication dates
   ]);
 
   assert.match(about, /"@type":"ProfilePage"/);
+  assert.match(
+    about,
+    /"@type":"ProfilePage"[^<]*"dateModified":"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}"/,
+  );
   assert.match(about, /Responsable editorial de VatioClaro/);
   assert.match(about, /no equivale a una acreditación como instalador/);
   assert.match(calculation, /"datePublished":"2026-07-29"/);

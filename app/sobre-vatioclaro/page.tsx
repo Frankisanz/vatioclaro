@@ -48,7 +48,8 @@ export default function AboutPage() {
     "@id": `${pageUrl}#profile-page`,
     url: pageUrl,
     name: `Sobre ${SITE_NAME} y su responsable editorial`,
-    dateModified: ABOUT_UPDATED_AT,
+    // Google exige fecha y hora ISO 8601 con zona en ProfilePage.
+    dateModified: `${ABOUT_UPDATED_AT}T00:00:00+02:00`,
     mainEntity: {
       "@type": "Person",
       "@id": EDITORIAL_PERSON_ID,

@@ -613,3 +613,41 @@ test("answers first, feeds AI assistants and gives every page its own image", as
   assert.match(schedule, /src="\/imagenes\/guias\/horarios-luz-punta-llano-valle\.png"/);
   assert.equal(image.subarray(1, 4).toString(), "PNG");
 });
+
+test("publishes the November heating and small appliance sheets, the heating comparison and the full AI text", async () => {
+  const newSheets = [
+    "toallero-electrico",
+    "acumulador-de-calor",
+    "estufa-halogena",
+    "ordenador-portatil",
+    "cargador-movil",
+    "campana-extractora",
+    "tostadora",
+    "robot-de-cocina",
+  ];
+  const [sitemap, llms, llmsFull, heating, accumulator, indexNowKey] = await Promise.all([
+    readOutput("sitemap.xml"),
+    readOutput("llms.txt"),
+    readOutput("llms-full.txt"),
+    readOutput("guias/calefaccion-electrica-que-gasta-menos.html"),
+    readOutput("consumo/acumulador-de-calor.html"),
+    readOutput("edabca3298d6a8cef4acbc2b86678cc5.txt"),
+  ]);
+
+  for (const slug of newSheets) {
+    const html = await readOutput(`consumo/${slug}.html`);
+    assert.match(html, /RESPUESTA RÁPIDA/, slug);
+    assert.match(html, /"@type":"FAQPage"/, slug);
+    assert.match(sitemap, new RegExp(`https://vatioclaro\\.es/consumo/${slug}</loc>`), slug);
+    assert.match(llmsFull, new RegExp(`URL: https://vatioclaro\\.es/consumo/${slug}\\n`), slug);
+  }
+
+  assert.match(heating, /Manta eléctrica<\/th><td>100 W<\/td>/);
+  assert.match(heating, /src="\/imagenes\/guias\/calefaccion-electrica-que-gasta-menos\.png"/);
+  assert.match(accumulator, /href="\/guias\/horarios-luz-punta-llano-valle"/);
+  assert.match(sitemap, /https:\/\/vatioclaro\.es\/guias\/calefaccion-electrica-que-gasta-menos<\/loc>/);
+  assert.match(llms, /https:\/\/vatioclaro\.es\/llms-full\.txt/);
+  assert.match(llmsFull, /^# VatioClaro: contenido completo/);
+  assert.match(llmsFull, /\| Manta eléctrica \| 100 W \| 0,03.€ \|/);
+  assert.equal(indexNowKey.trim(), "edabca3298d6a8cef4acbc2b86678cc5");
+});

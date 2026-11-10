@@ -64,6 +64,7 @@ function buildLlmsTxt() {
     "",
     "## Opcional",
     "",
+    `- [Contenido completo](${SITE_URL}/llms-full.txt): texto de todas las fichas y guías con supuestos, preguntas frecuentes y fuentes.`,
     `- [Sobre VatioClaro](${SITE_URL}/sobre-vatioclaro): responsable editorial y principios.`,
     `- [Mapa del sitio](${SITE_URL}/sitemap.xml)`,
     "",

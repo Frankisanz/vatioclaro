@@ -8,6 +8,7 @@ const comparisonSlugs = [
   "induccion-vs-vitroceramica-consumo",
   "aire-acondicionado-split-vs-portatil",
   "radiador-electrico-vs-bomba-calor",
+  "calefaccion-electrica-que-gasta-menos",
 ] as const;
 
 const comparisons = comparisonSlugs.map((slug) => {

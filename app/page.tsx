@@ -47,11 +47,11 @@ export const metadata: Metadata = {
 // agua caliente. Cambia la lista cuando cambie la estación.
 const featuredSlugs = [
   "radiador-de-aceite",
+  "acumulador-de-calor",
   "termo-electrico",
   "coche-electrico",
   "placa-de-induccion",
-  "aire-acondicionado",
-  "secadora",
+  "estufa-halogena",
 ];
 const featured = featuredSlugs
   .map((slug) => appliances.find((candidate) => candidate.slug === slug))
@@ -254,6 +254,9 @@ export default function Home() {
             <Link href="/guias/radiador-electrico-vs-bomba-calor" prefetch={false}>
               Radiador o bomba de calor <span aria-hidden="true">→</span>
             </Link>
+            <Link href="/guias/calefaccion-electrica-que-gasta-menos" prefetch={false}>
+              Qué calefacción eléctrica gasta menos <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
         <EditorialIllustration caption="Ilustración editorial de los usos de energía que conectan las guías de VatioClaro. No representa mediciones de una vivienda real." />
@@ -266,7 +269,7 @@ export default function Home() {
             <h2>Los aparatos que más dudas generan.</h2>
           </div>
           <Link className="text-link" href="/consumo" prefetch={false}>
-            Ver todas las guías →
+            Ver todos los aparatos →
           </Link>
         </div>
 

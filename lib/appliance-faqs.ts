@@ -564,6 +564,142 @@ export const APPLIANCE_FAQS: Record<string, ApplianceFaq[]> = {
         "Depende de la potencia eléctrica máxima del equipo, de si incorpora resistencia de apoyo y de qué otros aparatos uses a la vez. La potencia eléctrica de entrada es mucho menor que la potencia térmica que anuncia el equipo, pero la resistencia de apoyo puede sumar varios kW en los días más fríos. Revisa la ficha técnica con el instalador antes de cambiar el contrato.",
     },
   ],
+  "toallero-electrico": [
+    {
+      question: "¿Cuánto cuesta tener el toallero eléctrico encendido todo el día?",
+      answer:
+        "Si la resistencia estuviera activa las 24 horas, un toallero de 500 W consumiría 12 kWh al día, unos 3 € a 0,25 €/kWh. En la práctica, un modelo con termostato corta al alcanzar la temperatura y consume bastante menos. Programarlo solo para las horas de ducha, como en el ejemplo de dos horas diarias, deja el gasto en 1 kWh al día, unos 0,25 €.",
+    },
+    {
+      question: "¿Gasta más un toallero eléctrico o uno conectado a la calefacción?",
+      answer:
+        "Un toallero de agua conectado a la calefacción central no consume electricidad propia: usa el calor de la caldera o de la bomba de calor, que tiene su propio coste. Un toallero eléctrico convierte cada kWh en un kWh de calor. Los modelos mixtos llevan una resistencia para usarlos fuera de la temporada de calefacción; en ese modo calcula su consumo como el de uno eléctrico.",
+    },
+    {
+      question: "¿Sirve un toallero eléctrico para calentar el baño?",
+      answer:
+        "En un baño pequeño puede templar el ambiente, sobre todo si no se cubre con toallas. Su potencia suele ser menor que la de un calefactor, así que tarda más en calentar. Si necesitas calor rápido para la ducha, calcula también el calefactor de baño y compara las dos opciones con las horas reales de uso.",
+    },
+  ],
+  "acumulador-de-calor": [
+    {
+      question: "¿Cuánto cuesta cargar un acumulador de calor por la noche?",
+      answer:
+        "Multiplica los kWh de la carga por el precio de tu periodo valle. En el ejemplo, 2.000 W durante seis horas son 12 kWh: a 0,10 €/kWh cuestan 1,20 € por noche y a 0,25 €/kWh, 3 €. Por eso el acumulador solo tiene sentido económico si tu contrato abarata de verdad la energía en las horas de carga.",
+    },
+    {
+      question: "¿Un acumulador gasta menos que un radiador eléctrico?",
+      answer:
+        "No en energía: los dos son aparatos de resistencia y entregan un kWh de calor por cada kWh consumido. La diferencia está en el precio. Si cargas en valle a un precio más bajo que el de las horas en que usarías el radiador, el mismo calor te cuesta menos. Si tienes un precio único todo el día, el acumulador pierde esa ventaja y además libera calor aunque no estés en casa.",
+    },
+    {
+      question: "¿Qué diferencia hay entre un acumulador estático y uno dinámico?",
+      answer:
+        "El estático libera el calor de forma continua a través de su carcasa, así que parte se pierde en horas en las que quizá no lo necesitas. El dinámico tiene mejor aislamiento y un ventilador que expulsa el calor cuando lo pides con el termostato. Para el mismo calor útil, el dinámico permite aprovechar mejor la carga y ajustarla al día siguiente.",
+    },
+  ],
+  "estufa-halogena": [
+    {
+      question: "¿Cuánto cuesta una hora de estufa halógena?",
+      answer:
+        "Depende de los tubos encendidos. Con el ejemplo de 1.200 W, una hora consume 1,2 kWh y cuesta unos 0,30 € a 0,25 €/kWh. Si cada tubo fuera de 400 W y usaras solo uno, la hora costaría unos 0,10 €. Mira la potencia de cada nivel en el manual de tu estufa.",
+    },
+    {
+      question: "¿Gasta menos una estufa halógena que un radiador de aceite?",
+      answer:
+        "Por cada kWh, no: los dos convierten la electricidad en calor sin multiplicarla. La estufa radiante calienta antes a la persona que tiene delante, así que puede bastar con menos minutos si solo necesitas calor puntual. El radiador calienta el aire y conserva el calor, lo que resulta más cómodo para mantener una habitación durante horas. Compara por el tiempo que necesitas cada uno para estar a gusto.",
+    },
+    {
+      question: "¿Qué diferencia hay entre halógena, cuarzo y carbono?",
+      answer:
+        "Las tres calientan por radiación con resistencias dentro de tubos y su consumo depende de la potencia de cada tubo y del tiempo de uso. Cambian el material del tubo, el color de la luz y cómo se reparte el calor. A igual potencia y mismas horas, consumen los mismos kWh.",
+    },
+  ],
+  "ordenador-portatil": [
+    {
+      question: "¿Cuánto cuesta tener el portátil encendido una jornada de trabajo?",
+      answer:
+        "Con el ejemplo de 45 W de media durante ocho horas, la jornada consume 0,36 kWh y cuesta unos 0,09 € a 0,25 €/kWh. En 22 días laborables son 7,92 kWh, unos 2 € al mes. Si añades un monitor externo, suma su potencia por las mismas horas.",
+    },
+    {
+      question: "Mi cargador es de 65 W, ¿el portátil consume siempre eso?",
+      answer:
+        "No. Los 65 W son el máximo que el cargador puede entregar, por ejemplo con la batería cargándose mientras el procesador trabaja a fondo. En tareas de oficina con la batería llena, el portátil toma solo una parte de ese valor. Un medidor de enchufe te dará la cifra real de tu uso.",
+    },
+    {
+      question: "¿Cuánto ahorro trabajando con portátil en lugar de con sobremesa?",
+      answer:
+        "Con los ejemplos editables de VatioClaro, un sobremesa de 250 W durante ocho horas consume 2 kWh al día y un portátil de 45 W, 0,36 kWh: unos 0,41 € menos al día a 0,25 €/kWh. El resultado depende mucho de tu equipo concreto y de si usas un monitor externo con el portátil; mide los dos con la misma tarea antes de decidir.",
+    },
+  ],
+  "cargador-movil": [
+    {
+      question: "¿Cuánto cuesta cargar el móvil una vez?",
+      answer:
+        "Con el ejemplo de 0,02 kWh por carga completa medida en el enchufe, cada carga cuesta medio céntimo a 0,25 €/kWh. Cargándolo todos los días son unos 7,3 kWh y menos de 2 € al año.",
+    },
+    {
+      question: "¿Gasta luz el cargador enchufado sin el móvil?",
+      answer:
+        "Sí, pero muy poco. Como ejemplo, un cargador que consumiera 0,1 W sin carga durante todo el año sumaría unos 0,88 kWh, alrededor de 0,22 € a 0,25 €/kWh. Si un cargador se calienta sin nada conectado, su consumo en vacío es mayor y conviene desenchufarlo o sustituirlo.",
+    },
+    {
+      question: "¿La carga rápida gasta más electricidad?",
+      answer:
+        "La energía que entra en la batería es la misma, porque depende de su capacidad. La carga rápida puede tener algo más de pérdidas en forma de calor, pero la diferencia en euros es de fracciones de céntimo por carga. Elige la carga por comodidad y por el cuidado de la batería, no por el coste.",
+    },
+  ],
+  "campana-extractora": [
+    {
+      question: "¿Cuánto cuesta una hora de campana extractora?",
+      answer:
+        "Con el ejemplo de 150 W entre motor y luz, una hora consume 0,15 kWh y cuesta unos 4 céntimos a 0,25 €/kWh. Usada una hora al día son 4,5 kWh y algo más de 1 € al mes. A velocidad máxima o intensiva el consumo de cada hora es mayor.",
+    },
+    {
+      question: "¿Cómo leo la etiqueta energética de una campana?",
+      answer:
+        "La etiqueta de las campanas domésticas indica una clase de eficiencia y un consumo anual en kWh calculado con un escenario de uso normalizado. Sirve para comparar modelos entre sí. Para estimar tu gasto, mejor usa la potencia del motor en la velocidad que sueles usar y tus minutos reales de cocina.",
+    },
+    {
+      question: "¿La campana hace perder calor de la casa en invierno?",
+      answer:
+        "Una campana con salida al exterior expulsa aire de la cocina, y ese aire se sustituye por aire de fuera que hay que calentar. Por eso conviene usarla mientras cocinas y apagarla después, en lugar de dejarla funcionando sin vapor. Una campana de recirculación filtra el aire y lo devuelve a la cocina, aunque no elimina la humedad.",
+    },
+  ],
+  tostadora: [
+    {
+      question: "¿Cuánto cuesta hacer una tostada?",
+      answer:
+        "Con el ejemplo de 900 W durante seis minutos, cada uso consume 0,09 kWh y cuesta unos 2 céntimos a 0,25 €/kWh. Si la tostadora tiene dos ranuras, ese coste se reparte entre las rebanadas que tuestes a la vez.",
+    },
+    {
+      question: "¿Gasta más tostar pan en la tostadora o en el horno?",
+      answer:
+        "Para pocas rebanadas, la tostadora suele gastar menos porque calienta un espacio pequeño junto al pan. El horno tiene que precalentar toda la cavidad antes de empezar a tostar. Si vas a tostar muchas rebanadas a la vez, compara los dos con sus potencias y sus minutos reales.",
+    },
+    {
+      question: "¿Consume la tostadora si la dejo enchufada?",
+      answer:
+        "Una tostadora mecánica sin pantalla ni electrónica no consume nada cuando la palanca está arriba. Los modelos con pantalla digital o luces pueden tener un pequeño consumo en espera; mídelo con un medidor de enchufe si tienes dudas.",
+    },
+  ],
+  "robot-de-cocina": [
+    {
+      question: "¿Cuánto cuesta cocinar una receta con robot de cocina?",
+      answer:
+        "Con el ejemplo de 800 W de media durante media hora, la receta consume 0,4 kWh y cuesta unos 0,10 € a 0,25 €/kWh. Cocinando así todos los días son 12 kWh y unos 3 € al mes. Una receta corta sin calor cuesta mucho menos.",
+    },
+    {
+      question: "¿Por qué no uso la potencia máxima de la ficha?",
+      answer:
+        "Porque la resistencia no está encendida todo el tiempo: el robot la regula para mantener la temperatura y el motor cambia de velocidad. Multiplicar la potencia máxima por los minutos de la receta sobrestima el consumo. Mide una receta completa con un medidor de enchufe y divide los kWh entre las horas para obtener tu potencia media.",
+    },
+    {
+      question: "¿Gasta menos el robot que la placa de inducción?",
+      answer:
+        "Depende de la receta. Para calentar la misma cantidad de comida a la misma temperatura, la energía necesaria es parecida y la diferencia está en las pérdidas y en el tiempo. La comparación justa es medir la misma receta en los dos aparatos; la calculadora de comparación te deja introducir los dos resultados.",
+    },
+  ],
 };
 
 export function getApplianceFaqs(slug: string): ApplianceFaq[] {

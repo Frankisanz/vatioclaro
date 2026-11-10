@@ -155,7 +155,7 @@ const relatedApplianceSlugs: Record<string, string[]> = {
   "termo-electrico": ["calefactor-electrico", "lavavajillas", "lavadora"],
   frigorifico: ["congelador", "router-wifi", "aire-acondicionado"],
   congelador: ["frigorifico", "router-wifi", "aire-acondicionado"],
-  ordenador: ["router-wifi", "televisor", "frigorifico"],
+  ordenador: ["ordenador-portatil", "router-wifi", "televisor"],
   televisor: ["ordenador", "router-wifi", "frigorifico"],
   "router-wifi": ["ordenador", "televisor", "frigorifico"],
   "radiador-de-aceite": [
@@ -188,6 +188,14 @@ const relatedApplianceSlugs: Record<string, string[]> = {
   "bombilla-led": ["televisor", "router-wifi", "ordenador"],
   "consola-videojuegos": ["televisor", "ordenador", "router-wifi"],
   aerotermia: ["termo-electrico", "aire-acondicionado", "radiador-de-aceite"],
+  "toallero-electrico": ["calefactor-electrico", "estufa-halogena", "termo-electrico"],
+  "acumulador-de-calor": ["radiador-de-aceite", "emisor-termico", "aerotermia"],
+  "estufa-halogena": ["brasero-electrico", "radiador-de-aceite", "calefactor-electrico"],
+  "ordenador-portatil": ["ordenador", "router-wifi", "cargador-movil"],
+  "cargador-movil": ["ordenador-portatil", "router-wifi", "bombilla-led"],
+  "campana-extractora": ["placa-de-induccion", "horno", "vitroceramica"],
+  tostadora: ["horno", "microondas", "cafetera"],
+  "robot-de-cocina": ["placa-de-induccion", "vitroceramica", "horno"],
 };
 
 export function getRelatedAppliances(item: Appliance, limit = 3) {
@@ -252,6 +260,7 @@ const continuousGuideSlugs = new Set([
 ]);
 const highPowerGuideSlugs = new Set([
   "aerotermia",
+  "acumulador-de-calor",
   "aire-acondicionado",
   "radiador-de-aceite",
   "emisor-termico",
@@ -266,6 +275,30 @@ const highPowerGuideSlugs = new Set([
 ]);
 
 const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
+  "manta-electrica": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
+  ],
+  "brasero-electrico": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
+  ],
+  "estufa-halogena": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
+  ],
+  "toallero-electrico": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
+  ],
   vitroceramica: [
     {
       href: "/guias/induccion-vs-vitroceramica-consumo",
@@ -302,11 +335,19 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
   ],
   "calefactor-electrico": [
     {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
+    {
       href: "/guias/radiador-electrico-vs-bomba-calor",
       title: "Comparar resistencia eléctrica y bomba de calor",
     },
   ],
   "radiador-de-aceite": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
     {
       href: "/guias/radiador-electrico-vs-bomba-calor",
       title: "Comparar radiador eléctrico y bomba de calor",
@@ -319,6 +360,10 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
     },
   ],
   "emisor-termico": [
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Ver qué calefacción eléctrica gasta menos",
+    },
     {
       href: "/guias/radiador-electrico-vs-bomba-calor",
       title: "Comparar emisores de resistencia y bomba de calor",
@@ -338,6 +383,16 @@ const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
     {
       href: "/guias/como-entender-factura-luz",
       title: "Entender los periodos y conceptos de la factura",
+    },
+  ],
+  "acumulador-de-calor": [
+    {
+      href: "/guias/horarios-luz-punta-llano-valle",
+      title: "Consultar las horas valle para cargar el acumulador",
+    },
+    {
+      href: "/guias/calefaccion-electrica-que-gasta-menos",
+      title: "Comparar todas las calefacciones eléctricas",
     },
   ],
   "termo-electrico": [
@@ -1869,6 +1924,382 @@ const applianceSeeds: ApplianceSeed[] = [
     measurement:
       "Si tu equipo ya está instalado, su pantalla o su aplicación suele registrar la electricidad consumida y el calor producido. Divide el calor entre la electricidad de toda una temporada para conocer tu rendimiento real.",
     showLabelGuide: false,
+  },
+  {
+    slug: "toallero-electrico",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Toallero eléctrico",
+    articleName: "un toallero eléctrico",
+    seoTitle: "Cuánto consume un toallero eléctrico: coste al mes",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 500,
+      hoursPerDay: 2,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta secar toallas y templar el baño con las horas reales de resistencia encendida.",
+    intro:
+      "Un toallero o radiador toallero eléctrico es un emisor de resistencia: calienta las toallas y, de paso, el baño. Cada kWh que consume se convierte en un kWh de calor, así que su gasto depende de su potencia y de cuántas horas permanece encendida la resistencia, no de las horas que está enchufado.",
+    range:
+      "Consulta la potencia en la placa de características o el manual. Los modelos con termostato o programador solo consumen mientras la resistencia está activa.",
+    caveat:
+      "El ejemplo educativo editable supone 500 W durante dos horas al día con la resistencia encendida todo ese tiempo. Si lo dejas conectado muchas horas con termostato, mide su consumo real con un medidor de enchufe o en el circuito.",
+    tips: [
+      "Prográmalo para la hora de la ducha en lugar de dejarlo encendido todo el día.",
+      "Usa el termostato o el modo de baja potencia si solo quieres secar las toallas.",
+      "No lo cubras por completo con toallas gruesas: tarda más en calentar y el baño recibe menos calor.",
+    ],
+    factors: [
+      {
+        title: "Horas de resistencia activa",
+        text: "Un toallero conectado diez horas con termostato puede consumir menos que otro encendido dos horas sin regulación. Lo que se paga es el tiempo de resistencia, no el tiempo enchufado.",
+      },
+      {
+        title: "Potencia del modelo",
+        text: "Pasar de 300 a 750 W multiplica por 2,5 la energía de cada hora a plena potencia. Para un baño pequeño, la potencia alta acorta el calentamiento, pero no cambia el kWh por cada kWh de calor.",
+      },
+      {
+        title: "Tamaño y ventilación del baño",
+        text: "Un extractor encendido, una ventana abierta o un baño grande alargan el tiempo que la resistencia necesita para mantener la temperatura.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "acumulador-de-calor",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Acumulador de calor",
+    articleName: "un acumulador de calor",
+    seoTitle: "Cuánto consume un acumulador de calor y en qué horario",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 2000,
+      hoursPerDay: 6,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula la carga nocturna en kWh y compara su coste con el precio de tu periodo valle.",
+    intro:
+      "Un acumulador de calor carga ladrillos refractarios con una resistencia eléctrica, normalmente de madrugada, y libera ese calor durante el día. No consume menos energía que otro aparato de resistencia para el mismo calor: su ventaja es que esa energía se puede comprar en el periodo valle, si tu contrato tiene precios distintos por horas.",
+    range:
+      "Consulta la potencia de carga y la capacidad de acumulación en la placa de características o el manual. Los modelos dinámicos regulan la descarga con un ventilador; los estáticos la dejan salir de forma más continua.",
+    caveat:
+      "El ejemplo educativo editable supone 2.000 W cargando seis horas cada noche, 12 kWh al día. Es una carga completa en invierno: en días templados el regulador de carga debería cortar antes. Introduce el precio de tu periodo valle, no el precio medio de la factura.",
+    tips: [
+      "Ajusta el nivel de carga a la previsión del día siguiente en lugar de cargarlo siempre al máximo.",
+      "Comprueba que la carga ocurre dentro de tu periodo más barato; en la tarifa 2.0TD el valle de los laborables va de 0:00 a 8:00.",
+      "Cierra la trampilla o reduce la descarga en las horas en las que no hay nadie en casa.",
+    ],
+    factors: [
+      {
+        title: "Precio del periodo de carga",
+        text: "El mismo kWh cuesta distinto en punta, llano y valle si tu contrato tiene discriminación horaria. Con un precio único, el acumulador no ahorra frente a un radiador de la misma potencia que se usa solo cuando hace falta.",
+      },
+      {
+        title: "Nivel de carga",
+        text: "Cargar 12 kWh cuando el día solo necesita 6 kWh de calor significa pagar calor que se pierde por la tarde o por la noche con la casa vacía.",
+      },
+      {
+        title: "Potencia contratada",
+        text: "Varios acumuladores cargando a la vez suman su potencia. La 2.0TD permite contratar una potencia distinta en el periodo valle, lo que conviene revisar antes de instalar varios equipos.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "estufa-halogena",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Estufa halógena o de cuarzo",
+    articleName: "una estufa halógena",
+    seoTitle: "Cuánto consume una estufa halógena o de cuarzo",
+    category: "Climatización",
+    calculation: {
+      method: "power",
+      watts: 1200,
+      hoursPerDay: 3,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste por hora de las estufas radiantes de halógeno, cuarzo o carbono según los tubos que enciendes.",
+    intro:
+      "Las estufas halógenas, de cuarzo o de carbono calientan por radiación: sus tubos emiten calor que notas en la piel nada más encenderlas, aunque el aire de la habitación siga frío. Por eso sirven para calentar a una persona sentada cerca. Son aparatos de resistencia, así que cada kWh consumido es un kWh de calor, sin multiplicar la energía.",
+    range:
+      "Consulta la potencia de cada nivel en la placa o el manual: lo habitual es que cada tubo tenga su propia potencia y que el selector encienda uno, dos o tres.",
+    caveat:
+      "El ejemplo educativo editable supone 1.200 W durante tres horas al día. Si usas solo un tubo, divide la potencia según el nivel que indique el fabricante.",
+    tips: [
+      "Úsala para calentarte a ti, no a toda la habitación: dirígela hacia donde estás sentado y apágala al levantarte.",
+      "Empieza con un tubo y sube de nivel solo si no basta.",
+      "Respeta la distancia a cortinas, sofás y ropa que indique el manual y no la uses para secar prendas.",
+    ],
+    factors: [
+      {
+        title: "Número de tubos encendidos",
+        text: "Cada tubo añade su potencia. Pasar de uno a tres tubos puede triplicar el consumo de cada hora.",
+      },
+      {
+        title: "Distancia y orientación",
+        text: "El calor radiante se nota mucho menos al alejarse. Si te sientas lejos, tenderás a subir de nivel y a pagar más por el mismo confort.",
+      },
+      {
+        title: "Uso puntual o continuo",
+        text: "Para unos minutos en el baño o junto a la mesa, su respuesta inmediata es útil. Para mantener caliente una estancia durante horas, un emisor con termostato reparte mejor el calor.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Calefactores locales",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+  },
+  {
+    slug: "ordenador-portatil",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Ordenador portátil",
+    articleName: "un ordenador portátil",
+    seoTitle: "Cuánto consume un portátil: coste al día y al mes",
+    category: "Tecnología",
+    calculation: {
+      method: "power",
+      watts: 45,
+      hoursPerDay: 8,
+      daysPerMonth: 22,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de una jornada de trabajo con el portátil y por qué el cargador no indica su consumo real.",
+    intro:
+      "La potencia que figura en el cargador de un portátil, por ejemplo 65 W o 100 W, es el máximo que puede entregar, no lo que consume el equipo. Con tareas de oficina el portátil suele tomar bastante menos; con la batería cargándose, juegos o vídeo la demanda sube hacia ese máximo.",
+    range:
+      "Consulta la potencia del cargador en su etiqueta como límite superior y mide el consumo real con un medidor de enchufe durante tu jornada habitual.",
+    caveat:
+      "El ejemplo educativo editable supone 45 W de media durante ocho horas en 22 días laborables. No incluye un monitor externo, que puedes calcular aparte con su potencia.",
+    tips: [
+      "Activa la suspensión automática y baja el brillo de la pantalla: es de lo que más consume en uso ligero.",
+      "Si trabajas con monitor externo, súmalo al cálculo: puede consumir tanto como el propio portátil.",
+      "No hace falta desenchufar el cargador en cada pausa por ahorro: su consumo sin carga es pequeño, aunque conviene desconectarlo si no lo vas a usar en días.",
+    ],
+    factors: [
+      {
+        title: "Tipo de tarea",
+        text: "Escribir, navegar o hacer videollamadas consume mucho menos que editar vídeo o jugar, que ponen a trabajar el procesador y la gráfica.",
+      },
+      {
+        title: "Carga de la batería",
+        text: "Mientras la batería se llena, el cargador entrega la energía del uso más la de la carga. Una medición durante la carga no representa una jornada completa.",
+      },
+      {
+        title: "Pantalla y periféricos",
+        text: "El brillo, un monitor externo, discos o dispositivos USB conectados añaden consumo al total del puesto de trabajo.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "cargador-movil",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Cargador de móvil",
+    articleName: "un cargador de móvil",
+    seoTitle: "Cuánto cuesta cargar el móvil: consumo por carga y al año",
+    category: "Tecnología",
+    calculation: {
+      method: "cycle",
+      kwhPerCycle: 0.02,
+      cycles: 30,
+      cyclePeriod: "month",
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta cada carga completa del móvil y cuánto gasta el cargador olvidado en el enchufe.",
+    intro:
+      "Cargar el móvil es uno de los gastos más pequeños de una casa. La energía de una carga completa depende de la capacidad de la batería en vatios-hora y de las pérdidas del cargador; la potencia de carga rápida, 20, 30 o 65 W, cambia cuánto tarda, pero no cuánta energía cabe en la batería.",
+    range:
+      "La capacidad de la batería suele figurar en Wh o en mAh en la ficha técnica. Para pasar de mAh a Wh, multiplica por la tensión nominal de la batería y divide entre 1.000.",
+    caveat:
+      "El ejemplo educativo editable supone 0,02 kWh por carga completa medida en el enchufe, pérdidas incluidas, y una carga al día. Una tableta o un móvil con batería grande pueden necesitar más energía por carga.",
+    tips: [
+      "No te preocupes por el coste de cargar el móvil: céntrate en los aparatos de calefacción, agua caliente y cocina.",
+      "Desconecta los cargadores que no uses si son antiguos o se calientan sin nada conectado.",
+      "Usa el cargador original o uno certificado: las pérdidas y la seguridad dependen de su calidad.",
+    ],
+    factors: [
+      {
+        title: "Capacidad de la batería",
+        text: "Una batería de 5.000 mAh a 3,85 V guarda unos 19 Wh. Más capacidad significa más energía por carga completa, aunque el coste sigue siendo de céntimos.",
+      },
+      {
+        title: "Pérdidas del cargador",
+        text: "Parte de la energía se pierde en forma de calor en el cargador y en la batería. Por eso la energía medida en el enchufe es algo mayor que la capacidad de la batería.",
+      },
+      {
+        title: "Cargador sin móvil",
+        text: "Un cargador enchufado sin nada conectado consume muy poco. El reglamento europeo de modos de bajo consumo limita la espera de muchos aparatos, pero conviene medir los cargadores antiguos.",
+      },
+    ],
+    sourceTitle: "EUR-Lex — Reglamento (UE) 2023/826 sobre modos de bajo consumo",
+    sourceUrl:
+      "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0826",
+    measurement:
+      "Conecta el cargador a un medidor de enchufe con el móvil casi descargado y anota los kWh hasta que llegue al 100 %.",
+    cycleNote:
+      "Aquí un ciclo es una carga completa del móvil, de casi vacío a lleno, medida en el enchufe. Si cargas a ratos, suma las cargas parciales como fracciones de una carga completa.",
+    showLabelGuide: false,
+  },
+  {
+    slug: "campana-extractora",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Campana extractora",
+    articleName: "una campana extractora",
+    seoTitle: "Cuánto consume una campana extractora: coste y etiqueta",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 150,
+      hoursPerDay: 1,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste del motor y la luz de la campana según la velocidad que usas mientras cocinas.",
+    intro:
+      "Una campana extractora consume electricidad en el motor del ventilador y en la iluminación. La velocidad elegida cambia mucho la potencia: la máxima o el modo intensivo mueven más aire, hacen más ruido y gastan más que la velocidad baja. Las campanas domésticas tienen etiqueta energética europea con su consumo anual estimado.",
+    range:
+      "Consulta la potencia del motor y de la iluminación en la placa o el manual, y el consumo anual en kWh de la etiqueta energética.",
+    caveat:
+      "El ejemplo educativo editable supone 150 W entre motor y luz durante una hora al día. La etiqueta usa un escenario normalizado de uso que no tiene por qué coincidir con el tuyo.",
+    tips: [
+      "Enciéndela al empezar a cocinar en velocidad baja y sube solo cuando haya mucho vapor o humo.",
+      "Limpia o cambia los filtros según el manual: un filtro saturado reduce la extracción y te obliga a usar más velocidad.",
+      "Apágala unos minutos después de terminar en lugar de dejarla funcionando sin vapor.",
+    ],
+    factors: [
+      {
+        title: "Velocidad del motor",
+        text: "La velocidad máxima o intensiva puede consumir varias veces más que la mínima, además de hacer más ruido.",
+      },
+      {
+        title: "Iluminación",
+        text: "Las campanas con LED consumen poco en luz; las que tienen halógenos antiguos añaden bastantes vatios mientras están encendidas.",
+      },
+      {
+        title: "Estado de los filtros",
+        text: "Los filtros sucios aumentan la resistencia al paso del aire y empeoran la extracción a cualquier velocidad.",
+      },
+    ],
+    sourceTitle: "Comisión Europea — Hornos domésticos y etiqueta energética",
+    sourceUrl:
+      "https://energy-efficient-products.ec.europa.eu/product-list/domestic-ovens_en",
+  },
+  {
+    slug: "tostadora",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Tostadora",
+    articleName: "una tostadora",
+    seoTitle: "Cuánto consume una tostadora: coste por desayuno",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 900,
+      hoursPerDay: 0.1,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta cada tostada: mucha potencia durante muy pocos minutos.",
+    intro:
+      "Una tostadora tiene una potencia alta, pero funciona muy poco tiempo. Por eso su consumo mensual es pequeño aunque los vatios de la etiqueta impresionen. Lo que más cambia el gasto son los minutos por uso y si tuestas una o dos rebanadas cada vez.",
+    range:
+      "Consulta la potencia en la base del aparato o en el manual. El selector de tostado cambia el tiempo de funcionamiento, no la potencia.",
+    caveat:
+      "El ejemplo educativo editable supone 900 W durante seis minutos al día (0,1 h). Si usas un horno o una sandwichera para tostar, calcula ese aparato con su potencia y su tiempo.",
+    tips: [
+      "Tuesta todas las rebanadas a la vez si la tostadora tiene dos ranuras.",
+      "Limpia la bandeja de migas: además de evitar humo, ayuda a que el tostado sea uniforme.",
+      "Para una o dos tostadas, la tostadora suele gastar menos que encender el horno, que tiene que calentar toda la cavidad.",
+    ],
+    factors: [
+      {
+        title: "Minutos por uso",
+        text: "Pasar de tres a seis minutos duplica la energía. El nivel de tostado alarga el tiempo de la resistencia encendida.",
+      },
+      {
+        title: "Usos al día",
+        text: "Varias personas que desayunan por turnos multiplican los ciclos aunque cada uno sea corto.",
+      },
+      {
+        title: "Tostadora o horno",
+        text: "El horno calienta un volumen mucho mayor antes de empezar a tostar. Para pocas rebanadas, el aparato pequeño suele aprovechar mejor la energía.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "robot-de-cocina",
+    indexable: true,
+    updatedAt: "2026-11-10",
+    name: "Robot de cocina",
+    articleName: "un robot de cocina",
+    seoTitle: "Cuánto consume un robot de cocina: coste por receta",
+    category: "Cocina",
+    calculation: {
+      method: "power",
+      watts: 800,
+      hoursPerDay: 0.5,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula el coste de cada receta con la potencia media real, no con el máximo de la ficha técnica.",
+    intro:
+      "Un robot de cocina con calentamiento combina un motor y una resistencia. La ficha técnica indica la potencia máxima de ambos, pero durante una receta el termostato enciende y apaga la resistencia y el motor cambia de velocidad. La potencia media real suele ser bastante menor que la máxima.",
+    range:
+      "Consulta la potencia del motor y de la resistencia en la placa o el manual. Para conocer la potencia media de tus recetas, mide una receta completa con un medidor de enchufe.",
+    caveat:
+      "El ejemplo educativo editable supone 800 W de media durante media hora al día. Las recetas que solo pican o amasan consumen mucho menos; los guisos largos con temperatura alta, más.",
+    tips: [
+      "Mide dos o tres recetas habituales con un medidor de enchufe para conocer tu potencia media real.",
+      "Aprovecha el calor residual: muchas recetas permiten apagar unos minutos antes y dejar reposar con la tapa puesta.",
+      "Compara por receta, no por hora, cuando lo enfrentes a la placa o al horno.",
+    ],
+    factors: [
+      {
+        title: "Temperatura y duración de la receta",
+        text: "Calentar a 100 °C o más durante mucho tiempo mantiene la resistencia activa. Picar o mezclar sin calor apenas suma energía.",
+      },
+      {
+        title: "Cantidad de comida",
+        text: "Calentar más litros de agua o de caldo exige más energía, sea cual sea el aparato.",
+      },
+      {
+        title: "Velocidad del motor",
+        text: "El amasado o la velocidad turbo aumentan el consumo del motor durante unos minutos.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
   },
 ];
 

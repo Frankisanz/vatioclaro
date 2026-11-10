@@ -104,7 +104,155 @@ function costText(value: number) {
   return formatCurrency(value * EXAMPLE_ELECTRICITY_PRICE);
 }
 
+/**
+ * Potencias y coste por hora de los ejemplos de calefacción, leídos de las
+ * fichas para que la comparativa nunca diverja de ellas.
+ */
+const heaterComparisonSlugs = [
+  "manta-electrica",
+  "toallero-electrico",
+  "brasero-electrico",
+  "emisor-termico",
+  "estufa-halogena",
+  "calefactor-electrico",
+  "radiador-de-aceite",
+  "acumulador-de-calor",
+];
+
+function heaterWattsValue(slug: string) {
+  const item = getAppliance(slug);
+  if (!item || item.calculation.method !== "power") {
+    throw new Error(`Ficha de calefacción sin potencia: ${slug}`);
+  }
+  return item.calculation.watts;
+}
+
+function heaterWatts(slug: string) {
+  return heaterWattsValue(slug).toLocaleString("es-ES", { useGrouping: "always" });
+}
+
+function heaterHourCost(slug: string) {
+  return formatCurrency((heaterWattsValue(slug) / 1000) * EXAMPLE_ELECTRICITY_PRICE);
+}
+
 export const editorialGuides: EditorialGuide[] = [
+  {
+    slug: "calefaccion-electrica-que-gasta-menos",
+    indexable: true,
+    eyebrow: "Comparativa de calefacción",
+    title: "¿Qué calefacción eléctrica gasta menos?",
+    seoTitle: "Qué calefacción eléctrica gasta menos: coste por hora",
+    description:
+      "Compara el coste por hora de radiador, emisor, calefactor, estufa halógena, brasero, manta, acumulador y bomba de calor con las fórmulas a la vista.",
+    publishedAt: "2026-11-10",
+    updatedAt: "2026-11-10",
+    intro:
+      "Radiadores de aceite, emisores térmicos, calefactores, estufas halógenas, toalleros y acumuladores tienen algo en común: calientan con una resistencia, y una resistencia convierte cada kWh de electricidad en un kWh de calor. Ninguno es «de bajo consumo» por su tecnología. Lo que cambia la factura es la potencia, las horas de uso, si calientas toda la habitación o solo a la persona, el precio de la hora en que consumes y si usas una bomba de calor, que es la única que entrega más calor que la electricidad que gasta.",
+    directAnswer: `Para calentar una habitación, la calefacción eléctrica que menos gasta es una bomba de calor (un split con modo calor o la aerotermia), porque entrega varios kWh de calor por cada kWh eléctrico. Entre los aparatos de resistencia, todos gastan lo mismo por cada kWh de calor; lo más barato es calentar solo a la persona: una manta eléctrica de ${heaterWatts("manta-electrica")} W cuesta unos ${heaterHourCost("manta-electrica")} por hora y un brasero de ${heaterWatts("brasero-electrico")} W unos ${heaterHourCost("brasero-electrico")}, frente a ${heaterHourCost("radiador-de-aceite")} de un radiador de ${heaterWatts("radiador-de-aceite")} W a plena potencia (${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}).`,
+    quickFacts: [
+      { label: "Resistencia", value: "1 kWh eléctrico = 1 kWh de calor" },
+      { label: "Bomba de calor", value: "Varios kWh de calor por kWh eléctrico" },
+      { label: "Coste por hora", value: "kW × precio del kWh" },
+      { label: "Más barato", value: "Calentar a la persona, no la casa" },
+    ],
+    comparison: {
+      title: "Coste de una hora a plena potencia con los ejemplos de VatioClaro",
+      description: `Potencias de los ejemplos editables de cada ficha y precio de análisis de ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}. Con termostato, la resistencia no está encendida toda la hora y el coste real es menor. No es una medición de modelos concretos.`,
+      firstLabel: "Potencia del ejemplo",
+      secondLabel: "Coste por hora a plena potencia",
+      rows: heaterComparisonSlugs.map((slug) => ({
+        criterion: getAppliance(slug)?.name ?? slug,
+        first: `${heaterWatts(slug)} W`,
+        second: heaterHourCost(slug),
+      })),
+    },
+    sections: [
+      {
+        title: "La regla que desmonta el «bajo consumo»",
+        paragraphs: [
+          "Un emisor térmico, un radiador de aceite, un calefactor de aire o una estufa de cuarzo de 1.000 W consumen exactamente 1 kWh por cada hora con la resistencia encendida, y entregan 1 kWh de calor. El aceite, el fluido térmico, la cerámica o los ladrillos de un acumulador cambian cómo y cuándo se reparte ese calor, no cuánta energía hace falta.",
+          "Por eso, cuando un anuncio promete que un emisor «gasta la mitad», compara potencias y horas reales. Un aparato con buen termostato y programación puede gastar menos porque está menos tiempo encendido o calienta solo cuando hay alguien, no porque convierta mejor la electricidad.",
+        ],
+        callout:
+          "Fórmula: coste de una hora = potencia en kW × precio del kWh. Un aparato de 2.000 W a 0,25 €/kWh cuesta 0,50 € por cada hora con la resistencia encendida.",
+      },
+      {
+        title: "Calentar a la persona cuesta mucho menos que calentar la casa",
+        paragraphs: [
+          `La forma más barata de no pasar frío con electricidad es llevar el calor al cuerpo: una manta eléctrica de ${heaterWatts("manta-electrica")} W o un brasero bajo la mesa camilla de ${heaterWatts("brasero-electrico")} W necesitan mucha menos potencia que un aparato que tiene que calentar todo el aire de la estancia. Una estufa halógena dirigida hacia el sofá funciona con la misma lógica: da calor inmediato a quien está delante.`,
+          "La contrapartida es que la habitación sigue fría. Si necesitas moverte por la casa o evitar humedades, esas soluciones no sustituyen a la calefacción, pero pueden reducir mucho las horas en que la enciendes.",
+        ],
+      },
+      {
+        title: "La bomba de calor es la única que multiplica",
+        paragraphs: [
+          "Un aire acondicionado con bomba de calor o un equipo de aerotermia no generan el calor con una resistencia: lo trasladan desde el aire exterior. En condiciones normales entregan varios kWh de calor por cada kWh eléctrico, según su COP o, para toda la temporada, su SCOP.",
+          "Si ya tienes un split con modo calor, suele ser la forma más barata de calentar esa estancia con electricidad. Para el mismo calor, un equipo con un rendimiento de 3 necesita un tercio de la energía que un radiador. Ese rendimiento baja cuando hace mucho frío fuera y depende de la instalación, así que no lo tomes como una cifra fija.",
+        ],
+      },
+      {
+        title: "Cuándo importa la hora: acumuladores y tarifa con discriminación horaria",
+        paragraphs: [
+          "Un acumulador de calor consume lo mismo que un radiador para el mismo calor, pero carga de madrugada. Si tu contrato tiene precios distintos por periodos, esa energía se paga al precio del valle, que en la tarifa 2.0TD va de 0:00 a 8:00 los laborables y todo el día los fines de semana y festivos nacionales.",
+          "Con un precio único todo el día, el acumulador pierde esa ventaja. Antes de instalarlo o de cambiar de tarifa, revisa cuántos kWh consumes en cada periodo en los datos de tu distribuidora y calcula el coste con cada opción.",
+        ],
+      },
+      {
+        title: "Cómo calcular tu caso en cinco minutos",
+        paragraphs: [
+          "Busca la potencia de tu aparato en la placa de características, estima cuántas horas al día está realmente encendida la resistencia y multiplica: kW × horas × días × precio del kWh. Si tiene termostato, un medidor de enchufe durante un par de días te dará los kWh reales, que es el dato más fiable.",
+        ],
+        bullets: [
+          "Potencia en kW: los vatios divididos entre 1.000.",
+          "Horas reales de resistencia, no horas enchufado.",
+          "Precio del kWh de tu contrato y, si lo tiene, del periodo en que consumes.",
+          "Potencia contratada: varios aparatos de 2.000 W a la vez pueden hacer saltar el ICP.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Los emisores térmicos de bajo consumo gastan menos?",
+        answer:
+          "No por cada kWh de calor. Un emisor térmico es un aparato de resistencia como un radiador de aceite o un calefactor. Puede gastar menos si su termostato y su programación lo mantienen menos tiempo encendido, pero un emisor de 1.000 W consume 1 kWh por cada hora con la resistencia activa.",
+      },
+      {
+        question: "¿Qué gasta menos, un radiador de aceite o un calefactor?",
+        answer:
+          "A igual potencia y mismas horas de resistencia encendida, consumen lo mismo. El calefactor de aire calienta antes y se enfría antes; el radiador de aceite tarda más, pero conserva el calor. Elige por el uso: unos minutos en el baño o una habitación durante horas.",
+      },
+      {
+        question: "¿Cuánto cuesta tener la calefacción eléctrica encendida todo el día?",
+        answer:
+          "Multiplica la potencia por las horas reales de resistencia y por tu precio. Un aparato de 2.000 W con la resistencia activa ocho horas consume 16 kWh, unos 4 € al día a 0,25 €/kWh. Con termostato y una casa bien aislada, la resistencia estará encendida menos tiempo y el coste bajará.",
+      },
+      {
+        question: "¿Merece la pena el aire acondicionado para calentar?",
+        answer:
+          "Si es un equipo con bomba de calor, suele ser la opción eléctrica más barata para calentar una estancia, porque entrega más calor que la electricidad que consume. Revisa en su ficha el SCOP o la clase energética en modo calor y ten en cuenta que su rendimiento baja con temperaturas exteriores muy frías.",
+      },
+    ],
+    sources: [
+      {
+        title: "Comisión Europea — Calefactores locales y etiqueta energética",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/local-space-heaters_en",
+      },
+      {
+        title: "IDAE — Guía de la bomba de calor (2023)",
+        url: "https://www.idae.es/sites/default/files/documentos/publicaciones_idae/Guias_IDAE_La_Bomba_de_calor_2023_V11.pdf",
+      },
+      {
+        title: "BOE — Circular 3/2020 de la CNMC, metodología de los peajes de transporte y distribución",
+        url: "https://www.boe.es/buscar/act.php?id=BOE-A-2020-1066",
+      },
+    ],
+    related: [
+      { href: "/guias/radiador-electrico-vs-bomba-calor", title: "Radiador eléctrico frente a bomba de calor" },
+      { href: "/consumo/acumulador-de-calor", title: "Calcular la carga de un acumulador" },
+      { href: "/consumo/manta-electrica", title: "Calcular el coste de la manta eléctrica" },
+      { href: "/guias/horarios-luz-punta-llano-valle", title: "Consultar las horas valle" },
+    ],
+  },
   {
     slug: "por-que-ha-subido-factura-luz",
     indexable: true,

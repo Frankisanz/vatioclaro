@@ -1,0 +1,46 @@
+name: IndexNow
+
+# Avisa a Bing (y a los buscadores que comparten IndexNow, como Yandex o
+# Seznam) de las URLs del sitemap cada vez que Vercel publica en producción.
+# Bing alimenta las búsquedas de ChatGPT y Copilot, así que acelera que los
+# asistentes vean el contenido nuevo. La clave es pública por diseño: se sirve
+# en https://vatioclaro.es/edabca3298d6a8cef4acbc2b86678cc5.txt.
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    name: Enviar URLs a IndexNow
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE: https://vatioclaro.es
+      INDEXNOW_KEY: edabca3298d6a8cef4acbc2b86678cc5
+    steps:
+      - name: Enviar sitemap a IndexNow
+        run: |
+          set -euo pipefail
+          curl -fsS "$SITE/$INDEXNOW_KEY.txt" | grep -qx "$INDEXNOW_KEY"
+          curl -fsS "$SITE/sitemap.xml" \
+            | grep -o '<loc>[^<]*</loc>' \
+            | sed -e 's#<loc>##' -e 's#</loc>##' \
+            | jq -R . | jq -s \
+              --arg host "${SITE#https://}" \
+              --arg key "$INDEXNOW_KEY" \
+              --arg loc "$SITE/$INDEXNOW_KEY.txt" \
+              '{host: $host, key: $key, keyLocation: $loc, urlList: .}' > payload.json
+          echo "URLs: $(jq '.urlList | length' payload.json)"
+          status=$(curl -sS -o response.txt -w '%{http_code}' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data @payload.json https://api.indexnow.org/indexnow)
+          echo "IndexNow respondió $status"; cat response.txt || true
+          case "$status" in 200|202) ;; *) exit 1 ;; esac

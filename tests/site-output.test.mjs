@@ -651,3 +651,29 @@ test("publishes the November heating and small appliance sheets, the heating com
   assert.match(llmsFull, /\| Manta eléctrica \| 100 W \| 0,03.€ \|/);
   assert.equal(indexNowKey.trim(), "edabca3298d6a8cef4acbc2b86678cc5");
 });
+
+test("publishes the late-November drying and Christmas lights content", async () => {
+  const [sitemap, llmsFull, guide, rack, lights, dryer] = await Promise.all([
+    readOutput("sitemap.xml"),
+    readOutput("llms-full.txt"),
+    readOutput("guias/secar-ropa-que-gasta-menos.html"),
+    readOutput("consumo/tendedero-electrico.html"),
+    readOutput("consumo/luces-de-navidad.html"),
+    readOutput("consumo/secadora.html"),
+  ]);
+
+  for (const [slug, html] of [["tendedero-electrico", rack], ["luces-de-navidad", lights]]) {
+    assert.match(html, /RESPUESTA RÁPIDA/, slug);
+    assert.match(html, /"@type":"FAQPage"/, slug);
+    assert.match(sitemap, new RegExp(`https://vatioclaro\\.es/consumo/${slug}</loc>`), slug);
+    assert.match(llmsFull, new RegExp(`URL: https://vatioclaro\\.es/consumo/${slug}\\n`), slug);
+  }
+
+  assert.match(guide, /Tendedero eléctrico<\/th><td>150 W durante 4 h<\/td><td>0,6 kWh · 0,15.€<\/td>/);
+  assert.match(guide, /Secadora<\/th><td>140 kWh\/100 ciclos de etiqueta<\/td><td>1,4 kWh · 0,35.€<\/td>/);
+  assert.match(guide, /entre un 45 % y un 54 %/);
+  assert.match(guide, /src="\/imagenes\/guias\/secar-ropa-que-gasta-menos\.png"/);
+  assert.match(sitemap, /https:\/\/vatioclaro\.es\/guias\/secar-ropa-que-gasta-menos<\/loc>/);
+  assert.match(dryer, /href="\/guias\/secar-ropa-que-gasta-menos"/);
+  assert.match(lights, /Del 25 de noviembre al 6 de enero/);
+});

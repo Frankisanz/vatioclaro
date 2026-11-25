@@ -50,8 +50,8 @@ const featuredSlugs = [
   "acumulador-de-calor",
   "termo-electrico",
   "coche-electrico",
-  "placa-de-induccion",
-  "estufa-halogena",
+  "luces-de-navidad",
+  "tendedero-electrico",
 ];
 const featured = featuredSlugs
   .map((slug) => appliances.find((candidate) => candidate.slug === slug))

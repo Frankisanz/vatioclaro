@@ -700,6 +700,40 @@ export const APPLIANCE_FAQS: Record<string, ApplianceFaq[]> = {
         "Depende de la receta. Para calentar la misma cantidad de comida a la misma temperatura, la energía necesaria es parecida y la diferencia está en las pérdidas y en el tiempo. La comparación justa es medir la misma receta en los dos aparatos; la calculadora de comparación te deja introducir los dos resultados.",
     },
   ],
+  "tendedero-electrico": [
+    {
+      question: "¿Cuánto cuesta secar una colada en un tendedero eléctrico?",
+      answer:
+        "Multiplica la potencia por las horas encendido y por tu precio. En el ejemplo, 150 W durante cuatro horas son 0,6 kWh: unos 0,15 € a 0,25 €/kWh. Un modelo de 300 W encendido seis horas consume 1,8 kWh, unos 0,45 €, más que una colada en el ejemplo de secadora de VatioClaro (1,4 kWh).",
+    },
+    {
+      question: "¿Gasta menos un tendedero eléctrico que una secadora?",
+      answer:
+        "Depende de las horas. Con potencias bajas y pocas horas, suele gastar menos por colada que una secadora de resistencia, pero si lo dejas encendido toda la noche puede igualar o superar a una secadora de bomba de calor eficiente. Compara los kWh de cada colada: potencia × horas en el tendedero y los kWh por 100 ciclos de la etiqueta de la secadora divididos entre 100.",
+    },
+    {
+      question: "¿El tendedero eléctrico calienta la habitación?",
+      answer:
+        "Poco. Toda la electricidad que consume acaba convertida en calor, pero con 150 W apenas templa una estancia; un radiador pequeño de 1.000 a 1.500 W tiene entre siete y diez veces más. Además, el agua que se evapora de la ropa aumenta la humedad del aire, así que conviene ventilar al terminar o usar un deshumidificador.",
+    },
+  ],
+  "luces-de-navidad": [
+    {
+      question: "¿Cuánto gastan las luces de Navidad en toda la temporada?",
+      answer:
+        "Suma los vatios de todo lo que enciendes, multiplícalo por las horas diarias y por los días. En el ejemplo, 30 W durante seis horas al día son 0,18 kWh diarios: unos 5,4 kWh y 1,35 € en treinta días a 0,25 €/kWh. Del 25 de noviembre al 6 de enero, unos 43 días, serían unos 7,7 kWh y menos de 2 €.",
+    },
+    {
+      question: "¿Gastan mucho las luces de Navidad LED?",
+      answer:
+        "Muy poco si son guirnaldas LED normales: unos pocos vatios cada una. Lo que más eleva el consumo son las figuras grandes, los proyectores, las mangueras luminosas de muchos metros y, sobre todo, las guirnaldas antiguas de bombillas incandescentes. Comprueba los vatios en la etiqueta de cada una.",
+    },
+    {
+      question: "¿Consumen las luces de Navidad apagadas?",
+      answer:
+        "Si el transformador o el controlador de efectos sigue enchufado, puede tener un pequeño consumo en espera aunque las luces estén apagadas. Un temporizador mecánico o un enchufe inteligente que corte la corriente evita ese gasto; también basta con desenchufar la regleta.",
+    },
+  ],
 };
 
 export function getApplianceFaqs(slug: string): ApplianceFaq[] {

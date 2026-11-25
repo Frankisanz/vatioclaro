@@ -135,7 +135,185 @@ function heaterHourCost(slug: string) {
   return formatCurrency((heaterWattsValue(slug) / 1000) * EXAMPLE_ELECTRICITY_PRICE);
 }
 
+
+/**
+ * Comparativa de secado: potencias y kWh por ciclo leídos de las fichas.
+ * Las horas por colada son supuestos visibles de la guía, no mediciones.
+ */
+const DRYING_RACK_HOURS = 4;
+const DRYING_DEHUMIDIFIER_HOURS = 5;
+
+function formatEs(value: number) {
+  return value.toLocaleString("es-ES", { useGrouping: "always" });
+}
+
+function dryingWatts(slug: string): string;
+function dryingWatts(slug: string, raw: true): number;
+function dryingWatts(slug: string, raw?: true) {
+  const item = getAppliance(slug);
+  if (!item || item.calculation.method !== "power") {
+    throw new Error(`Ficha de secado sin potencia: ${slug}`);
+  }
+  return raw ? item.calculation.watts : formatEs(item.calculation.watts);
+}
+
+function dryingDryer() {
+  const item = getAppliance("secadora");
+  if (!item || item.calculation.method !== "cycle" || !item.labelKwhPer100Cycles) {
+    throw new Error("La ficha de secadora debe calcularse por ciclos");
+  }
+  return { kwh: item.calculation.kwhPerCycle, label: item.labelKwhPer100Cycles };
+}
+
+const dryingRackKwh = (dryingWatts("tendedero-electrico", true) / 1000) * DRYING_RACK_HOURS;
+const dryingDehumidifierKwh =
+  (dryingWatts("deshumidificador", true) / 1000) * DRYING_DEHUMIDIFIER_HOURS;
+const dryingDryerKwh = dryingDryer().kwh;
+const dryingDryerLabel = dryingDryer().label;
+
+function dryingKwhText(value: number) {
+  return formatKwh(value, 2);
+}
+
+function dryingCostText(value: number) {
+  return formatCurrency(value * EXAMPLE_ELECTRICITY_PRICE);
+}
+
 export const editorialGuides: EditorialGuide[] = [
+  {
+    slug: "secar-ropa-que-gasta-menos",
+    indexable: true,
+    eyebrow: "Comparativa de secado",
+    title: "¿Qué gasta menos para secar la ropa en invierno?",
+    seoTitle: "Secadora, tendedero eléctrico o deshumidificador: qué gasta menos",
+    description:
+      "Compara los kWh y el coste por colada de tender sin electricidad, el tendedero eléctrico, el deshumidificador y la secadora, con los supuestos a la vista.",
+    publishedAt: "2026-11-25",
+    updatedAt: "2026-11-25",
+    intro:
+      "En invierno la ropa tendida dentro de casa tarda días en secarse y llena la vivienda de humedad. Las alternativas eléctricas son tres: un tendedero calefactado, un deshumidificador junto a la ropa o una secadora. Cada una gasta distinto y resuelve un problema distinto, así que la comparación justa es por colada y con las horas que de verdad funciona cada aparato.",
+    directAnswer: `Tender sin electricidad no cuesta nada, pero en una casa fría y cerrada es lento y añade humedad. De las opciones eléctricas, con los ejemplos de VatioClaro un tendedero eléctrico de ${dryingWatts("tendedero-electrico")} W durante ${formatEs(DRYING_RACK_HOURS)} horas gasta ${dryingKwhText(dryingRackKwh)} por colada (${dryingCostText(dryingRackKwh)}), un deshumidificador de ${dryingWatts("deshumidificador")} W durante ${formatEs(DRYING_DEHUMIDIFIER_HOURS)} horas, ${dryingKwhText(dryingDehumidifierKwh)} (${dryingCostText(dryingDehumidifierKwh)}), y la secadora del ejemplo, ${dryingKwhText(dryingDryerKwh)} (${dryingCostText(dryingDryerKwh)}) a ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}. La diferencia real la marcan las horas de uso y los kWh por 100 ciclos de tu secadora.`,
+    quickFacts: [
+      { label: "Fórmula por colada", value: "kW × horas × precio" },
+      { label: "Secadora", value: "kWh/100 ciclos ÷ 100" },
+      { label: "Lo que más ahorra", value: "Centrifugar más fuerte" },
+      { label: "Ojo con", value: "La humedad en casa" },
+    ],
+    comparison: {
+      title: "Energía y coste de una colada con los ejemplos de VatioClaro",
+      description: `Potencias y kWh por ciclo de los ejemplos editables de cada ficha; las horas por colada son supuestos de esta guía. Precio de análisis de ${formatElectricityPrice(EXAMPLE_ELECTRICITY_PRICE)}. No es una medición de modelos concretos: cambia los datos por los de tus aparatos.`,
+      firstLabel: "Supuesto por colada",
+      secondLabel: "Energía y coste por colada",
+      rows: [
+        {
+          criterion: "Tendedero sin electricidad",
+          first: "Ropa tendida en casa o en el exterior",
+          second: "0 kWh · 0,00 €",
+        },
+        {
+          criterion: "Tendedero eléctrico",
+          first: `${dryingWatts("tendedero-electrico")} W durante ${formatEs(DRYING_RACK_HOURS)} h`,
+          second: `${dryingKwhText(dryingRackKwh)} · ${dryingCostText(dryingRackKwh)}`,
+        },
+        {
+          criterion: "Deshumidificador junto a la ropa",
+          first: `${dryingWatts("deshumidificador")} W durante ${formatEs(DRYING_DEHUMIDIFIER_HOURS)} h`,
+          second: `${dryingKwhText(dryingDehumidifierKwh)} · ${dryingCostText(dryingDehumidifierKwh)}`,
+        },
+        {
+          criterion: "Secadora",
+          first: `${formatEs(dryingDryerLabel)} kWh/100 ciclos de etiqueta`,
+          second: `${dryingKwhText(dryingDryerKwh)} · ${dryingCostText(dryingDryerKwh)}`,
+        },
+      ],
+    },
+    sections: [
+      {
+        title: "Lo que hay que evaporar: la clave está en la lavadora",
+        paragraphs: [
+          "Todas las opciones hacen lo mismo: evaporar el agua que la ropa trae de la lavadora. Cuanta menos agua, menos energía o menos horas necesita cualquier método. Por eso el primer ahorro no está en el secado, sino en el centrifugado.",
+          "La etiqueta energética de las lavadoras incluye una clase de eficiencia de centrifugado de la A a la G, calculada con la humedad residual: el agua que queda en la ropa en proporción a su peso seco. Una clase A deja menos de un 45 %; una B, entre un 45 % y un 54 %; una D, entre un 63 % y un 72 %. Con 7 kg de ropa seca, pasar de una D a una B puede suponer más de medio litro de agua menos por colada.",
+        ],
+        callout:
+          "Ejemplo: 7 kg de ropa con un 50 % de humedad residual llevan unos 3,5 litros de agua. Con un 70 %, casi 5 litros. Ese litro y medio de diferencia lo paga la secadora o lo suelta la ropa en el aire de casa.",
+      },
+      {
+        title: "Tendedero eléctrico: poca potencia, muchas horas",
+        paragraphs: [
+          `Un tendedero calefactado suele tener una potencia baja, como los ${dryingWatts("tendedero-electrico")} W del ejemplo, así que cada hora cuesta poco: ${dryingCostText(dryingWatts("tendedero-electrico", true) / 1000)}. El problema es que una colada completa puede necesitar muchas horas, y muchos modelos no tienen termostato: consumen su potencia completa mientras están encendidos.`,
+          "Funciona mejor con prendas finas extendidas sobre las varillas y con funda, que retiene el aire templado. Las toallas gruesas y los vaqueros tardan mucho más. Y el agua que evapora queda dentro de casa: en una habitación cerrada sin ventilar sube la humedad y aparecen condensaciones en las ventanas.",
+        ],
+      },
+      {
+        title: "Deshumidificador: seca la ropa y la casa a la vez",
+        paragraphs: [
+          "Un deshumidificador con la ropa tendida en una habitación cerrada recoge en su depósito el agua que suelta la ropa. Gasta más por hora que un tendedero eléctrico, pero tiene una ventaja que ninguna otra opción da: evita que esa humedad acabe en paredes y ventanas.",
+          "Si ya tienes uno por problemas de humedad, usarlo para secar la ropa aprovecha un consumo que harías igualmente. Los modelos con compresor rinden menos con temperaturas bajas; consulta el rango de funcionamiento del fabricante si la habitación está muy fría.",
+        ],
+      },
+      {
+        title: "Secadora: rápida, y su gasto está en la etiqueta",
+        paragraphs: [
+          "La secadora es la opción más rápida y la única que no depende de la temperatura de la casa. Su consumo no se calcula con la potencia máxima, sino con los kWh por 100 ciclos de la etiqueta energética vigente: divídelos entre 100 y tendrás los kWh de una colada.",
+          "Las secadoras de bomba de calor reutilizan el calor del aire y suelen tener mejor clase energética que las de resistencia, que calientan el aire, lo usan una vez y lo condensan o lo expulsan. Para dos modelos concretos, compara sus kWh por 100 ciclos: cada 100 kWh/100 ciclos equivalen a 1 kWh por colada, unos 0,25 € a 0,25 €/kWh.",
+        ],
+      },
+      {
+        title: "Cómo decidir en tu casa",
+        paragraphs: [
+          "Calcula el coste de cada opción con tus aparatos y tus horas reales y decide también por lo que necesitas: rapidez, no llenar la casa de humedad o no gastar nada.",
+        ],
+        bullets: [
+          "Si hay sol o viento, tender fuera sigue siendo lo más barato incluso en invierno.",
+          "Si la casa tiene humedad o condensaciones, el deshumidificador resuelve las dos cosas.",
+          "Si haces muchas coladas o necesitas la ropa el mismo día, mira los kWh por 100 ciclos de la secadora.",
+          "Con cualquier opción, centrifugar a más revoluciones reduce el agua que hay que evaporar.",
+          "Si tu contrato tiene precios por periodos, programa la secadora o el tendedero en horas valle.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "¿Qué gasta menos, la secadora o el tendedero eléctrico?",
+        answer: `Depende de las horas que uses el tendedero. Con los ejemplos de VatioClaro, ${formatEs(DRYING_RACK_HOURS)} horas de un tendedero de ${dryingWatts("tendedero-electrico")} W son ${dryingKwhText(dryingRackKwh)} frente a ${dryingKwhText(dryingDryerKwh)} de la secadora. Si el tendedero necesita toda la noche o tiene más potencia, puede igualar a una secadora de bomba de calor eficiente.`,
+      },
+      {
+        question: "¿Se puede secar la ropa con un deshumidificador?",
+        answer:
+          "Sí. Coloca la ropa tendida y el deshumidificador en una habitación pequeña con la puerta y la ventana cerradas, y deja espacio entre prendas para que circule el aire. El aparato recoge el agua que suelta la ropa y evita que la humedad se quede en la casa. Revisa que el depósito no se llene antes de terminar.",
+      },
+      {
+        question: "¿Es malo tender la ropa dentro de casa en invierno?",
+        answer:
+          "No es malo por sí mismo, pero una colada puede soltar varios litros de agua al aire. En una vivienda fría y poco ventilada eso favorece condensaciones y moho. Ventila unos minutos cuando la ropa esté seca, tiéndela en la estancia mejor ventilada o usa un deshumidificador si el problema se repite.",
+      },
+      {
+        question: "¿Cuánto cuesta poner la secadora una vez?",
+        answer:
+          "Divide los kWh por 100 ciclos de su etiqueta entre 100 y multiplícalo por tu precio del kWh. Con 140 kWh/100 ciclos, como en el ejemplo, son 1,4 kWh: unos 0,35 € a 0,25 €/kWh. Una colada más pequeña o un programa distinto del de etiqueta pueden consumir otra cantidad.",
+      },
+    ],
+    sources: [
+      {
+        title: "BOE (DOUE) — Reglamento Delegado (UE) 2019/2014, etiquetado energético de lavadoras (clases de centrifugado, cuadro 3 del anexo II)",
+        url: "https://boe.es/doue/2019/315/L00029-00067.pdf",
+      },
+      {
+        title: "Comisión Europea — Nueva etiqueta energética de secadoras",
+        url: "https://energy-efficient-products.ec.europa.eu/product-list/tumble-dryers_en",
+      },
+      {
+        title: "IDAE — Guía práctica de la energía",
+        url: "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+      },
+    ],
+    related: [
+      { href: "/consumo/tendedero-electrico", title: "Calcular el coste del tendedero eléctrico" },
+      { href: "/consumo/secadora", title: "Calcular el coste de la secadora" },
+      { href: "/consumo/deshumidificador", title: "Calcular el coste del deshumidificador" },
+      { href: "/consumo/lavadora", title: "Calcular el coste de la lavadora" },
+    ],
+  },
   {
     slug: "calefaccion-electrica-que-gasta-menos",
     indexable: true,

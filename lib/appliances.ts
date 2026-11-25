@@ -196,6 +196,8 @@ const relatedApplianceSlugs: Record<string, string[]> = {
   "campana-extractora": ["placa-de-induccion", "horno", "vitroceramica"],
   tostadora: ["horno", "microondas", "cafetera"],
   "robot-de-cocina": ["placa-de-induccion", "vitroceramica", "horno"],
+  "tendedero-electrico": ["secadora", "deshumidificador", "lavadora"],
+  "luces-de-navidad": ["bombilla-led", "televisor", "router-wifi"],
 };
 
 export function getRelatedAppliances(item: Appliance, limit = 3) {
@@ -275,6 +277,24 @@ const highPowerGuideSlugs = new Set([
 ]);
 
 const comparisonGuideLinks: Record<string, RelatedGuideLink[]> = {
+  "tendedero-electrico": [
+    {
+      href: "/guias/secar-ropa-que-gasta-menos",
+      title: "Ver qué gasta menos para secar la ropa",
+    },
+  ],
+  deshumidificador: [
+    {
+      href: "/guias/secar-ropa-que-gasta-menos",
+      title: "Ver qué gasta menos para secar la ropa",
+    },
+  ],
+  secadora: [
+    {
+      href: "/guias/secar-ropa-que-gasta-menos",
+      title: "Ver qué gasta menos para secar la ropa",
+    },
+  ],
   "manta-electrica": [
     {
       href: "/guias/calefaccion-electrica-que-gasta-menos",
@@ -2300,6 +2320,102 @@ const applianceSeeds: ApplianceSeed[] = [
       "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
     sourceUrl:
       "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+  },
+  {
+    slug: "tendedero-electrico",
+    indexable: true,
+    updatedAt: "2026-11-25",
+    name: "Tendedero eléctrico",
+    articleName: "un tendedero eléctrico",
+    seoTitle: "Cuánto consume un tendedero eléctrico por colada",
+    category: "Lavado",
+    calculation: {
+      method: "power",
+      watts: 150,
+      hoursPerDay: 4,
+      daysPerMonth: 12,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Calcula cuánto cuesta secar cada colada en un tendedero calefactado y compáralo con la secadora.",
+    intro:
+      "Un tendedero eléctrico o calefactado lleva una resistencia dentro de las varillas que las mantiene templadas. No calienta el aire de la casa como un radiador: acelera la evaporación del agua de la ropa que está en contacto con las barras. Como su potencia es baja, gasta poco por hora; lo que decide el coste es cuántas horas lo tienes encendido por colada.",
+    range:
+      "Consulta la potencia en la etiqueta del propio tendedero o en el manual. Los modelos con tapa o funda tardan menos en secar con la misma potencia porque retienen el aire templado.",
+    caveat:
+      "El ejemplo educativo editable supone 150 W durante cuatro horas por colada y doce coladas al mes. Muchos modelos no tienen termostato y consumen su potencia completa todo el tiempo encendidos; si el tuyo lo tiene, mide el consumo real con un medidor de enchufe.",
+    tips: [
+      "Centrifuga a la velocidad más alta que admita cada tejido: cuanto menos agua lleve la ropa, menos horas de tendedero.",
+      "Extiende las prendas sin solaparlas y gíralas a mitad de secado para que toquen las varillas calientes.",
+      "Úsalo en una habitación ventilada o junto a un deshumidificador: el agua que sale de la ropa queda en el aire de la casa.",
+    ],
+    factors: [
+      {
+        title: "Horas encendido",
+        text: "Con 150 W, cada hora son 0,15 kWh. Pasar de cuatro a ocho horas por colada duplica el coste, así que conviene apagarlo en cuanto la ropa esté seca.",
+      },
+      {
+        title: "Agua que trae la ropa",
+        text: "La clase de centrifugado de la etiqueta de la lavadora indica la humedad residual: una clase B deja entre un 45 % y un 54 % del peso de la ropa seca en agua; una clase D, entre un 63 % y un 72 %.",
+      },
+      {
+        title: "Funda y estancia",
+        text: "Una funda, una habitación cerrada y templada o un deshumidificador cerca acortan el secado. En una estancia fría y húmeda la evaporación es más lenta y la resistencia trabaja más horas.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+    showLabelGuide: false,
+  },
+  {
+    slug: "luces-de-navidad",
+    indexable: true,
+    updatedAt: "2026-11-25",
+    name: "Luces de Navidad",
+    articleName: "unas luces de Navidad",
+    seoTitle: "Cuánto gastan las luces de Navidad LED al mes",
+    category: "Iluminación",
+    calculation: {
+      method: "power",
+      watts: 30,
+      hoursPerDay: 6,
+      daysPerMonth: 30,
+      pricePerKwh: DEFAULT_ELECTRICITY_PRICE,
+    },
+    shortDescription:
+      "Suma los vatios de tus guirnaldas, el árbol y el balcón y calcula lo que cuesta la decoración durante las fiestas.",
+    intro:
+      "Las luces de Navidad suman poca potencia, pero se encienden muchas horas durante varias semanas. Para saber lo que cuestan basta con sumar los vatios de cada guirnalda, figura o proyector que enciendes a la vez y multiplicarlos por las horas y los días de la temporada. Las tiras LED actuales consumen una fracción de las antiguas guirnaldas de bombillitas incandescentes con la misma cantidad de puntos de luz.",
+    range:
+      "Consulta los vatios en la etiqueta del cable, el transformador o el envase. Si solo indica tensión y corriente, multiplica voltios por amperios para obtener una potencia máxima aproximada.",
+    caveat:
+      "El ejemplo educativo editable supone 30 W en total, por ejemplo varias guirnaldas LED en el árbol y el balcón, encendidas seis horas al día durante treinta días. Los transformadores pueden consumir algo con las luces apagadas por el temporizador; desenchúfalos si quieres consumo cero.",
+    tips: [
+      "Usa un temporizador o un enchufe programable para que las luces solo funcionen las horas en que alguien las ve.",
+      "Si conservas guirnaldas antiguas de bombillas incandescentes, comprueba sus vatios: pueden gastar más que todas las LED juntas.",
+      "Apaga las luces interiores al acostarte y las de exterior a una hora fija; no aportan nada de madrugada.",
+    ],
+    factors: [
+      {
+        title: "Vatios de cada elemento",
+        text: "Una guirnalda LED pequeña puede tener unos pocos vatios, mientras que figuras grandes, proyectores o mangueras luminosas de muchos metros suman decenas. Lee la etiqueta de cada uno y súmalos.",
+      },
+      {
+        title: "Horas y días de la temporada",
+        text: "La temporada suele durar de finales de noviembre al 6 de enero, más de cinco semanas. Pasar de seis a doce horas diarias duplica el consumo, aunque la potencia sea pequeña.",
+      },
+      {
+        title: "Tecnología de las bombillas",
+        text: "Con el mismo número de puntos de luz, una guirnalda LED necesita mucha menos potencia que una de bombillitas incandescentes, que convierten la mayor parte de la energía en calor.",
+      },
+    ],
+    sourceTitle:
+      "IDAE — Guía práctica de la energía (contexto de eficiencia; no origen del ejemplo)",
+    sourceUrl:
+      "https://www.idae.es/guia-practica-de-la-energia-consumo-eficiente-y-responsable",
+    showLabelGuide: false,
   },
 ];
 
